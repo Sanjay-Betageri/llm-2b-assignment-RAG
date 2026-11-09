@@ -1,0 +1,2515 @@
+User Guide
+Amazon Virtual Private Cloud
+Copyright © 2026 Amazon Web Services, Inc. and/or its aﬃliates. All rights reserved.
+
+What is Amazon VPC?
+With Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources in a logically 
+isolated virtual network that you've deﬁned. This virtual network closely resembles a traditional 
+network that you'd operate in your own data center, with the beneﬁts of using the scalable 
+infrastructure of AWS.
+The following diagram shows an example VPC. The VPC has one subnet in each of the 
+Availability Zones in the Region, EC2 instances in each subnet, and an internet gateway to allow 
+communication between the resources in your VPC and the internet.
+For more information, see Amazon Virtual Private Cloud (Amazon VPC).
+Features
+The following features help you conﬁgure a VPC to provide the connectivity that your applications 
+need:
+Virtual private clouds (VPC)
+A VPC is a virtual network that closely resembles a traditional network that you'd operate in 
+your own data center. After you create a VPC, you can add subnets.
+Features 1
+
+Subnets
+A subnet  is a range of IP addresses in your VPC. A subnet must reside in a single Availability 
+Zone. After you add subnets, you can deploy AWS resources in your VPC.
+IP addressing
+You can assign IP addresses, both IPv4 and IPv6, to your VPCs and subnets. You can also bring 
+your public IPv4 addresses and IPv6 GUA addresses to AWS and allocate them to resources in 
+your VPC, such as EC2 instances, NAT gateways, and Network Load Balancers.
+Routing
+Use route tables to determine where network traﬃc from your subnet or gateway is directed.
+Gateways and endpoints
+A gateway connects your VPC to another network. For example, use an internet gateway to 
+connect your VPC to the internet. Use a VPC endpoint  to connect to AWS services privately, 
+without the use of an internet gateway or NAT device.
+Peering connections
+Use a VPC peering connection to route traﬃc between the resources in two VPCs.
+Traﬃc Mirroring
+Copy network traﬃc from network interfaces and send it to security and monitoring appliances 
+for deep packet inspection.
+Transit gateways
+Use a transit gateway, which acts as a central hub, to route traﬃc between your VPCs, VPN 
+connections, and Direct Connect connections.
+VPC Flow Logs
+A ﬂow log captures information about the IP traﬃc going to and from network interfaces in 
+your VPC.
+VPN connections
+Connect your VPCs to your on-premises networks using AWS Virtual Private Network (Site-to-
+Site VPN) .
+Features 2
+
+Getting started with Amazon VPC
+Your AWS account includes a default VPC  in each AWS Region. Your default VPCs are conﬁgured 
+such that you can immediately start launching and connecting to EC2 instances. For more 
+information, see Plan your VPC .
+You can choose to create additional VPCs with the subnets, IP addresses, gateways and routing that 
+you need. For more information, see the section called “Create a VPC”.
+Working with Amazon VPC
+You can create and manage your VPCs using any of the following interfaces:
+•AWS Management Console — Provides a web interface that you can use to access your VPCs.
+•AWS Command Line Interface (AWS CLI) — Provides commands for a broad set of AWS services, 
+including Amazon VPC, and is supported on Windows, Mac, and Linux. For more information, see
+AWS Command Line Interface.
+•AWS SDKs — Provides language-speciﬁc APIs and takes care of many of the connection 
+details, such as calculating signatures, handling request retries, and error handling. For more 
+information, see AWS SDKs.
+•Query API — Provides low-level API actions that you call using HTTPS requests. Using the Query 
+API is the most direct way to access Amazon VPC, but it requires that your application handle 
+low-level details such as generating the hash to sign the request, and error handling. For more 
+information, see Amazon VPC actions in the Amazon EC2 API Reference.
+Pricing for Amazon VPC
+There's no additional charge for using a VPC. There are, however, charges for some VPC 
+components, such as NAT gateways, IP Address Manager, traﬃc mirroring, Reachability Analyzer, 
+and Network Access Analyzer. For more information, see Amazon VPC Pricing.
+Nearly all resources that you launch in your virtual private cloud (VPC) provide you with an IP 
+address for connectivity. The vast majority of resources in your VPC use private IPv4 addresses. 
+Resources that require direct access to the internet over IPv4, however, use public IPv4 addresses.
+Amazon VPC enables you to launch managed services, such as Elastic Load Balancing, Amazon 
+RDS, and Amazon EMR, without having a VPC set up beforehand. It does this by using the default 
+Getting started with Amazon VPC 3
+
+VPC in your account if you have one. Any public IPv4 addresses provisioned to your account by the 
+managed service will be charged. These charges will be associated with Amazon VPC service in your 
+AWS Cost and Usage Report.
+Pricing for public IPv4 addresses
+A public IPv4 address is an IPv4 address that is routable from the internet. A public IPv4 address is 
+necessary for a resource to be directly reachable from the internet over IPv4.
+If you are an existing or new AWS Free Tier customer, you get 750 hours of public IPv4 address 
+usage with the EC2 service at no charge. If you are not using the EC2 service in the AWS Free Tier, 
+Public IPv4 addresses are charged. For speciﬁc pricing information, see the Public IPv4 address tab 
+in Amazon VPC Pricing.
+Private IPv4 addresses (RFC 1918) are not charged. For more information about how public IPv4 
+addresses are charged for shared VPCs, see Billing and metering for the owner and participants.
+Public IPv4 addresses have the following types:
+•Elastic IP addresses (EIPs) : Static, public IPv4 addresses provided by Amazon that you can 
+associate with an EC2 instance, elastic network interface, or AWS resource.
+•EC2 public IPv4 addresses: Public IPv4 addresses assigned to an EC2 instance by Amazon (if the 
+EC2 instance is launched into a default subnet or if the instance is launched into a subnet that’s 
+been conﬁgured to automatically assign a public IPv4 address).
+•BYOIPv4 addresses: Public IPv4 addresses in the IPv4 address range that you’ve brought to AWS 
+using Bring your own IP addresses (BYOIP).
+•Service-managed IPv4 addresses: Public IPv4 addresses automatically provisioned on AWS 
+resources and managed by an AWS service. For example, public IPv4 addresses on Amazon ECS, 
+Amazon RDS, or Amazon WorkSpaces.
+The following list shows the most common AWS services that can use public IPv4 addresses.
+•Amazon WorkSpaces Applications
+•AWS Client VPN
+•AWS Database Migration Service
+•Amazon EC2
+•Amazon Elastic Container Service
+Pricing for Amazon VPC 4
+
+•Amazon EKS
+•Amazon EMR
+•Amazon GameLift Servers
+•AWS Global Accelerator
+•AWS Mainframe Modernization
+•Amazon Managed Streaming for Apache Kafka
+•Amazon MQ
+•Amazon RDS
+•Amazon Redshift
+•AWS Site-to-Site VPN
+•Amazon VPC NAT gateway
+•Amazon WorkSpaces
+•Elastic Load Balancing
+Pricing for Amazon VPC 5
+
+How Amazon VPC works
+With Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources in a logically 
+isolated virtual network that you've deﬁned. This virtual network closely resembles a traditional 
+network that you'd operate in your own data center, with the beneﬁts of using the scalable 
+infrastructure of AWS.
+The following is a visual representation of a VPC and its resources from the Preview  pane shown 
+when you create a VPC using the AWS Management Console. For an existing VPC, you can access 
+this visualization on the Resource map tab. This example shows the resources that are initially 
+selected on the Create VPC  page when you choose to create the VPC plus other networking 
+resources. This VPC is conﬁgured with an IPv4 CIDR and an Amazon-provided IPv6 CIDR, subnets in 
+two Availability Zones, three route tables, an internet gateway, and a gateway endpoint. Because 
+we've selected the internet gateway, the visualization indicates that traﬃc from the public subnets 
+is routed to the internet because the corresponding route table sends the traﬃc to the internet 
+gateway.
+Concepts
+•VPCs and subnets
+•Default and nondefault VPCs
+•Route tables
+•Access the internet
+•Access a corporate or home network
+•Connect VPCs and networks
+
+•AWS private global network
+VPCs and subnets
+A virtual private cloud (VPC) is a virtual network dedicated to your AWS account. It is logically 
+isolated from other virtual networks in the AWS Cloud. You can specify an IP address range for the 
+VPC, add subnets, add gateways, and associate security groups.
+A subnet  is a range of IP addresses in your VPC. You launch AWS resources, such as Amazon EC2 
+instances, into your subnets. You can connect a subnet to the internet, other VPCs, and your own 
+data centers, and route traﬃc to and from your subnets using route tables.
+Learn more
+•IP addressing
+•Virtual private clouds
+•Subnets
+Default and nondefault VPCs
+If your account was created after December 4, 2013, it comes with a default VPC  in each Region. 
+A default VPC is conﬁgured and ready for you to use. For example, it has a default subnet  in each 
+Availability Zone in the Region, an attached internet gateway, a route in the main route table that 
+sends all traﬃc to the internet gateway, and DNS settings that automatically assign public DNS 
+hostnames to instances with public IP addresses and enable DNS resolution through the Amazon-
+provided DNS server (see DNS attributes for your VPC). Therefore, an EC2 instance that is launched 
+in a default subnet automatically has access to the internet. If you have a default VPC in a Region 
+and you don't specify a subnet when you launch an EC2 instance into that Region, we choose one 
+of the default subnets and launch the instance into that subnet.
+You can also create your own VPC, and conﬁgure it as you need. This is known as a nondefault VPC . 
+Subnets that you create in your nondefault VPC and additional subnets that you create in your 
+default VPC are called nondefault subnets .
+Learn more
+•the section called “Default VPCs”
+VPCs and subnets 7
+
+•the section called “Create a VPC”
+Route tables
+A route table  contains a set of rules, called routes, that are used to determine where network 
+traﬃc from your VPC is directed. You can explicitly associate a subnet with a particular route table. 
+Otherwise, the subnet is implicitly associated with the main route table.
+Each route in a route table speciﬁes the range of IP addresses where you want the traﬃc to go (the 
+destination) and the gateway, network interface, or connection through which to send the traﬃc 
+(the target).
+Learn more
+•Conﬁgure route tables
+Access the internet
+You control how the instances that you launch into a VPC access resources outside the VPC.
+A default VPC includes an internet gateway, and each default subnet is a public subnet. Each 
+instance that you launch into a default subnet has a private IPv4 address and a public IPv4 address. 
+These instances can communicate with the internet through the internet gateway. An internet 
+gateway enables your instances to connect to the internet through the Amazon EC2 network edge.
+By default, each instance that you launch into a nondefault subnet has a private IPv4 address, but 
+no public IPv4 address, unless you speciﬁcally assign one at launch, or you modify the subnet's 
+public IP address attribute. These instances can communicate with each other, but can't access the 
+internet.
+You can enable internet access for an instance launched into a nondefault subnet by attaching an 
+internet gateway to its VPC (if its VPC is not a default VPC) and associating an Elastic IP address 
+with the instance.
+Alternatively, to allow an instance in your VPC to initiate outbound connections to the internet 
+but prevent unsolicited inbound connections from the internet, you can use a network address 
+translation (NAT) device. NAT maps multiple private IPv4 addresses to a single public IPv4 address. 
+You can conﬁgure the NAT device with an Elastic IP address and connect it to the internet through 
+an internet gateway. This makes it possible for an instance in a private subnet to connect to the 
+Route tables 8
+
+internet through the NAT device, routing traﬃc from the instance to the internet gateway and any 
+responses to the instance.
+If you associate an IPv6 CIDR block with your VPC and assign IPv6 addresses to your instances, 
+instances can connect to the internet over IPv6 through an internet gateway. Alternatively, 
+instances can initiate outbound connections to the internet over IPv6 using an egress-only internet 
+gateway. IPv6 traﬃc is separate from IPv4 traﬃc; your route tables must include separate routes 
+for IPv6 traﬃc.
+Learn more
+•Enable internet access for a VPC using an internet gateway
+•Enable outbound IPv6 traﬃc using an egress-only internet gateway
+•Connect to the internet or other networks using NAT devices
+Access a corporate or home network
+You can optionally connect your VPC to your own corporate data center using an IPsec AWS Site-
+to-Site VPN connection, making the AWS Cloud an extension of your data center.
+A Site-to-Site VPN connection consists of two VPN tunnels between a virtual private gateway or 
+transit gateway on the AWS side, and a customer gateway device located in your data center. A 
+customer gateway device is a physical device or software appliance that you conﬁgure on your side 
+of the Site-to-Site VPN connection.
+Learn more
+•AWS Site-to-Site VPN User Guide
+•Amazon VPC Transit Gateways
+Connect VPCs and networks
+You can create a VPC peering connection  between two VPCs that enables you to route traﬃc 
+between them privately. Instances in either VPC can communicate with each other as if they are 
+within the same network.
+You can also create a transit gateway  and use it to interconnect your VPCs and on-premises 
+networks. The transit gateway acts as a Regional virtual router for traﬃc ﬂowing between its 
+Access a corporate or home network 9
+
+attachments, which can include VPCs, VPN connections, Direct Connect gateways, and transit 
+gateway peering connections.
+Learn more
+•Amazon VPC Peering Guide
+•Amazon VPC Transit Gateways
+AWS private global network
+AWS provides a high-performance, and low-latency private global network that delivers a secure 
+cloud computing environment to support your networking needs. AWS Regions are connected to 
+multiple Internet Service Providers (ISPs) as well as to a private global network backbone, which 
+provides improved network performance for cross-Region traﬃc sent by customers.
+Packets that originate from the AWS network with a destination on the AWS network stay on the 
+AWS global network, except traﬃc to or from AWS China Regions and the AWS European Sovereign 
+Cloud Region. This is true whether the destination is a private IP address or a public IP address. 
+For example, if EC2 instances in two VPCs communicate using public IP addresses, the traﬃc stays 
+in the private global network. The destination can be in the same Availability Zone, a diﬀerent 
+Availability Zone in the same Region, or a diﬀerent Region.
+Network packet loss can be caused by a number of factors, including network ﬂow collisions, 
+lower level (Layer 2) errors, and other network failures. We engineer and operate our networks to 
+minimize packet loss. We measure packet-loss rate (PLR) across the global backbone that connects 
+the AWS Regions. We operate our backbone network to target a p99 of the hourly PLR of less than 
+0.0001%.
+AWS private global network 10
+
+Plan your VPC
+Complete the following tasks to prepare to create and connect your VPCs. When you are ﬁnished, 
+you will be ready to deploy your application on AWS.
+Tasks
+•Sign up for an AWS account
+•Verify permissions
+•Determine your IP address ranges
+•Select your Availability Zones
+•Plan your internet connectivity
+•Create your VPC
+•Deploy your application
+Sign up for an AWS account
+Sign up for an AWS account
+To get started with AWS, you need an AWS account. For information about creating an AWS 
+account, see Getting started with an AWS account in the AWS Account Management Reference 
+Guide .
+Verify permissions
+Before you can use Amazon VPC, you must have the required permissions. For more information, 
+see Identity and access management for Amazon VPC and Amazon VPC policy examples.
+Determine your IP address ranges
+The resources in your VPC communicate with each other and with resources over the internet using 
+IP addresses. When you create VPCs and subnets, you can select their IP address ranges. When you 
+deploy resources in a subnet, such as EC2 instances, they receive IP addresses from the IP address 
+range of the subnet. For more information, see IP addressing .
+Sign up for an AWS account 11
+
+As you choose a size for your VPC, consider how many IP addresses you'll need across your AWS 
+accounts and VPCs. Ensure that the IP address ranges for your VPCs don't overlap with the IP 
+address ranges for your own network. If you need connectivity between multiple VPCs, you must 
+ensure that they have no overlapping IP addresses.
+IP Address Manager (IPAM) makes it easier to plan, track, and monitor the IP addresses for your 
+application. For more information, see the IP Address Manager Guide.
+Select your Availability Zones
+An AWS Region is a physical location where we cluster data centers, known as Availability Zones. 
+Each Availability Zone has independent power, cooling, and physical security, with redundant 
+power, networking, and connectivity. The Availability Zones in a Region are physically separated 
+by a meaningful distance, and interconnected through high-bandwidth, low-latency networking. 
+You can design your application to run in multiple Availability Zones to achieve even greater fault 
+tolerance.
+Production environment
+For a production environment, we recommend that you select at least two Availability Zones and 
+deploy your AWS resources evenly in each active Availability Zone.
+Development or test environment
+For a development or test environment, you might choose to save money by deploying your 
+resources in only one Availability Zone.
+Plan your internet connectivity
+Plan to divide each VPC into subnets based on your connectivity requirements. For example:
+•If you have web servers that will receive traﬃc from clients on the internet, create a subnet for 
+these servers in each Availability Zone.
+•If you also have servers that will receive traﬃc only from other servers in the VPC, create a 
+separate subnet for these servers in each Availability Zone.
+•If you have servers that will receive traﬃc only through a VPN connection to your network, 
+create a separate subnet for these servers in each Availability Zone.
+Select your Availability Zones 12
+
+If your application will receive traﬃc from the internet, the VPC must have an internet gateway. 
+Attaching an internet gateway to a VPC does not automatically make your instances accessible 
+from the internet. In addition to attaching the internet gateway, you must update the subnet route 
+table with a route to the internet gateway. You must also ensure that the instances have public IP 
+addresses and an associated security group that allows traﬃc from the internet over speciﬁc ports 
+and protocols required by your application.
+Alternatively, register your instances with an internet-facing load balancer. The load balancer 
+receives traﬃc from the clients and distributes it across the registered instances in one or more 
+Availability Zones. For more information, see Elastic Load Balancing . To allow instances in a private 
+subnet to access the internet (for example, to download updates) without allowing unsolicited 
+inbound connections from the internet, add a public NAT gateway in each active Availability Zone 
+and update the route table to send internet traﬃc to the NAT gateway. For more information, see
+the section called “Access the internet from a private subnet”.
+Create your VPC
+After you've determined the number of VPCs and subnets that you need, what CIDR blocks to 
+assign to your VPCs and subnets, and how to connect your VPC to the internet, you are ready to 
+create your VPC. If you create your VPC using the AWS Management Console and include public 
+subnets in your conﬁguration, we create a route table for the subnet and add the routes required 
+for direct access to the internet. For more information, see the section called “Create a VPC”.
+Deploy your application
+After you've created your VPC, you can deploy your application.
+Production environment
+For a production environment, you can use one of the following services to deploy servers in 
+multiple Availability Zones, to conﬁgure scaling so that you maintain the minimum number of 
+servers required by your application, and to register your servers with a load balancer to distribute 
+traﬃc evenly across your servers.
+•Amazon EC2 Auto Scaling
+•EC2 Fleet
+•Amazon Elastic Container Service (Amazon ECS)
+Create your VPC 13
+
+Development or test environment
+For a development or test environment, you might choose to launch a single EC2 instance. For 
+more information, see Get started with Amazon EC2 in the Amazon EC2 User Guide.
+Deploy your application 14
+
+IP addressing for your VPCs and subnets
+IP addresses enable resources in your VPC to communicate with each other, and with resources 
+over the internet.
+Classless Inter-Domain Routing (CIDR) notation is a way to represent an IP address and its network 
+mask. The format of these addresses is as follows:
+•An individual IPv4 address is 32 bits, with 4 groups of up to 3 decimal digits, 0-255. For example, 
+10.0.1.0.
+•An IPv4 CIDR block has an IPv4 address followed by a slash and a number from 0 to 32. For 
+example, 10.0.0.0/16 represents 65,536 IPv4 addresses from 10.0.0.0 to 10.0.255.255.
+•An individual IPv6 address is 128 bits, with 8 segments of 4 hexadecimal digits. For example, 
+2001:0db8:85a3:0000:0000:8a2e:0370:7334. It is not necessary to include the leading 
+zeros in a segment. You can also replace consecutive all-zero segments with double 
+colons (::) one time in an address. Therefore, the example address can be compressed as 
+2001:db8:85a3::8a2e:370:7334.
+•An IPv6 CIDR block has an IPv6 address that ends with all-zero segments, with the all-
+zero segments replaced by a double colon, followed by a slash and a number from 0 
+to 128. For example, 2001:db8:1234:1a00::/56 represents 2^72 IPv6 addresses from 
+2001:db8:1234:1a00:0000:0000:0000:0000 to 2001:db8:1234:1aﬀ:ﬀﬀ:ﬀﬀ:ﬀﬀ:ﬀﬀ.
+For more information, see What is CIDR?
+Contents
+•Private IPv4 addresses
+•Public IPv4 addresses
+•IPv6 addresses
+•Use your own IP addresses
+•Use Amazon VPC IP Address Manager
+•VPC CIDR blocks
+•Subnet CIDR blocks
+•Compare IPv4 and IPv6
+•Consolidate and manage network CIDR blocks with managed preﬁx lists
+
+•AWS IP address ranges
+•IPv6 support for your VPC
+•AWS services that support IPv6
+Private IPv4 addresses
+Private IPv4 addresses (also referred to as private IP addresses  in this topic) are not reachable 
+over the internet, and can be used for communication between the instances in your VPC. When 
+you launch an instance into a VPC, a primary private IP address from the IPv4 address range of 
+the subnet is assigned to the primary network interface (for example, eth0) of the instance. Each 
+instance is also given a private (internal) DNS hostname that resolves to the private IP address of 
+the instance. The hostname can be of two types: resource-based or IP-based. For more information, 
+see EC2 instance naming. If you don't specify a primary private IP address, we select an available 
+IP address in the subnet range for you. For more information about network interfaces, see Elastic 
+Network Interfaces in the Amazon EC2 User Guide.
+You can assign additional private IP addresses, known as secondary private IP addresses, to 
+instances that are running in a VPC. Unlike a primary private IP address, you can reassign a 
+secondary private IP address from one network interface to another. A private IP address remains 
+associated with the network interface when the instance is stopped and restarted, and is released 
+when the instance is terminated. For more information about primary and secondary IP addresses, 
+see Multiple IP Addresses in the Amazon EC2 User Guide.
+We refer to private IP addresses as the IP addresses that are within the IPv4 CIDR range of the 
+VPC. Most VPC IP address ranges fall within the private (non-publicly routable) IP address ranges 
+speciﬁed in RFC 1918; however, you can use publicly routable CIDR blocks for your VPC. Regardless 
+of the IP address range of your VPC, we do not support direct access to the internet from your 
+VPC's CIDR block, including a publicly-routable CIDR block. You must set up internet access through 
+a gateway; for example, an internet gateway, virtual private gateway, a AWS Site-to-Site VPN 
+connection, or Direct Connect.
+We never advertise the IPv4 address range of a subnet to the internet.
+Public IPv4 addresses
+All subnets have an attribute that determines whether a network interface created in the subnet 
+automatically receives a public IPv4 address (also referred to as a public IP address  in this topic). 
+Private IPv4 addresses 16
+
+Therefore, when you launch an instance into a subnet that has this attribute enabled, a public IP 
+address is assigned to the primary network interface that's created for the instance. A public IP 
+address is mapped to the primary private IP address through network address translation (NAT).
+Note
+AWS charges for all public IPv4 addresses, including public IPv4 addresses associated with 
+running instances and Elastic IP addresses. For more information, see the Public IPv4 
+Address  tab on the Amazon VPC pricing page.
+You can control whether your instance receives a public IP address by doing the following:
+•Modifying the public IP addressing attribute of your subnet. For more information, see Modify 
+the IP addressing attributes of your subnet.
+•Enabling or disabling the public IP addressing feature during instance launch, which overrides 
+the subnet's public IP addressing attribute.
+•You can unassign a public IP address from your instance after launch by managing the IP 
+addresses associated with a network interface. For more information, see Manage IP addresses in 
+the Amazon EC2 User Guide.
+A public IP address is assigned from Amazon's pool of public IP addresses; it's not associated with 
+your account. When a public IP address is disassociated from your instance, it's released back into 
+the pool, and is no longer available for you to use. In certain cases, we release the public IP address 
+from your instance, or assign it a new one. For more information, see Public IP addresses in the
+Amazon EC2 User Guide.
+If you require a persistent public IP address allocated to your account that can be assigned to and 
+removed from instances as you require, use an Elastic IP address instead. For more information, see
+Associate Elastic IP addresses with resources in your VPC.
+If your VPC is enabled to support DNS hostnames, each instance that receives a public IP address or 
+an Elastic IP address is also given a public DNS hostname. We resolve a public DNS hostname to the 
+public IP address of the instance outside the instance network, and to the private IP address of the 
+instance from within the instance network. For more information, see DNS attributes for your VPC.
+If you are using Amazon VPC IP Address Manager (IPAM), you can get a contiguous block of public 
+IPv4 addresses from AWS and use it to allocate sequential Elastic IP addresses to AWS resources. 
+Public IPv4 addresses 17
+
+Using contiguous IPv4 address blocks can signiﬁcantly reduce management overhead for security 
+access control lists and simplify IP address allocation and tracking for enterprises scaling on 
+AWS. For more information, see Allocate sequential Elastic IP addresses from an IPAM pool in the
+Amazon VPC IPAM User Guide.
+IPv6 addresses
+As the internet continues to grow, so does the need for IP addresses. The most common format 
+for IP addresses is IPv4. The new format for IP addresses is IPv6, which provides a larger address 
+space than IPv4. IPv6 resolves the IPv4 address exhaustion issue and enables you to connect more 
+devices to the internet. The transition is gradual, but as IPv6 adoption grows, you can simplify your 
+networks and take advantage of IPv6 advanced capabilities for better connectivity, performance, 
+and security.
+Many AWS services, such as Amazon EC2, Amazon S3, and Amazon CloudFront, oﬀer either dual-
+stack (IPv4 and IPv6) or IPv6-only support, allowing resources to be assigned IPv6 addresses 
+and accessed over the IPv6 protocol. This simpliﬁes network conﬁguration and management for 
+customers adopting IPv6.
+Other services oﬀer limited or partial dual-stack and IPv6-only support.
+For more information about services that support IPv6, see AWS services that support IPv6.
+Note that some IPv6 addresses are reserved by the Internet Engineering Task Force. For more 
+information about reserved IPv6 address ranges, see IANA IPv6 Special-Purpose Address Registry
+and RFC4291.
+Note
+Both public and private IPv6 addressing is available in AWS. AWS deﬁnes public IP 
+addresses as those advertised on the internet from AWS, while private IP addresses are not 
+and cannot be advertised on the internet from AWS.
+Contents
+•Public IPv6 addresses
+•Private IPv6 addresses
+IPv6 addresses 18
+
+Public IPv6 addresses
+Amazon-provided IPv6 addresses are always advertised on the internet. They are globally unique, 
+and therefore reachable over the internet. You can control whether resources such as EC2 instances 
+are reachable using their IPv6 addresses by controlling routing for your subnets, or by using 
+security groups and network ACLs.
+These are some of the ways you can prepare to use public IPv6 addresses for your workloads:
+•Create an IPAM with Amazon VPC IP Address Manager and provision an Amazon-owned public 
+IPv6 address range to an IPAM address pool. For more information, see Create IPv6 pools in the
+Amazon VPC IPAM User Guide.
+•If you have an IPAM and you own a public IPv6 address range, bring some or all of the public 
+IPv6 address range to IPAM and provision the public IPv6 address range to an IPAM address pool. 
+For more information, see Tutorial: Bring your IP addresses to IPAM in the Amazon VPC IPAM User 
+Guide .
+•If you don't have an IPAM but you own a public IPv6 address range, bring some or all of the 
+public IPv6 address range to AWS. For more information, see Bring your own IP addresses 
+(BYOIP) to Amazon EC2 in the Amazon EC2 User Guide.
+When you are prepared to use public IPv6 addresses, you can assign public IPv6 addresses to 
+instances (see IPv6 addresses in the Amazon EC2 User Guide), you can allocate a public IPv6 CIDR 
+block to your VPC (see Add or remove a CIDR block from your VPC) and associate the IPv6 CIDR 
+block with your subnets (see Modify the IP addressing attributes of your subnet).
+Private IPv6 addresses
+Private IPv6 addresses are IPv6 addresses that are not advertised and cannot be advertised on the 
+Internet from AWS.
+You can use a private IPv6 address if you want your private networks to support IPv6 and you 
+have no intention of routing traﬃc from these addresses to the Internet. If you want to connect 
+to the internet from a resource that has a private IPv6 address, you can, but you must route traﬃc 
+through a resource in another subnet with a public IPv6 address to do so.
+There are two types of private IPv6 addresses:
+Public IPv6 addresses 19
+
+•IPv6 ULA ranges: IPv6 addresses as deﬁned in RFC4193. These address ranges always start with 
+"fc" or "fd", which makes them easily identiﬁable. Valid IPv6 ULA space is anything under fd00::/8 
+that does not overlap with the Amazon reserved range fd00::/16.
+•IPv6 GUA ranges: IPv6 addresses as deﬁned in RFC3587. The option to use IPv6 GUA ranges 
+as private IPv6 addresses is disabled by default and must be enabled before you can use it. For 
+more information, see Enable provisioning private IPv6 GUA CIDRs in the Amazon VPC IPAM User 
+Guide .
+Note the following:
+•Private IPv6 addresses are only available through Amazon VPC IP Address Manager (IPAM). IPAM 
+discovers resources with IPv6 ULA and GUA addresses and monitors pools for overlapping IPv6 
+ULA and GUA address space.
+•When you use private IPv6 GUA ranges, we require that you use IPv6 GUA ranges owned by you.
+•Private IPv6 addresses are not and cannot be advertised on the internet by AWS. AWS does not 
+allow direct egress to the public internet from a private IPv6 range even if there is an internet 
+gateway or egress only internet gateway in the VPC. Private IPv6 addresses are automatically 
+dropped at the internet gateway edge ensuring that they are not routed publicly.
+•AWS reserves the ﬁrst 4 subnet private IPv6 addresses and the last one.
+•Valid ranges for private IPv6 ULA are /9 to /60 starting with fd80::/9.
+•If you have a private IPv6 GUA range allocated to a VPC, you cannot use public IPv6 GUA space 
+that overlaps the private IPv6 GUA space in the same VPC.
+•Communication between resources with private IPv6 ULA and GUA address ranges is supported 
+(such as across Direct Connect, VPC peering, transit gateway, or VPN connections).
+•You can use private IPv6 addresses with IPv6-only and dual-stack VPC subnets , elastic load 
+balancers and AWS Global Accelerator endpoints.
+•There is no charge for private IPv6 addresses.
+These are some of the ways you can prepare to use private IPv6 addresses for your workloads:
+•Create an IPAM with Amazon VPC IP Address Manager and provision a private IPv6 ULA range to 
+an IPAM address pool. For more information, see Create IPv6 pools in the Amazon VPC IPAM User 
+Guide .
+Private IPv6 addresses 20
+
+•Create an IPAM with Amazon VPC IP Address Manager and provision a private IPv6 GUA range to 
+an IPAM address pool. The option to use IPv6 GUA ranges as private IPv6 addresses is disabled 
+by default and must be enabled on your IPAM before you can use it. For more information, see
+Enable provisioning private IPv6 GUA CIDRs in the Amazon VPC IPAM User Guide.
+When you are prepared to use private IPv6 addresses, you can allocate a private IPv6 CIDR block 
+from an IPAM pool to your VPC (see Add or remove a CIDR block from your VPC) and associate the 
+IPv6 CIDR block with your subnets (see Modify the IP addressing attributes of your subnet).
+Use your own IP addresses
+You can bring part or all of your own public IPv4 address range or IPv6 address range to your AWS 
+account. You continue to own the address range, but AWS advertises it on the internet by default. 
+After you bring the address range to AWS, it appears in your account as an address pool. You can 
+create an Elastic IP address from your IPv4 address pool, and you can associate an IPv6 CIDR block 
+from your IPv6 address pool with a VPC.
+For more information, see Bring your own IP addresses (BYOIP) in the Amazon EC2 User Guide.
+Use Amazon VPC IP Address Manager
+Amazon VPC IP Address Manager (IPAM) is a VPC feature that makes it easier for you to plan, track, 
+and monitor IP addresses for your AWS workloads. You can use IPAM to allocate IP address CIDRs 
+to VPCs using speciﬁc business rules.
+For more information, see What is IPAM? in the Amazon VPC IPAM User Guide.
+VPC CIDR blocks
+The IP addresses for your virtual private cloud (VPC) are represented using Classless Inter-Domain 
+Routing (CIDR) notation. A VPC must have an associated IPv4 CIDR block. You can optionally 
+associate additional IPv4 CIDR blocks and one or more IPv6 CIDR blocks. For more information, see
+IP addressing for your VPCs and subnets.
+Contents
+•IPv4 VPC CIDR blocks
+•Manage IPv4 CIDR blocks for a VPC
+Use your own IP addresses 21
+
+•IPv4 CIDR block association restrictions
+•IPv6 VPC CIDR blocks
+IPv4 VPC CIDR blocks
+When you create a VPC, you must specify an IPv4 CIDR block for the VPC. The allowed block 
+size is between a /16 netmask (65,536 IP addresses) and /28 netmask (16 IP addresses). After 
+you've created your VPC, you can associate additional IPv4 CIDR blocks with the VPC. For more 
+information, see Add or remove a CIDR block from your VPC.
+When you create a VPC, we recommend that you specify a CIDR block from the private IPv4 
+address ranges as speciﬁed in RFC 1918.
+RFC 1918 range Example CIDR block
+10.0.0.0 - 10.255.255.255 (10/8 preﬁx) 10.0.0.0/16
+172.16.0.0 - 172.31.255.255 (172.16/12 
+preﬁx)172.31.0.0/16
+192.168.0.0 - 192.168.255.255 (192.168/16 
+preﬁx)192.168.0.0/20
+Considerations
+•You can't specify the following CIDR blocks for your VPCs:
+•0.0.0.0/8
+•127.0.0.0/8 (internal host loopback address range)
+•169.254.0.0/16 ( link-local address range)
+•224.0.0.0/4 (multicast address range)
+•When you create a VPC for use with an AWS service, check the service documentation to verify if 
+there are speciﬁc requirements for its conﬁguration.
+•Some AWS services use the 172.17.0.0/16  CIDR range. Services can experience IP address 
+conﬂicts if the IP address range is already in use in your network. For example, AWS Cloud9 
+and Amazon SageMaker AI use 172.17.0.0/16 . To avoid conﬂicts, don't use this range when 
+IPv4 VPC CIDR blocks 22
+
+creating your VPC. For more information, see Can't connect to EC2 environment because VPC's IP 
+addresses are used by Docker in the AWS Cloud9 User Guide.
+•You can create a VPC with a publicly routable CIDR block that falls outside of the private IPv4 
+address ranges speciﬁed in RFC 1918. However, for the purposes of this documentation, we refer 
+to private IP addresses  as the IPv4 addresses that are within the CIDR range of your VPC.
+•If you create a VPC using a command line tool or the Amazon EC2 API, the CIDR block is 
+automatically modiﬁed to its canonical form. For example, if you specify 100.68.0.18/18 for the 
+CIDR block, we create a CIDR block of 100.68.0.0/18.
+Manage IPv4 CIDR blocks for a VPC
+You can associate secondary IPv4 CIDR blocks with your VPC. When you associate a CIDR block with 
+your VPC, a route is automatically added to your VPC route tables to enable routing within the VPC 
+(the destination is the CIDR block and the target is local ).
+In the following example, the VPC has both a primary and a secondary CIDR block. The CIDR blocks 
+for Subnet A and Subnet B are from the primary VPC CIDR block. The CIDR block for Subnet C is 
+from the secondary VPC CIDR block.
+Manage IPv4 CIDR blocks for a VPC 23
+
+The following route table shows the local routes for the VPC.
+Destination Target
+10.0.0.0/16 Local
+10.2.0.0/16 Local
+To add a CIDR block to your VPC, the following rules apply:
+•The allowed block size is between a /28 netmask and /16 netmask.
+•The CIDR block must not overlap with any existing CIDR block that's associated with the VPC.
+•There are restrictions on the ranges of IPv4 addresses you can use. For more information, see
+IPv4 CIDR block association restrictions.
+•You cannot increase or decrease the size of an existing CIDR block.
+Manage IPv4 CIDR blocks for a VPC 24
+
+•You have a quota on the number of CIDR blocks you can associate with a VPC and the number 
+of routes you can add to a route table. You cannot associate a CIDR block if this results in you 
+exceeding your quotas. For more information, see Amazon VPC quotas.
+•The CIDR block must not be the same or larger than a destination CIDR range in a route in any of 
+the VPC route tables. For example, in a VPC where the primary CIDR block is 10.2.0.0/16 , you 
+have an existing route in a route table with a destination of 10.0.0.0/24  to a virtual private 
+gateway. You want to associate a secondary CIDR block in the 10.0.0.0/16  range. Because of 
+the existing route, you cannot associate a CIDR block of 10.0.0.0/24  or larger. However, you 
+can associate a secondary CIDR block of 10.0.0.0/25  or smaller.
+•The following rules apply when you add IPv4 CIDR blocks to a VPC that's part of a VPC peering 
+connection:
+•If the VPC peering connection is active, you can add CIDR blocks to a VPC provided they do 
+not overlap with a CIDR block of the peer VPC.
+•If the VPC peering connection is pending-acceptance , the owner of the requester VPC 
+cannot add any CIDR block to the VPC, regardless of whether it overlaps with the CIDR block of 
+the accepter VPC. Either the owner of the accepter VPC must accept the peering connection, or 
+the owner of the requester VPC must delete the VPC peering connection request, add the CIDR 
+block, and then request a new VPC peering connection.
+•If the VPC peering connection is pending-acceptance , the owner of the accepter VPC 
+can add CIDR blocks to the VPC. If a secondary CIDR block overlaps with a CIDR block of the 
+requester VPC, the VPC peering connection request fails and cannot be accepted.
+•If you're using Direct Connect to connect to multiple VPCs through a Direct Connect gateway, 
+the VPCs that are associated with the Direct Connect gateway must not have overlapping CIDR 
+blocks. If you add a CIDR block to one of the VPCs that's associated with the Direct Connect 
+gateway, ensure that the new CIDR block does not overlap with an existing CIDR block of any 
+other associated VPC. For more information, see Direct Connect gateways in the Direct Connect 
+User Guide .
+•When you add or remove a CIDR block, it can go through various states: associating  |
+associated  | disassociating  | disassociated  | failing  | failed . The CIDR block is 
+ready for you to use when it's in the associated  state.
+You can disassociate a CIDR block that you've associated with your VPC; however, you cannot 
+disassociate the CIDR block with which you originally created the VPC (the primary CIDR block). 
+To view the primary CIDR for your VPC in the Amazon VPC console, choose Your VPCs, select the 
+checkbox for your VPC, and choose the CIDRs  tab. To view the primary CIDR using the AWS CLI, use 
+Manage IPv4 CIDR blocks for a VPC 25
+
+the describe-vpcs  command as follows. The primary CIDR is returned in the top-level CidrBlock 
+element .
+aws ec2 describe-vpcs --vpc-id vpc-1a2b3c4d  --query Vpcs[*].CidrBlock --output text
+The following is example output.
+10.0.0.0/16
+IPv4 CIDR block association restrictions
+The following table provides an overview of permitted and restricted VPC CIDR block associations 
+for existing VPC CIDR blocks. The reason for restrictions is that some AWS services make use of 
+cross-VPC and cross-account features that require non-conﬂicting CIDR blocks on the AWS service 
+side.
+Existing IPv4 
+address rangeRestricted associations Permitted associations
+10.0.0.0/8 CIDR blocks from other RFC 
+1918* ranges (172.16.0.0/12 and 
+192.168.0.0/16).
+If any of the CIDR blocks associated 
+with the VPC are from the 10.0.0.0/ 
+15 range (10.0.0.0 to 10.1.255.255), 
+you cannot add a CIDR block from 
+the 10.0.0.0/16 range (10.0.0.0 to 
+10.0.255.255).
+CIDR blocks from the 198.19.0.0/16 
+range.Any other CIDR block from the 
+10.0.0.0/8 range between a /16 
+netmask and /28 netmask that's not 
+restricted.
+Any publicly routable IPv4 CIDR 
+block (non-RFC 1918) between 
+a /16 netmask and /28 netmask or a 
+CIDR block between a /16 netmask 
+and /28 netmask from the 100.64.0. 
+0/10 range.
+169.254.0.0/16 CIDR blocks from the "link local" 
+block are reserved as described in
+RFC 5735 and cannot be assigned to 
+VPCs. 
+IPv4 CIDR block association restrictions 26
+
+Existing IPv4 
+address rangeRestricted associations Permitted associations
+172.16.0.0/12 CIDR blocks from other RFC 1918* 
+ranges (10.0.0.0/8 and 192.168.0 
+.0/16).
+CIDR blocks from the 172.31.0.0/16 
+range.
+CIDR blocks from the 198.19.0.0/16 
+range.Any other CIDR block from the 
+172.16.0.0/12 range between a /16 
+netmask and /28 netmask that's not 
+restricted.
+Any publicly routable IPv4 CIDR 
+block (non-RFC 1918) between 
+a /16 netmask and /28 netmask or a 
+CIDR block between a /16 netmask 
+and /28 netmask from the 100.64.0. 
+0/10 range.
+192.168.0.0/16 CIDR blocks from other RFC 1918* 
+ranges (10.0.0.0/8 and 172.16.0. 
+0/12).
+CIDR blocks from the 198.19.0.0/16 
+range.Any other CIDR block from the 
+192.168.0.0/16 range between 
+a /16 netmask and /28 netmask.
+Any publicly routable IPv4 CIDR 
+block (non-RFC 1918) between a /16 
+netmask and /28 netmask or a CIDR 
+block from the 100.64.0.0/10 range 
+between a /16 netmask and /28 
+netmask.
+198.19.0.0/16 CIDR blocks from the RFC 1918* 
+ranges.Any publicly routable IPv4 CIDR 
+block (non-RFC 1918) between a /16 
+netmask and /28 netmask or a CIDR 
+block from the 100.64.0.0/10 range 
+between a /16 netmask and /28 
+netmask.
+IPv4 CIDR block association restrictions 27
+
+Existing IPv4 
+address rangeRestricted associations Permitted associations
+Publicly routable 
+CIDR block (non-
+RFC 1918), or a 
+CIDR block from 
+the 100.64.0. 
+0/10 rangeCIDR blocks from the RFC 1918* 
+ranges.
+CIDR blocks from the 198.19.0.0/16 
+range.Any other publicly routable IPv4 
+CIDR block (non-RFC 1918) between 
+a /16 netmask and /28 netmask or a 
+CIDR block between a /16 netmask 
+and /28 netmask from the 100.64.0. 
+0/10 range.
+You can also associate a CIDR in one 
+of the RFC 1918 ranges, but to do 
+this you have to add that CIDR ﬁrst 
+when you create the VPC and then 
+add the non-RFC 1918 CIDR.
+* RFC 1918 ranges are the private IPv4 address ranges speciﬁed in RFC 1918.
+IPv6 VPC CIDR blocks
+You can associate a single IPv6 CIDR block when you create a new VPC or you can associate up to 
+ﬁve IPv6 CIDR blocks from /44 to /60 in increments of /4. You can request an IPv6 CIDR block 
+from Amazon's pool of IPv6 addresses. For more information, see Add or remove a CIDR block from 
+your VPC.
+If you've associated an IPv6 CIDR block with your VPC, you can associate an IPv6 CIDR block with 
+an existing subnet in your VPC or when you create a new subnet. For more information, see the 
+section called “Subnet sizing for IPv6”.
+For example, you create a VPC and specify that you want to associate an Amazon-provided 
+IPv6 CIDR block with the VPC. Amazon assigns the following IPv6 CIDR block to your VPC:
+2001:db8:1234:1a00::/56 . You cannot choose the range of IP addresses yourself. 
+You can create a subnet and associate an IPv6 CIDR block from this range; for example,
+2001:db8:1234:1a00::/64 .
+You can disassociate an IPv6 CIDR block from a VPC. After you've disassociated an IPv6 CIDR block 
+from a VPC, you cannot expect to receive the same CIDR if you associate an IPv6 CIDR block with 
+your VPC again later.
+IPv6 VPC CIDR blocks 28
+
+Subnet CIDR blocks
+The IP addresses for your subnets are represented using Classless Inter-Domain Routing (CIDR) 
+notation. The CIDR block of a subnet can be the same as the CIDR block for the VPC (to create a 
+single subnet in the VPC), or a subset of the CIDR block for the VPC (to create multiple subnets in 
+the VPC).
+If you create more than one subnet in a VPC, the CIDR blocks of the subnets cannot overlap.
+For example, if you create a VPC with CIDR block 10.0.0.0/24 , it supports 256 IP addresses. You 
+can break this CIDR block into two subnets, each supporting 128 IP addresses. One subnet uses 
+CIDR block 10.0.0.0/25  (for addresses 10.0.0.0  - 10.0.0.127 ) and the other uses CIDR block
+10.0.0.128/25  (for addresses 10.0.0.128  - 10.0.0.255 ).
+There are tools available on the internet to help you calculate and create IPv4 and IPv6 subnet 
+CIDR blocks. You can ﬁnd tools that suit your needs by searching for terms such as 'subnet 
+calculator' or 'CIDR calculator'. Your network engineering group can also help you determine the 
+IPv4 and IPv6 CIDR blocks to specify for your subnets.
+Subnet sizing for IPv4
+The allowed IPv4 CIDR block size for a subnet is between a /28 netmask and /16 netmask. The 
+ﬁrst four IP addresses and the last IP address in each subnet CIDR block are not available for your 
+use, and they cannot be assigned to a resource, such as an EC2 instance. For example, in a subnet 
+with CIDR block 10.0.0.0/24 , the following ﬁve IP addresses are reserved:
+Subnet CIDR blocks 29
+
+•10.0.0.0: Network address.
+•10.0.0.1: Reserved by AWS for the VPC router.
+•10.0.0.2: Reserved by AWS. The IP address of the DNS server is the base of the VPC network 
+range plus two. For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in 
+the primary CIDR. We also reserve the base of each subnet range plus two for all CIDR blocks in 
+the VPC. For more information, see Amazon DNS server.
+•10.0.0.3: Reserved by AWS for future use.
+•10.0.0.255: Network broadcast address. We do not support broadcast in a VPC, therefore we 
+reserve this address.
+If you create a subnet using a command line tool or the Amazon EC2 API, the CIDR block is 
+automatically modiﬁed to its canonical form. For example, if you specify 100.68.0.18/18 for the 
+CIDR block, we create a CIDR block of 100.68.0.0/18.
+If you bring an IPv4 address range to AWS using BYOIP, you can use all of the IP addresses in 
+the range, including the ﬁrst address (the network address) and the last address (the broadcast 
+address).
+Subnet sizing for IPv6
+If you've associated an IPv6 CIDR block with your VPC, you can associate an IPv6 CIDR block with 
+an existing subnet in your VPC, or when you create a new subnet. Possible IPv6 netmask lengths 
+are between /44 and /64 in increments of /4.
+There are tools available on the internet to help you calculate and create IPv6 subnet CIDR blocks. 
+You can ﬁnd tools that suit your needs by searching for terms such as 'IPv6 subnet calculator' or 
+'IPv6 CIDR calculator'. Your network engineering group can also help you determine the IPv6 CIDR 
+blocks to specify for your subnets.
+The ﬁrst four IPv6 addresses and the last IPv6 address in each subnet CIDR block are not available 
+for your use, and they cannot be assigned to an EC2 instance. For example, in a subnet with CIDR 
+block 2001:db8:1234:1a00/64 , the following ﬁve IP addresses are reserved:
+•2001:db8:1234:1a00::
+•2001:db8:1234:1a00::1 : Reserved by AWS for the VPC router.
+•2001:db8:1234:1a00::2
+Subnet sizing for IPv6 30
+
+•2001:db8:1234:1a00::3
+•2001:db8:1234:1a00:ffff:ffff:ffff:ffff
+In addition to the IP address reserved by AWS for the VPC router in the example above, the 
+following IPv6 addresses are reserved for the default VPC router:
+•A link-local IPv6 address in the FE80::/10 range generated using EUI-64. For more information 
+about link-local addresses, see Link-local address.
+•The link-local IPv6 address FE80:ec2::1 .
+If you need to communicate with the VPC router over IPv6, you can conﬁgure your applications to 
+communicate with whichever address best ﬁts your need.
+Compare IPv4 and IPv6
+The following table summarizes the diﬀerences between IPv4 and IPv6 in Amazon EC2 and 
+Amazon VPC.
+For a list of AWS services that support dual-stack conﬁguration (IPv4 and IPv6) and IPv6-only 
+conﬁgurations, see Services that support IPv6.
+Characteristic IPv4 IPv6
+VPC size Up to 5 CIDRs from /16 to /28. This
+quota  is adjustable.Up to 5 CIDRs from /44 to /60 in 
+increments of /4. This quota  is 
+adjustable.
+Subnet size From /16 to /28. From /44 to /64 in increments of /4.
+Address 
+selectionYou can choose the IPv4 CIDR block 
+for your VPC or you can allocate a 
+CIDR block from Amazon VPC IP 
+Address Manager (IPAM). For more 
+information, see What is IPAM? in 
+the Amazon VPC IPAM User Guide.You can bring your own IPv6 CIDR 
+block to AWS for your VPC, choose 
+an Amazon-provided IPv6 CIDR 
+block, or you can allocate a CIDR 
+block from Amazon VPC IP Address 
+Manager (IPAM). For more informati 
+on, see What is IPAM? in the Amazon 
+VPC IPAM User Guide.
+Compare IPv4 and IPv6 31
+
+Characteristic IPv4 IPv6
+Internet accessRequires an internet gateway.Requires an internet gateway. 
+Supports outbound-only communica 
+tion using an egress-only internet 
+gateway.
+Elastic IP 
+addressesSupported. Gives an EC2 instance 
+a permanent, static public IPv4 
+address.Not supported. EIPs keep the public 
+IPv4 address of an instance static on 
+instance restart. IPv6 addresses are 
+static by default.
+NAT gatewaysSupported. Instances in private 
+subnets can connect to the internet 
+using a public NAT gateway or to 
+resources in other VPCs using a 
+private NAT gateway.Supported. You can use a NAT 
+gateway with NAT64 to enable 
+instances in IPv6-only subnets 
+to communicate with IPv4-only 
+resources within VPCs, between 
+VPCs, in your on-premises networks, 
+or over the internet.
+DNS names Instances receive Amazon-provided 
+IPBN or RBN-based DNS names. 
+The DNS name resolves to the DNS 
+records selected for the instance.Instance receive Amazon-provided 
+IPBN or RBN-based DNS names. 
+The DNS name resolves to the DNS 
+records selected for the instance.
+Consolidate and manage network CIDR blocks with managed 
+preﬁx lists
+A managed preﬁx list is a set of one or more CIDR blocks. You can use preﬁx lists to make it easier 
+to conﬁgure and maintain your security groups and route tables. You can create a preﬁx list from 
+the IP addresses that you frequently use, and reference them as a set in security group rules and 
+routes instead of referencing them individually. For example, you can consolidate security group 
+rules with diﬀerent CIDR blocks but the same port and protocol into a single rule that uses a preﬁx 
+list. If you scale your network and need to allow traﬃc from another CIDR block, you can update 
+the relevant preﬁx list and all security groups that use the preﬁx list are updated. You can also use 
+managed preﬁx lists with other AWS accounts using Resource Access Manager (RAM).
+Managed preﬁx lists 32
+
+There are two types of preﬁx lists:
+•Customer-managed preﬁx lists  — Sets of IP address ranges that you deﬁne and manage. You 
+can share your preﬁx list with other AWS accounts, enabling those accounts to reference the 
+preﬁx list in their own resources.
+•AWS-managed preﬁx lists — Sets of IP address ranges for AWS services. You cannot create, 
+modify, share, or delete an AWS-managed preﬁx list.
+Contents
+•Preﬁx lists concepts and rules
+•Identity and access management for preﬁx lists
+•Customer-managed preﬁx lists
+•AWS-managed preﬁx lists
+•Optimize AWS infrastructure management with preﬁx lists
+Preﬁx lists concepts and rules
+A preﬁx list consists of entries . Each entry consists of a CIDR block and, optionally, a description for 
+the CIDR block.
+Customer-managed preﬁx lists
+The following rules apply to customer-managed preﬁx lists:
+•A preﬁx list supports a single type of IP addressing only (IPv4 or IPv6). You cannot combine IPv4 
+and IPv6 CIDR blocks in a single preﬁx list.
+•A preﬁx list applies only to the Region where you created it.
+•When you create a preﬁx list, you must specify the maximum number of entries that the preﬁx 
+list can support.
+•When you reference a preﬁx list in a resource, the maximum number of entries for the preﬁx lists 
+counts against the quota for the number of entries for the resource. For example, if you create a 
+preﬁx list with 20 maximum entries and you reference that preﬁx list in a security group rule, this 
+counts as 20 security group rules.
+•When you reference a preﬁx list in a route table, route priority rules apply. For more information, 
+see Route priority for preﬁx lists.
+Preﬁx lists concepts and rules 33
+
+•You can modify a preﬁx list. When you add or remove entries, we create a new version of the 
+preﬁx list. Resources that reference the preﬁx always use the current (latest) version. You can 
+restore the entries from a previous version of the preﬁx list, which also creates a new version.
+•There are quotas related to preﬁx lists. For more information, see Customer-managed preﬁx lists.
+•Customer-managed preﬁx lists are available in all commercial AWS Regions (including GovCloud 
+(US) and China Regions).
+AWS-managed preﬁx lists
+The following rules apply to AWS-managed preﬁx lists:
+•You cannot create, modify, share, or delete an AWS-managed preﬁx list.
+•Diﬀerent AWS-managed preﬁx lists have a diﬀerent weight when you use them. For more 
+information, see AWS-managed preﬁx list weight.
+•You cannot view the version number of an AWS-managed preﬁx list.
+Identity and access management for preﬁx lists
+By default, users do not have permission to create, view, modify, or delete preﬁx lists. You can 
+create an IAM policy and attach it to a role that allows users to work with preﬁx lists.
+To see a list of Amazon VPC actions and the resources and condition keys that you can use in an 
+IAM policy, see Actions, resources, and condition keys for Amazon EC2 in the Service Authorization 
+Reference.
+The following example policy allows users to view and work with preﬁx list
+pl-123456abcde123456  only. Users cannot create or delete preﬁx lists.
+JSON
+{ 
+    "Version":"2012-10-17",        
+    "Statement": [ 
+        { 
+            "Effect": "Allow", 
+            "Action": [ 
+                "ec2:GetManagedPrefixListAssociations", 
+Identity and access management for preﬁx lists 34
+
+                "ec2:GetManagedPrefixListEntries", 
+                "ec2:ModifyManagedPrefixList", 
+                "ec2:RestoreManagedPrefixListVersion" 
+            ], 
+            "Resource": "arn:aws:ec2: us-east-1 :123456789012 :prefix-
+list/pl-123456abcde123456 " 
+        }, 
+        { 
+            "Effect": "Allow", 
+            "Action": "ec2:DescribeManagedPrefixLists", 
+            "Resource": "*" 
+        } 
+    ]
+}
+For more information about working with IAM in Amazon VPC, see Identity and access 
+management for Amazon VPC.
+Customer-managed preﬁx lists
+Customer-managed preﬁx lists allow you to deﬁne and maintain your own sets of IP address 
+ranges, known as preﬁxes, within AWS. Instead of hardcoding these IP addresses into your various 
+resources, you can create a centralized preﬁx list and reference it wherever needed. This not only 
+simpliﬁes the management of your IP addresses but also promotes consistency and reusability 
+across your AWS landscape.
+One of the standout features of customer-managed preﬁx lists is the ability to share them 
+with other AWS accounts. By granting access to your preﬁx lists, you can enable other teams or 
+organizations to use your deﬁned IP address ranges in their own resources. This collaborative 
+approach fosters a more cohesive and eﬃcient cloud experience, where IP address management is 
+shared and synchronized.
+In the sections that follow, we'll dive deeper into the practical aspects of working with customer-
+managed preﬁx lists, including step-by-step guidance on creating, managing, and sharing your IP 
+address ranges.
+Note
+You can automate preﬁx list management using Amazon VPC IPAM to automatically sync 
+CIDRs based on rules you deﬁne. This eliminates manual updates when your infrastructure 
+Customer-managed preﬁx lists 35
+
+changes. For more information, see Automate preﬁx list updates with IPAM in the Amazon 
+VPC IPAM User Guide.
+Tasks
+•Work with customer-managed preﬁx lists
+Work with customer-managed preﬁx lists
+This section describes how to work with customer-managed preﬁx lists.
+Contents
+•Create a preﬁx list
+•View preﬁx lists
+•View the entries for a preﬁx list
+•View associations (references) for your preﬁx list
+•Modify a preﬁx list
+•Resize a preﬁx list
+•Restore a previous version of a preﬁx list
+•Delete a preﬁx list
+•Share customer-managed preﬁx lists
+Create a preﬁx list
+When you create a preﬁx list, you must specify the maximum number of entries that the preﬁx list 
+can support.
+Limitation
+You can't add a preﬁx list to a security group rule if the number of rules plus the max entries for 
+the preﬁx list exceeds the quota for rules per security group for your account.
+To create a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+Customer-managed preﬁx lists 36
+
+3. Choose Create preﬁx list .
+4. For Preﬁx list name , enter a name for the preﬁx list.
+5. For Max entries , enter the maximum number of entries for the preﬁx list.
+6. For Address family , choose whether the preﬁx list supports IPv4 or IPv6 entries.
+7. For Preﬁx list entries , choose Add new entry, and enter the CIDR block and a description for 
+the entry. Repeat this step for each entry.
+8. (Optional) For Tags, add tags to the preﬁx list to help you identify it later.
+9. Choose Create preﬁx list .
+To create a preﬁx list using the AWS CLI
+Use the create-managed-preﬁx-list command.
+View preﬁx lists
+You can view your preﬁx lists, preﬁx lists that are shared with you, and AWS-managed preﬁx lists.
+To view preﬁx lists using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. The Owner ID  column shows the AWS account ID of the preﬁx list owner. For AWS-managed 
+preﬁx lists, the Owner ID  is AWS.
+To view preﬁx lists using the AWS CLI
+Use the describe-managed-preﬁx-lists command.
+View the entries for a preﬁx list
+You can view the entries for your preﬁx lists, preﬁx lists that are shared with you, and AWS-
+managed preﬁx lists.
+To view the entries for a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+Customer-managed preﬁx lists 37
+
+3. Select the checkbox for the preﬁx list.
+4. In the lower pane, choose Entries  to view the entries for the preﬁx list.
+To view the entries for a preﬁx list using the AWS CLI
+Use the get-managed-preﬁx-list-entries command.
+View associations (references) for your preﬁx list
+You can view the IDs and owners of the resources that are associated with your preﬁx list. 
+Associated resources are resources that reference your preﬁx list in their entries or rules.
+Limitation
+You cannot view associated resources for an AWS-managed preﬁx list.
+To view preﬁx list associations using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. Select the checkbox for the preﬁx list.
+4. In the lower pane, choose Associations  to view the resources that are referencing the preﬁx 
+list.
+To view preﬁx list associations using the AWS CLI
+Use the get-managed-preﬁx-list-associations command.
+Modify a preﬁx list
+You can modify the name of your preﬁx list, and you can add or remove entries. To modify the 
+maximum number of entries, see Resize a preﬁx list.
+Updating the entries of a preﬁx list creates a new version of the preﬁx list. Updating the name or 
+maximum number of entries for a preﬁx list does not create a new version of the preﬁx list.
+Considerations
+•You cannot modify an AWS-managed preﬁx list.
+Customer-managed preﬁx lists 38
+
+•When you increase the maximum number of entries in a preﬁx list, the increased maximum size 
+is applied to the quota of entries for the resources that reference the preﬁx list. If any of these 
+resources can't support the increased maximum size, the modify operation fails and the previous 
+maximum size is restored.
+To modify a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. Select the checkbox for preﬁx list, and choose Actions, Modify preﬁx list.
+4. For Preﬁx list name , enter a new name for the preﬁx list.
+5. If the managed preﬁx list has been conﬁgured as an IPAM preﬁx list resolver target, you'll see 
+an IPAM preﬁx list resolver sync option.
+Choose whether to enable or disable synchronization with the IPAM preﬁx list resolver. When 
+enabled, the preﬁx list CIDRs are automatically updated based on the associated resolver's 
+CIDR selection rules. When disabled, the preﬁx list CIDRs are not automatically updated. 
+For more information about this feature, see Automate preﬁx list updates with IPAM in the
+Amazon VPC IPAM User Guide.
+6. For Preﬁx list entries , choose Remove to remove an existing entry. To add a new entry, choose
+Add new entry and enter the CIDR block and a description for the entry.
+7. Choose Save preﬁx list.
+To modify a preﬁx list using the AWS CLI
+Use the modify-managed-preﬁx-list command.
+Resize a preﬁx list
+You can resize a preﬁx list and modify the maximum number of entries for the preﬁx list up to 
+1000. For more information about customer-managed preﬁx list quotas, see Customer-managed 
+preﬁx lists.
+To resize a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+Customer-managed preﬁx lists 39
+
+3. Select the checkbox for the preﬁx list, and choose Actions, Resize preﬁx list.
+4. For New max entries , enter a value.
+5. Choose Resize.
+To resize a preﬁx list using the AWS CLI
+Use the modify-managed-preﬁx-list command.
+Restore a previous version of a preﬁx list
+You can restore the entries from a previous version of your preﬁx list. This creates a new version of 
+the preﬁx list.
+If you decreased the size of the preﬁx list, you must ensure that the preﬁx list is large enough to 
+contain the entries from the previous version.
+To restore a previous version of a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. Select the checkbox for the preﬁx list, and choose Actions, Restore preﬁx list.
+4. For Select preﬁx list version, choose a previous version. The entries for the selected version 
+are displayed in Preﬁx list entries .
+5. Choose Restore preﬁx list.
+To restore a previous version of a preﬁx list using the AWS CLI
+Use the restore-managed-preﬁx-list-version command.
+Delete a preﬁx list
+To delete a preﬁx list, you must ﬁrst remove any references to it in your resources (such as in your 
+route tables). If you've shared the preﬁx list using AWS RAM, any references in consumer-owned 
+resources must ﬁrst be removed.
+Limitation
+You cannot delete an AWS-managed preﬁx list.
+Customer-managed preﬁx lists 40
+
+To delete a preﬁx list using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. Select the preﬁx list, and choose Actions, Delete preﬁx list.
+4. In the conﬁrmation dialog box, enter delete , and choose Delete.
+To delete a preﬁx list using the AWS CLI
+Use the delete-managed-preﬁx-list command.
+Share customer-managed preﬁx lists
+With AWS Resource Access Manager (AWS RAM), the owner of a customer-managed preﬁx list can 
+share the preﬁx list with the following:
+•Speciﬁc AWS accounts inside or outside of its organization in AWS Organizations
+•An organizational unit inside its organization in AWS Organizations
+•An entire organization in AWS Organizations
+Consumers with whom a preﬁx list has been shared can view the preﬁx list and its entries, and they 
+can reference the preﬁx list in their AWS resources.
+For more information about AWS RAM, see the AWS RAM User Guide. For more information quotas, 
+see Service quotas in the AWS RAM User Guide.
+Important
+There are no additional charges for sharing preﬁx lists.
+Contents
+•Shared preﬁx list permissions
+•Work with shared preﬁx lists
+Shared preﬁx list permissions
+Permissions for owners
+Customer-managed preﬁx lists 41
+
+Owners are responsible for managing a shared preﬁx list and its entries. Owners can view the IDs of 
+the AWS resources that reference the preﬁx list. However, they cannot add or remove references to 
+a preﬁx list in AWS resources that are owned by consumers.
+Owners cannot delete a preﬁx list if the preﬁx list is referenced in a resource that's owned by a 
+consumer.
+Permissions for consumers
+Consumers can view the entries in a shared preﬁx list, and they can reference a shared preﬁx list in 
+their AWS resources. However, consumers can't modify, restore, or delete a shared preﬁx list.
+Work with shared preﬁx lists
+AWS preﬁx lists provide a convenient way to manage and reference the IP address ranges used by 
+various AWS services. In addition to the AWS-managed preﬁx lists, you also can create and share 
+your own customer-managed preﬁx lists with other AWS accounts.
+Sharing preﬁx lists can be particularly useful for organizations with complex networking 
+requirements or those that need to coordinate IP address usage across multiple AWS workloads. 
+By sharing a preﬁx list, you can ensure consistent IP address management and simplify networking 
+conﬁgurations for your collaborators.
+This section describes and how to share preﬁx lists and how to identify and use preﬁx lists that 
+have been shared with your account.
+Contents
+•Share a preﬁx list
+•Unshare a shared preﬁx list
+•Identify a shared preﬁx list
+•Identify references to a shared preﬁx list
+Share a preﬁx list
+To share a preﬁx list, you must add it to a resource share. If you do not have a resource share, you 
+must ﬁrst create one using the AWS RAM console.
+If you are part of an organization in AWS Organizations, and sharing within your organization is 
+enabled, consumers in your organization are automatically granted access to the shared preﬁx list. 
+Customer-managed preﬁx lists 42
+
+Otherwise, consumers receive an invitation to join the resource share and are granted access to the 
+shared preﬁx list after accepting the invitation.
+You can create a resource share and share a preﬁx list that you own using the AWS RAM console, or 
+the AWS CLI.
+Important
+•To share a preﬁx list, you must own it. You cannot share a preﬁx list that has been shared 
+with you. You cannot share an AWS-managed preﬁx list.
+•To share a preﬁx list with your organization or an organizational unit in AWS 
+Organizations, you must enable sharing with AWS Organizations. For more information, 
+see  Enable sharing with AWS Organizations in the AWS RAM User Guide.
+To create a resource share and share a preﬁx list using the AWS RAM console
+Follow the steps in Create a resource share in the AWS RAM User Guide. For Select resource type, 
+choose Preﬁx Lists , and then select the check box for your preﬁx list.
+To add a preﬁx list to an existing resource share using the AWS RAM console
+To add a managed preﬁx that you own to an existing resource share, follow the steps in Updating a 
+resource share in the AWS RAM User Guide. For Select resource type, choose Preﬁx Lists , and then 
+select the check box for your preﬁx list.
+To share a preﬁx list that you own using the AWS CLI
+Use the following commands to create and update a resource share:
+•create-resource-share
+•associate-resource-share
+•update-resource-share
+Unshare a shared preﬁx list
+When you unshare a preﬁx list, consumers can no longer view the preﬁx list or its entries in their 
+account, and they cannot reference the preﬁx list in their resources. If the preﬁx list is already 
+Customer-managed preﬁx lists 43
+
+referenced in the consumer's resources, those references continue to function as normal, and you 
+can continue to view those references. If you update the preﬁx list to a new version, the references 
+use the latest version.
+To unshare a shared preﬁx list that you own, you must remove it from the resource share using 
+AWS RAM.
+To unshare a shared preﬁx list that you own using the AWS RAM console
+See Updating a resource share in the AWS RAM User Guide.
+To unshare a shared preﬁx list that you own using the AWS CLI
+Use the disassociate-resource-share command.
+Identify a shared preﬁx list
+Owners and consumers can identify shared preﬁx lists using the Amazon VPC console and AWS CLI.
+To identify a shared preﬁx list using the Amazon VPC console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. The page displays the preﬁx lists that you own and the preﬁx lists that are shared with you. 
+The Owner ID  column shows the AWS account ID of the preﬁx list owner.
+4. To view the resource share information for a preﬁx list, select the preﬁx list and choose
+Sharing  in the lower pane.
+To identify a shared preﬁx list using the AWS CLI
+Use the describe-managed-preﬁx-lists command. The command returns the preﬁx lists that you 
+own and the preﬁx lists that are shared with you. OwnerId shows the AWS account ID of the preﬁx 
+list owner.
+Identify references to a shared preﬁx list
+Owners can identify the consumer-owned resources that are referencing a shared preﬁx list.
+To identify references to a shared preﬁx list using the Amazon VPC console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+Customer-managed preﬁx lists 44
+
+2. In the navigation pane, choose Managed Preﬁx Lists .
+3. Select the preﬁx list and choose Associations  in the lower pane.
+4. The IDs of the resources that are referencing the preﬁx list are listed in the Resource ID
+column. The owners of the resources are listed in the Resource Owner column.
+To identify references to a shared preﬁx list using the AWS CLI
+Use the get-managed-preﬁx-list-associations command.
+AWS-managed preﬁx lists
+AWS-managed preﬁx lists are sets of IP address ranges for AWS services. These preﬁx lists are 
+maintained by Amazon Web Services and provide a way to reference the IP addresses used by 
+various AWS oﬀerings. This can be particularly useful when conﬁguring security groups or other 
+network-level controls within a VPC.
+The preﬁx lists cover a wide range of AWS services, including S3 and DynamoDB, and many others. 
+By using the managed preﬁx lists, you can ensure that your network conﬁgurations are up-to-date 
+and properly account for the IP addresses used by the AWS services you depend on. This can help 
+simplify networking tasks and reduce the administrative overhead of manually maintaining lists of 
+IP addresses.
+In addition to the practical beneﬁts, using the managed preﬁx lists also aligns with AWS security 
+best practices. By relying on the authoritative IP address information provided by AWS, you can 
+minimize the risk of misconﬁguration or unexpected connectivity issues. This can be especially 
+important for mission-critical applications or workloads with strict compliance requirements.
+Contents
+•Available AWS-managed preﬁx lists
+•AWS-managed preﬁx list weight
+•Use an AWS-managed preﬁx list
+Available AWS-managed preﬁx lists
+The following services provide AWS-managed preﬁx lists.
+AWS-managed preﬁx lists 45
+
+AWS service Preﬁx list name Weight
+Amazon CloudFront com.amazonaws.global.cloudfront.origin-
+facing (IPv4)
+com.amazonaws.global.ipv6.cloudfront.origin-
+facing (IPv6)55
+Amazon DynamoDB com.amazonaws.region .dynamodb 1
+com.amazonaws.region.ec2-instance-conn 
+ect2 Amazon EC2 Instance Connect
+com.amazonaws.region.ipv6.ec2-instance-
+connect2
+AWS Ground Station com.amazonaws.global.groundstation 5
+com.amazonaws.region.ipv6.route53-heal 
+thchecks25 Amazon Route 53
+com.amazonaws.region.route53-healthche 
+cks25
+Amazon S3 com.amazonaws.region .s3 1
+Amazon S3 Express One Zonecom.amazonaws.region.s3express 6
+AWS Secrets Managercom.amazonaws.region.secretsmanager-ma 
+naged-external-secrets20
+com.amazonaws.region.vpc-lattice 10 Amazon VPC Lattice
+com.amazonaws.region.ipv6.vpc-lattice 10
+To view the AWS-managed preﬁx lists using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Managed Preﬁx Lists .
+AWS-managed preﬁx lists 46
+
+3. In the search ﬁeld, add the Owner ID: AWS ﬁlter.
+To view the AWS-managed preﬁx lists using the AWS CLI
+Use the describe-managed-preﬁx-lists command as follows.
+aws ec2 describe-managed-prefix-lists --filters Name=owner-id,Values=AWS
+AWS-managed preﬁx list weight
+The weight of an AWS-managed preﬁx list refers to the number of entries that it takes up in a 
+resource.
+For example, the weight of a Amazon CloudFront managed preﬁx list is 55. Here's how the this 
+aﬀects your Amazon VPC quotas:
+•Security groups – The default quota  is 60 rules, leaving room for only 5 additional rules in a 
+security group. You can request a quota increase for this quota.
+•Route tables – The default quota  is 50 routes, so you must request a quota increase before you 
+can add the preﬁx list to a route table.
+Use an AWS-managed preﬁx list
+AWS-managed preﬁx lists are created and maintained by AWS and can be used by anyone with an 
+AWS account. You cannot create, modify, share, or delete an AWS-managed preﬁx list.
+As with customer-managed preﬁx lists, you can use AWS-managed preﬁx lists with AWS resources 
+such as security groups and route tables. For more information, see Optimize AWS infrastructure 
+management with preﬁx lists.
+Optimize AWS infrastructure management with preﬁx lists
+You can reference a preﬁx list in the following AWS resources.
+Resources
+•VPC security groups
+•Subnet route tables
+Optimize AWS infrastructure management with preﬁx lists 47
+
+•Transit gateway route tables
+•AWS Network Firewall rule groups
+•Amazon Managed Grafana network access control
+•AWS Outposts rack local gateways
+VPC security groups
+You can specify a preﬁx list as the source for an inbound rule, or as the destination for an outbound 
+rule. For more information, see Security groups.
+Important
+You can't modify an existing rule to use a preﬁx list. You have to create a new rule to use a 
+preﬁx list.
+To reference a preﬁx list in a security group rule using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Security Groups.
+3. Select the security group to update.
+4. Choose Actions, Edit inbound rules or Actions, Edit outbound rules.
+5. Choose Add rule. For Type, select the traﬃc type. For Source (inbound rules) or Destination
+(outbound rules), choose Custom . Then, in the next ﬁeld, under Preﬁx lists , choose the ID of 
+the preﬁx list.
+6. Choose Save rules.
+To reference a preﬁx list in a security group rule using the AWS CLI
+Use the authorize-security-group-ingress and authorize-security-group-egress commands. For the
+--ip-permissions  parameter, specify the ID of the preﬁx list using PrefixListIds .
+Subnet route tables
+You can specify a preﬁx list as the destination for route table entry. You cannot reference a preﬁx 
+list in a gateway route table. For more information about route tables, see Conﬁgure route tables.
+Optimize AWS infrastructure management with preﬁx lists 48
+
+To reference a preﬁx list in a route table using the console
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Route Tables, and select the route table.
+3. Choose Actions, Edit routes.
+4. To add a route, choose Add route .
+5. For Destination  enter the ID of a preﬁx list.
+6. For Target, choose a target.
+7. Choose Save changes.
+To reference a preﬁx list in a route table using the AWS CLI
+Use the create-route (AWS CLI) command. Use the --destination-prefix-list-id  parameter 
+to specify the ID of a preﬁx list.
+Transit gateway route tables
+You can specify a preﬁx list as the destination for a route. For more information, see Preﬁx list 
+references in Amazon VPC Transit Gateways.
+AWS Network Firewall rule groups
+An AWS Network Firewall rule group is a reusable set of criteria for inspecting and handling 
+network traﬃc. If you create Suricata-compatible stateful rule groups in AWS Network Firewall, you 
+can reference a preﬁx list from the rule group. For more information, see Referencing Amazon VPC 
+preﬁx lists and Creating a stateful rule group in the AWS Network Firewall Developer Guide.
+Amazon Managed Grafana network access control
+You can specify one or more preﬁx lists as an inbound rule for requests to Amazon Managed 
+Grafana workspaces. For more information about Grafana workspace network access control, 
+including how to reference preﬁx lists, see Managing network access in the Amazon Managed 
+Grafana User Guide .
+AWS Outposts rack local gateways
+Each AWS Outposts rack provides a local gateway that allows you to connect your Outpost 
+resources with your on-premises networks. You can group CIDRs that you frequently use in a preﬁx 
+Optimize AWS infrastructure management with preﬁx lists 49
+
+list and reference this list as a route target in your local gateway route table. For more information, 
+see Manage local gateway route table routes in the AWS Outposts User Guide for racks.
+AWS IP address ranges
+AWS publishes its current IP address ranges in JSON format. With this information, you can identify 
+traﬃc from AWS. You can also use this information to allow or deny traﬃc to or from some AWS 
+services.
+Considerations
+•We publish the IP address ranges for services that customers commonly use to perform egress 
+ﬁltering. We don't publish the IP address ranges for all services.
+•Services use their IP address ranges to communicate with other services or to communicate with 
+a customer network.
+•The IP address ranges that you bring to AWS through bring your own IP addresses (BYOIP) are 
+not included in the .json ﬁle. For more information, see Advertise your address range through 
+AWS in the Amazon EC2 User Guide.
+Some services publish their address ranges using AWS-managed preﬁx lists. For more information, 
+see the section called “Available AWS-managed preﬁx lists”.
+Contents
+•Download the JSON ﬁle
+•Egress control
+•Geolocation feed
+•Find the IP address ranges for AWS services
+•Syntax for AWS IP address range JSON
+•AWS IP address ranges notiﬁcations
+Download the JSON ﬁle
+To view the current address ranges, download ip-ranges.json . To maintain history, save successive 
+versions of the JSON ﬁle on your own computer. To determine whether there have been changes 
+AWS IP address ranges 50
+
+since the last time that you saved the ﬁle, check the publication time in the current ﬁle and 
+compare it to the publication time in the last ﬁle that you saved.
+The following is an example curl command that saves the JSON ﬁle to the current directory.
+curl -O https://ip-ranges.amazonaws.com/ip-ranges.json
+If you access this ﬁle programmatically, it is your responsibility to ensure that the application 
+downloads the ﬁle only after successfully verifying the TLS certiﬁcate presented by the server.
+To receive notiﬁcations of updates to the JSON ﬁle, see AWS IP address ranges notiﬁcations.
+Egress control
+To allow resources you've created with one AWS service to only access other AWS services, you can 
+use the IP address range information in the ip-ranges.json ﬁle to perform egress ﬁltering. Ensure 
+that the security group rules allow outbound traﬃc to the CIDR blocks in the AMAZON list. There 
+are quotas for security groups. Depending on the number of IP address ranges in each Region, you 
+might need multiple security groups per Region.
+Note
+Some AWS services are built on EC2 and use EC2 IP address space. If you block traﬃc to 
+EC2 IP address space, you block traﬃc to these non-EC2 services as well.
+Geolocation feed
+The IP address ranges in ip-ranges.json  are by AWS Region. However, a Local Zone is not in 
+the same physical location as its parent Region. The geolocation data published in geo-ip-feed.csv
+accounts for Local Zones. The data follows RFC 8805.
+Find the IP address ranges for AWS services
+The AWS IP address range JSON ﬁle provided by AWS can be a valuable resource for ﬁnding the 
+IP addresses of various AWS services and using that information to enhance your network security 
+and access control. By parsing the detailed data contained within this JSON ﬁle, you can precisely 
+identify the IP address ranges associated with speciﬁc AWS services and Regions.
+Egress control 51
+
+For example, you can use the IP address ranges to conﬁgure robust network security policies, 
+setting up granular ﬁrewall rules to allow or deny access to certain AWS resources. This information 
+can also be useful for a variety of AWS Network Firewall tasks. This level of control is crucial for 
+protecting your applications and data, ensuring that only authorized traﬃc can reach the necessary 
+AWS services. Additionally, having this IP intelligence can help you ensure your applications are 
+properly conﬁgured to communicate with the right AWS endpoints, improving overall reliability 
+and performance.
+Beyond just ﬁrewall rules, the ip-ranges.json  ﬁle can also be leveraged to conﬁgure 
+sophisticated egress ﬁltering on your network infrastructure. By understanding the destination 
+IP address ranges for diﬀerent AWS services, you can set up routing policies or use advanced 
+network security solutions like to selectively permit or block outbound traﬃc based on its intended 
+destination. This egress control is essential for mitigating the risk of data leakage and unauthorized 
+access.
+It's important to note that the ip-ranges.json  ﬁle is regularly updated, so maintaining an up-
+to-date local copy is crucial to ensure you have the most accurate and current information. By 
+continuously using the contents of this ﬁle, you can eﬃciently manage network access and security 
+for your AWS-based applications, strengthening your overall cloud security posture.
+The following examples can help you ﬁlter the AWS IP address ranges to just what you are looking 
+for. On Linux, you can download and use the the jq tool  to parse a local copy of the JSON ﬁle. The
+AWS Tools for Windows PowerShell includes a cmdlet, Get-AWSPublicIpAddressRange, that you 
+can use to parse this JSON ﬁle. For more information, see the following blog: Querying the Public 
+IP Address Ranges for AWS.
+To get the JSON ﬁle, see the section called “Download”. For more information about the syntax of 
+the JSON ﬁle, see the section called “Syntax”.
+Examples
+•Get the ﬁle creation date
+•Get the IP addresses for a speciﬁc Region
+•Get all IPv4 addresses
+•Get all IPv4 addresses for a speciﬁc service
+•Get all IPv4 addresses for a speciﬁc service in a speciﬁc Region
+•Get all IPv6 addresses
+•Get all IPv6 addresses for a speciﬁc service
+Find address ranges 52
+
+•Get all IP addresses for a speciﬁc border group
+Get the ﬁle creation date
+The following example gets the creation date of ip-ranges.json .
+jq
+$ jq .createDate < ip-ranges.json
+"2024-08-01-17-22-15"
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange -OutputPublicationDate
+Thursday, August 1, 2024 9:22:35 PM
+Get the IP addresses for a speciﬁc Region
+The following example ﬁlters the JSON ﬁle for the IP addresses for the speciﬁed Region.
+jq
+$ jq '.prefixes[] | select(.region=="us-east-1")' < ip-ranges.json
+{ 
+  "ip_prefix": "23.20.0.0/14", 
+  "region": "us-east-1", 
+  "network_border_group": "us-east-1", 
+  "service": "AMAZON"
+},
+{ 
+  "ip_prefix": "50.16.0.0/15", 
+  "region": "us-east-1", 
+  "network_border_group": "us-east-1", 
+  "service": "AMAZON"
+},
+{ 
+  "ip_prefix": "50.19.0.0/16", 
+Find address ranges 53
+
+  "region": "us-east-1", 
+  "network_border_group": "us-east-1", 
+  "service": "AMAZON"
+},
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange -Region us-east-1
+IpPrefix        Region      NetworkBorderGroup         Service
+--------        ------       -------                   -------
+23.20.0.0/14    us-east-1    us-east-1                 AMAZON
+50.16.0.0/15    us-east-1    us-east-1                 AMAZON
+50.19.0.0/16    us-east-1    us-east-1                 AMAZON
+...
+Get all IPv4 addresses
+The following example ﬁlters the JSON ﬁle for the IPv4 addresses.
+jq
+$ jq -r '.prefixes | .[].ip_prefix' < ip-ranges.json
+23.20.0.0/14
+27.0.0.0/22
+43.250.192.0/24
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange | where {$_.IpAddressFormat -eq "Ipv4"} | select 
+ IpPrefix
+IpPrefix
+--------
+23.20.0.0/14
+27.0.0.0/22
+43.250.192.0/24
+...
+Find address ranges 54
+
+Get all IPv4 addresses for a speciﬁc service
+The following example ﬁlters the JSON ﬁle for the IPv4 addresses for the speciﬁed service.
+jq
+$ jq -r '.prefixes[] | select(.service=="GLOBALACCELERATOR") | .ip_prefix' < ip-
+ranges.json
+13.248.117.0/24
+15.197.34.0/23
+15.197.36.0/22
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange -ServiceKey GLOBALACCELERATOR | where 
+ {$_.IpAddressFormat -eq "Ipv4"} | select IpPrefix
+IpPrefix
+--------
+13.248.117.0/24
+15.197.34.0/23
+15.197.36.0/22
+...
+Get all IPv4 addresses for a speciﬁc service in a speciﬁc Region
+The following example ﬁlters the JSON ﬁle for the IPv4 addresses for the speciﬁed service in the 
+speciﬁed Region.
+jq
+$ jq -r '.prefixes[] | select(.region=="us-east-1") | 
+ select(.service=="GLOBALACCELERATOR") | .ip_prefix' < ip-ranges.json
+13.248.124.0/24
+99.82.166.0/24
+99.82.171.0/24
+...
+Find address ranges 55
+
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange -Region us-east-1 -ServiceKey GLOBALACCELERATOR 
+ | where {$_.IpAddressFormat -eq "Ipv4"} | select IpPrefix
+IpPrefix
+--------
+13.248.117.0/24
+99.82.166.0/24
+99.82.171.0/24
+...
+Get all IPv6 addresses
+The following example ﬁlters the JSON ﬁle for the IPv6 addresses.
+jq
+$ jq -r '.ipv6_prefixes | .[].ipv6_prefix' < ip-ranges.json
+2a05:d07c:2000::/40
+2a05:d000:8000::/40
+2406:dafe:2000::/40
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange | where {$_.IpAddressFormat -eq "Ipv6"} | select 
+ IpPrefix
+IpPrefix
+--------
+2a05:d07c:2000::/40
+2a05:d000:8000::/40
+2406:dafe:2000::/40
+...
+Get all IPv6 addresses for a speciﬁc service
+The following example ﬁlters the JSON ﬁle for the IPv6 addresses for the speciﬁed service.
+Find address ranges 56
+
+jq
+$ jq -r '.ipv6_prefixes[] | select(.service=="GLOBALACCELERATOR") | .ipv6_prefix' < 
+ ip-ranges.json
+2600:1f01:4874::/47
+2600:1f01:4802::/47
+2600:1f01:4860::/47
+2600:9000:a800::/40
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange -ServiceKey GLOBALACCELERATOR | where 
+ {$_.IpAddressFormat -eq "Ipv6"} | select IpPrefix
+IpPrefix
+--------
+2600:1f01:4874::/47
+2600:1f01:4802::/47
+2600:1f01:4860::/47
+2600:9000:a800::/40
+...
+Get all IP addresses for a speciﬁc border group
+The following example ﬁlters the JSON ﬁle for all IP addresses for the speciﬁed border group.
+jq
+$ jq -r '.prefixes[] | select(.network_border_group=="us-west-2-lax-1") 
+ | .ip_prefix' < ip-ranges.json
+70.224.192.0/18
+52.95.230.0/24
+15.253.0.0/16
+...
+PowerShell
+PS C:\> Get-AWSPublicIpAddressRange | where {$_.NetworkBorderGroup -eq "us-west-2-
+lax-1"} | select IpPrefix
+Find address ranges 57
+
+IpPrefix
+--------
+70.224.192.0/18
+52.95.230.0/24
+15.253.0.0/16
+...
+Syntax for AWS IP address range JSON
+AWS publishes its current IP address ranges in JSON format. To get the JSON ﬁle, see the section 
+called “Download”. The syntax of the JSON ﬁle is as follows.
+{ 
+  "syncToken": " 0123456789 ", 
+  "createDate": " yyyy-mm-dd-hh-mm-ss", 
+  "prefixes": [ 
+    { 
+      "ip_prefix": " cidr", 
+      "region": " region", 
+      "network_border_group": " network_border_group ", 
+      "service": " subset" 
+    } 
+  ], 
+  "ipv6_prefixes": [ 
+    { 
+      "ipv6_prefix": " cidr", 
+      "region": " region", 
+      "network_border_group": " network_border_group ", 
+      "service": " subset" 
+    } 
+  ]   
+}
+syncToken
+The publication time, in Unix epoch time format.
+Type: String
+Example: "syncToken": "1416435608"
+Syntax 58
+
+createDate
+The publication date and time, in UTC YY-MM-DD-hh-mm-ss format.
+Type: String
+Example: "createDate": "2014-11-19-23-29-02"
+preﬁxes
+The IP preﬁxes for the IPv4 address ranges.
+Type: Array
+ipv6_preﬁxes
+The IP preﬁxes for the IPv6 address ranges.
+Type: Array
+ip_preﬁx
+The public IPv4 address range, in CIDR notation. Note that AWS may advertise a preﬁx in 
+more speciﬁc ranges. For example, preﬁx 96.127.0.0/17 in the ﬁle may be advertised as 
+96.127.0.0/21, 96.127.8.0/21, 96.127.32.0/19, and 96.127.64.0/18.
+Type: String
+Example: "ip_prefix": "198.51.100.2/24"
+ipv6_preﬁx
+The public IPv6 address range, in CIDR notation. Note that AWS may advertise a preﬁx in more 
+speciﬁc ranges.
+Type: String
+Example: "ipv6_prefix": "2001:db8:1234::/64"
+network_border_group
+The name of the network border group, which is a unique set of Availability Zones or Local 
+Zones from which AWS advertises IP addresses, or GLOBAL. Traﬃc for GLOBAL services can be 
+attracted to or originate from multiple (up to all) Availability Zones or Local Zones from which 
+AWS advertises IP addresses.
+Syntax 59
+
+Type: String
+Example: "network_border_group": "us-west-2-lax-1"
+region
+The AWS Region or GLOBAL. Traﬃc for GLOBAL services can be attracted to or originate from 
+multiple (up to all) AWS Regions.
+Type: String
+Valid values: af-south-1  | ap-east-1  | ap-east-2  | ap-northeast-1  | ap-northeast-2  |
+ap-northeast-3  | ap-south-1  | ap-south-2  | ap-southeast-1  | ap-southeast-2  | ap-
+southeast-3  | ap-southeast-4  | ap-southeast-5  | ap-southeast-6  | ap-southeast-7
+| ca-central-1  | ca-west-1  | cn-north-1  | cn-northwest-1  | eu-central-1  | eu-
+central-2  | eu-north-1  | eu-south-1  | eu-south-2  | eu-west-1  | eu-west-2  | eu-
+west-3  | il-central-1  | mx-central-1  | me-central-1  | me-south-1  | sa-east-1  |
+us-east-1  | us-east-2  | us-gov-east-1  | us-gov-west-1  | us-west-1  | us-west-2  |
+GLOBAL
+Example: "region": "us-east-1"
+service
+The subset of IP address ranges. The addresses listed for API_GATEWAY  are egress only. Specify
+AMAZON to get all IP address ranges (meaning that every subset is also in the AMAZON  subset). 
+However, some IP address ranges are only in the AMAZON subset (meaning that they are not also 
+available in another subset).
+Type: String
+Valid values: AMAZON  | AMAZON_APPFLOW  | AMAZON_CONNECT  | API_GATEWAY
+| AURORA_DSQL  | CHIME_MEETINGS  | CHIME_VOICECONNECTOR  | CLOUD9  |
+CLOUDFRONT  | CLOUDFRONT_ORIGIN_FACING  | CODEBUILD  | DYNAMODB  | EBS | EC2 |
+EC2_INSTANCE_CONNECT  | GLOBALACCELERATOR  | IVS_LOW_LATENCY  | IVS_REALTIME  |
+KINESIS_VIDEO_STREAMS  | MEDIA_PACKAGE_V2  | ROUTE53  | ROUTE53_HEALTHCHECKS  |
+ROUTE53_HEALTHCHECKS_PUBLISHING  | ROUTE53_RESOLVER  | S3 | WORKSPACES_GATEWAYS
+Example: "service": "AMAZON"
+Syntax 60
+
+Range overlaps
+The IP address ranges returned by any service code are also returned by the AMAZON service code. 
+For example, all IP address ranges that are returned by the S3 service code are also returned by the
+AMAZON service code.
+When service A uses resources from service B, there are IP address ranges that are returned by 
+the service codes for both service A and service B. However, these IP address ranges are used 
+exclusively by service A, and can't be used by service B. For example, Amazon S3 uses resources 
+from Amazon EC2, so there are IP address ranges that are returned by both the S3 and EC2 service 
+codes. However these IP address ranges are used exclusively by Amazon S3. Therefore, the S3
+service code returns all IP address ranges that are used exclusively by Amazon S3. To identify the 
+IP address ranges that are used exclusively by Amazon EC2, ﬁnd the IP address ranges that are 
+returned by the EC2 service code but not the S3 service code.
+Learn more
+This section provides links to additional information for diﬀerent service codes.
+•AMAZON_APPFLOW  – IP address ranges
+•AMAZON_CONNECT  – Set up your network
+•CHIME_MEETINGS  – Conﬁguring for media and signaling
+•CLOUDFRONT  – Locations and IP address ranges of CloudFront edge servers
+•DYNAMODB  – IP address ranges
+•EC2 – Public IPV4 addresses
+•EC2_INSTANCE_CONNECT  – EC2 Instance Connect prerequisites
+•GLOBALACCELERATOR  – Location and IP address ranges of Global Accelerator edge servers
+•ROUTE53  – IP address ranges of Amazon Route 53 servers
+•ROUTE53_HEALTHCHECKS  – IP address ranges of Amazon Route 53 servers
+•ROUTE53_HEALTHCHECKS_PUBLISHING  – IP address ranges of Amazon Route 53 servers
+•WORKSPACES_GATEWAYS  – PCoIP gateway servers
+Release notes
+The following table describes updates to the syntax of ip-ranges.json . We also add new Region 
+codes with each Region launch.
+Syntax 61
+
+Description Release date
+Added the IVS_LOW_LATENCY  service code. July 29, 2025
+Added the AURORA_DSQL  service code.May 21, 2025
+Added the IVS_REALTIME  service code. June 11, 2024
+Added the MEDIA_PACKAGE_V2  service code.May 9, 2023
+Added the CLOUDFRONT_ORIGIN_FACING
+service code.October 12, 2021
+Added the ROUTE53_RESOLVER  service code.June 24, 2021
+Added the EBS service code. May 12, 2021
+Added the KINESIS_VIDEO_STREAMS
+service code.November 19, 2020
+Added the CHIME_MEETINGS  and
+CHIME_VOICECONNECTOR  service codes.June 19, 2020
+Added the AMAZON_APPFLOW  service code. June 9, 2020
+Add support for the network border group. April 7, 2020
+Added the WORKSPACES_GATEWAYS  service 
+code.March 30, 2020
+Added the ROUTE53_HEALTHCHEC 
+K_PUBLISHING  service code.January 30, 2020
+Added the API_GATEWAY  service code. September 26, 2019
+Added the EC2_INSTANCE_CONNECT
+service code.June 26, 2019
+Added the DYNAMODB  service code. April 25, 2019
+Syntax 62
+
+Description Release date
+Added the GLOBALACCELERATOR  service 
+code.December 20, 2018
+Added the AMAZON_CONNECT  service code. June 20, 2018
+Added the CLOUD9 service code. June 20, 2018
+Added the CODEBUILD  service code. April 19, 2018
+Added the S3 service code. February 28, 2017
+Added support for IPv6 address ranges. August 22, 2016
+Initial release November 19, 2014
+AWS IP address ranges notiﬁcations
+AWS publishes its current IP address ranges in JSON format. Whenever there is a change to the 
+AWS IP address ranges, we send notiﬁcations to subscribers of the Amazon SNS topic named
+AmazonIpSpaceChanged . For more information about the syntax of the JSON ﬁle, see the section 
+called “Syntax”.
+The payload of the notiﬁcation contains information in the following format.
+{ 
+  "create-time":" yyyy-mm-ddThh:mm:ss+00:00", 
+  "synctoken":" 0123456789 ", 
+  "md5":" 6a45316e8bc9463c9e926d5d37836d33 ", 
+  "url":"https://ip-ranges.amazonaws.com/ip-ranges.json"
+}
+create-time
+The creation date and time.
+Notiﬁcations could be delivered out of order. Therefore, we recommend that you check the 
+timestamps to ensure the correct order.
+Subscribe to notiﬁcations 63
+
+synctoken
+The publication time, in Unix epoch time format.
+md5
+The cryptographic hash value of the ip-ranges.json  ﬁle. You can use this value to check 
+whether the downloaded ﬁle is corrupted.
+url
+The location of the ip-ranges.json  ﬁle. For more information, see the section called 
+“Download”.
+You can subscribe to receive notiﬁcations as follows.
+To subscribe to AWS IP address range notiﬁcations
+1. Open the Amazon SNS console at https://console.aws.amazon.com/sns/v3/home.
+2. In the navigation bar, change the Region to US East (N. Virginia) , if necessary. You must select 
+this Region because the SNS notiﬁcations that you are subscribing to were created in this 
+Region.
+3. In the navigation pane, choose Subscriptions .
+4. Choose Create subscription .
+5. In the Create subscription  dialog box, do the following:
+a. For Topic ARN, copy the following Amazon Resource Name (ARN):
+arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged
+b. For Protocol, choose the protocol to use (for example, Email ).
+c. For Endpoint , type the endpoint to receive the notiﬁcation (for example, your email 
+address).
+d. Choose Create subscription .
+6. You'll be contacted on the endpoint that you speciﬁed and asked to conﬁrm your subscription. 
+For example, if you speciﬁed an email address, you'll receive an email message with the subject 
+line AWS Notification - Subscription Confirmation . Follow the directions to 
+conﬁrm your subscription.
+Subscribe to notiﬁcations 64
+
+Notiﬁcations are subject to the availability of the endpoint. Therefore, you might want to check 
+the JSON ﬁle periodically to ensure that you've got the latest ranges. For more information about 
+Amazon SNS reliability, see https://aws.amazon.com/sns/faqs/#Reliability.
+If you no longer want to receive these notiﬁcations, use the following procedure to unsubscribe.
+To unsubscribe from AWS IP address ranges notiﬁcations
+1. Open the Amazon SNS console at https://console.aws.amazon.com/sns/v3/home.
+2. In the navigation pane, choose Subscriptions .
+3. Select the check box for the subscription.
+4. Choose Actions, Delete subscriptions.
+5. When prompted for conﬁrmation, choose Delete.
+For more information about Amazon SNS, see the Amazon Simple Notiﬁcation Service Developer 
+Guide .
+IPv6 support for your VPC
+If you have an existing VPC that supports IPv4 only, and resources in your subnet that are 
+conﬁgured to use IPv4 only, you can add IPv6 support for your VPC and resources. Your VPC can 
+operate in dual-stack mode — your resources can communicate over IPv4, or IPv6, or both. IPv4 
+and IPv6 communication are independent of each other.
+You cannot disable IPv4 support for your VPC and subnets; this is the default IP addressing system 
+for Amazon VPC and Amazon EC2.
+Considerations
+•There is no migration path from IPv4-only subnets to IPv6-only subnets.
+•This example assumes that you have an existing VPC with public and private subnets. For 
+information about creating a new VPC for use with IPv6, see the section called “Create a VPC”.
+•Before you begin using IPv6, ensure that you have read the features of IPv6 addressing for 
+Amazon VPC: Compare IPv4 and IPv6.
+Contents
+•Add IPv6 support for your VPC
+IPv6 support for your VPC 65
+
+•Example dual-stack VPC conﬁguration
+Add IPv6 support for your VPC
+The following table provides an overview of the process to enable IPv6 for your VPC.
+Contents
+•Step 1: Associate an IPv6 CIDR block with your VPC and subnets
+•Step 2: Update your route tables
+•Step 3: Update your security group rules
+•Step 4: Assign IPv6 addresses to your instances
+Step Notes
+Step 1: Associate an IPv6 CIDR block with your 
+VPC and subnetsAssociate an Amazon-provided or BYOIP 
+IPv6 CIDR block with your VPC and with your 
+subnets.
+Step 2: Update your route tables Update your route tables to route your IPv6 
+traﬃc. For a public subnet, create a route 
+that routes all IPv6 traﬃc from the subnet to 
+the internet gateway. For a private subnet, 
+create a route that routes all internet-bound 
+IPv6 traﬃc from the subnet to an egress-only 
+internet gateway.
+Step 3: Update your security group rules Update your security group rules to include 
+rules for IPv6 addresses. This enables IPv6 
+traﬃc to ﬂow to and from your instances. If 
+you've created custom network ACL rules to 
+control the ﬂow of traﬃc to and from your 
+subnet, you must include rules for IPv6 traﬃc.
+Step 4: Assign IPv6 addresses to your 
+instancesAssign IPv6 addresses to your instances from 
+the IPv6 address range of your subnet.
+Add IPv6 support for your VPC 66
+
+Step 1: Associate an IPv6 CIDR block with your VPC and subnets
+You can associate an IPv6 CIDR block with your VPC, and then associate a /64 CIDR block from that 
+range with each subnet.
+To associate an IPv6 CIDR block with a VPC
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Your VPCs.
+3. Select your VPC.
+4. Choose Actions, Edit CIDRs and then choose Add new IPv6 CIDR .
+5. Select one of the following options, and then choose Select CIDR:
+•Amazon-provided IPv6 CIDR block – Use an IPv6 CIDR block from Amazon's pool of IPv6 
+addresses. For Network Border Group, choose the group from which AWS advertises IP 
+addresses.
+•IPAM-allocated IPv6 CIDR block – Use an IPv6 CIDR block from an IPAM pool. Choose the 
+IPAM pool and the IPv6 CIDR block.
+•IPv6 CIDR owned by me – Use an IPv6 CIDR block from your IPv6 address pool (BYOIP). 
+Choose the IPv6 address pool and the IPv6 CIDR block.
+6. Choose Close.
+To associate an IPv6 CIDR block with a subnet
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Subnets .
+3. Select a subnet.
+4. Choose Actions, Edit IPv6 CIDRs and then choose Add IPv6 CIDR .
+5. Edit the CIDR block as needed (for example, replace the 00).
+6. Choose Save.
+7. Repeat this procedure for any other subnets in your VPC.
+For more information, see IPv6 VPC CIDR blocks .
+Add IPv6 support for your VPC 67
+
+Step 2: Update your route tables
+When you associate an IPv6 CIDR block with your VPC, we automatically add a local route to each 
+route table for the VPC to allow IPv6 traﬃc within the VPC.
+You must update the route tables for your public subnets to enable instances (such as web servers) 
+to use the internet gateway for IPv6 traﬃc. You must also update the route tables for your private 
+subnets to enable instances (such as database instances) to use an egress-only internet gateway for 
+IPv6 traﬃc, because NAT gateways do not support IPv6.
+To update the route table for a public subnet
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Subnets . Select the public subnet. On the Route table tab, 
+choose the route table ID to open the details page for the route table.
+3. Select the route table. On the Routes tab, choose Edit routes.
+4. Choose Add route . Choose ::/0  for Destination . Choose the ID of the internet gateway for
+Target.
+5. Choose Save changes.
+To update the route table for a private subnet
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Egress-only internet gateways. Choose Create egress only 
+internet gateway. Choose your VPC from VPC, and then choose Create egress only internet 
+gateway.
+For more information, see Enable outbound IPv6 traﬃc using an egress-only internet gateway.
+3. In the navigation pane, choose Subnets . Select the private subnet. On the Route table tab, 
+choose the route table ID to open the details page for the route table.
+4. Select the route table. On the Routes tab, choose Edit routes.
+5. Choose Add route . Choose ::/0  for Destination . Choose the ID of the egress-only internet 
+gateway for Target.
+6. Choose Save changes.
+Add IPv6 support for your VPC 68
+
+Note
+A route table cannot have the same destination (::/0) pointing to both an internet 
+gateway and an egress-only internet gateway simultaneously. If you receive an error 
+message stating "There are existing ipv6 routes with next hop as internet Gateway" when 
+conﬁguring an egress-only internet gateway, you must ﬁrst remove the existing IPv6 route 
+to the internet gateway before adding the route to the egress-only internet gateway.
+For more information, see Example routing options.
+Step 3: Update your security group rules
+To enable your instances to send and receive traﬃc over IPv6, you must update your security 
+group rules to include rules for IPv6 addresses. For example, in the example above, you can 
+update the web server security group (sg-11aa22bb11aa22bb1 ) to add rules that allow inbound 
+HTTP, HTTPS, and SSH access from IPv6 addresses. You don't need to make any changes to the 
+inbound rules for your database security group; the rule that allows all communication from
+sg-11aa22bb11aa22bb1  includes IPv6 communication.
+To update your inbound security group rules
+1. Open the Amazon VPC console at https://console.aws.amazon.com/vpc/.
+2. In the navigation pane, choose Security groups and select your web server security group.
+3. In the Inbound rules tab, choose Edit inbound rules.
+4. For each rule that allows IPv4 traﬃc, choose Add rule and conﬁgure the rule to allow the 
+corresponding IPv6 traﬃc. For example, to add a rule that allows all HTTP traﬃc over IPv6, 
+choose HTTP for Type and ::/0  for Source.
+5. When you are ﬁnished adding rules, choose Save rules.
+Update your outbound security group rules
+When you associate an IPv6 CIDR block with your VPC, we automatically add an outbound rule to 
+the security groups for the VPC that allows all IPv6 traﬃc. However, if you modiﬁed the original 
+outbound rules for your security group, this rule is not automatically added, and you must add 
+equivalent outbound rules for IPv6 traﬃc.
+Update your network ACL rules
+Add IPv6 support for your VPC 69
+
+When you associate an IPv6 CIDR block with a VPC, we automatically add rules to the default 
+network ACL to allow IPv6 traﬃc. However, if you modiﬁed your default network ACL or if you've 
+created a custom network ACL, you must manually add rules for IPv6 traﬃc. For more information, 
+see Add and delete rules.
+Step 4: Assign IPv6 addresses to your instances
+All current generation instance types support IPv6. If your instance type does not support IPv6, you 
+must resize the instance to a supported instance type before you can assign an IPv6 address. The 
+process that you'll use depends on whether the new instance type that you choose is compatible 
+with the current instance type. For more information, see Change the instance type in the Amazon 
+EC2 User Guide. If you must launch an instance from a new AMI to support IPv6, you can assign an 
+IPv6 address to your instance during launch.
+After you've veriﬁed that your instance type supports IPv6, you can assign an IPv6 address to 
+your instance using the Amazon EC2 console. The IPv6 address is assigned to the primary network 
+interface (for example, eth0) for the instance. For more information, see Assign an IPv6 address to 
+an instance in the Amazon EC2 User Guide.
+You can connect to an instance using its IPv6 address. For more information, see Connect to your 
+Linux instance using an SSH client in the Amazon EC2 User Guide.
+If you launched your instance using an AMI for a current version of your operating system, your 
+instance is conﬁgured for IPv6. If you can't ping an IPv6 address from your instance, refer to the 
+documentation for your operating system to conﬁgure IPv6.
+Example dual-stack VPC conﬁguration
+With a dual-stack conﬁguration, you can use both IPv4 and IPv6 addresses for communication 
+between resources in your VPC and resources over the internet.
+The following diagram represents the architecture of your VPC. Your VPC has a public subnet and a 
+private subnet. The VPC and subnets have both an IPv4 CIDR block and an IPv6 CIDR block. There 
+is an EC2 instance in the private subnet that has both an IPv4 address and an IPv6 address. The 
+instance can send outbound IPv4 traﬃc to the internet using a NAT gateway and outbound IPv6 
+traﬃc to the internet using an egress-only internet gateway.
+Example dual-stack VPC 70
+
+Route table for public subnet
+The following is the route table for the public subnet. The ﬁrst two entries are the local routes. The 
+third entry sends all IPv4 traﬃc to the internet gateway. Note that the fourth entry is necessary 
+only if you plan to launch EC2 instances with IPv6 addresses in the public subnet.
+Destination Target
+VPC IPv4 CIDR local
+VPC IPv6 CIDR local
+0.0.0.0/0 internet-gateway-id
+::/0 internet-gateway-id
+Route table for the private subnet
+Example dual-stack VPC 71
+
+The following is the route table for the private subnet. The ﬁrst two entries are the local routes. 
+The third entry sends all IPv4 traﬃc to the NAT gateway. The last entry sends all IPv6 traﬃc to the 
+egress-only internet gateway.
+Destination Target
+VPC IPv4 CIDR local
+VPC IPv6 CIDR local
+0.0.0.0/0 nat-gateway-id
+::/0 egress-only-gateway-id
+AWS services that support IPv6
+Computers and smart devices use IP addresses to communicate with each other over the internet 
+and other networks. As the internet continues to grow, so does the need for IP addresses. The most 
+common format for IP addresses is IPv4. The new format for IP addresses is IPv6, which provides a 
+larger address space than IPv4.
+AWS services support for IPv6 includes support for dual stack conﬁguration (IPv4 and IPv6) or IPv6 
+only conﬁgurations. For example, a virtual private cloud (VPC) is a logically isolated section of the 
+AWS Cloud where you can launch AWS resources. Within a VPC, you can create subnets that are 
+IPv4 only, dual stack, or IPv6 only.
+AWS services support access through public endpoints. Some AWS services also support access 
+using private endpoints powered by AWS PrivateLink. AWS services can support IPv6 through their 
+private endpoints even if they do not support IPv6 through their public endpoints. Endpoints that 
+support IPv6 can respond to DNS queries with AAAA records.
+Services that support IPv6
+The following table lists the AWS services that provide dual stack support, IPv6 only support, and 
+endpoints that support IPv6. We will update this table as we release additional support for IPv6. 
+For the speciﬁcs about how a service supports IPv6, refer to the documentation for the service.
+IPv6 support on AWS 72
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS AmplifyYes No Yes  
+Amazon API GatewayYes No YesYes
+AWS App MeshYesYesYes No
+AWS App RunnerYes No YesYes
+AWS AppConﬁgYes No YesYes
+Application Auto 
+ScalingNo No YesYes
+AWS Application 
+Discovery ServiceYes No YesYes
+Application Recovery 
+Controller (ARC)Yes No Yes  
+Amazon WorkSpaces 
+ApplicationsYes No No No
+AWS AppSync2Partial No PartialYes
+Amazon AthenaYes No YesYes
+AWS Audit Manager No No YesYes
+Amazon AuroraYes No Yes No
+Amazon Aurora DSQL No No YesYes
+AWS Auto Scaling No No YesYes
+AWS B2B Data 
+InterchangeYes No YesYes
+Services that support IPv6 73
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS BackupYes No YesYes
+AWS Batch Yes No YesYes
+Amazon Bedrock No No YesYes
+AWS Billing and Cost 
+Management Data 
+ExportsYes No YesYes
+AWS Billing and Cost 
+Management Pricing 
+CalculatorYes No YesYes
+AWS Billing ConductorYes No YesYes
+AWS BudgetsYes No Yes  
+Amazon BraketYesYesYesYes
+AWS Certiﬁcate 
+ManagerYes No Yes No
+Amazon Chime SDKYes No Yes  
+Amazon ComprehendYesYesYesYes
+AWS Clean RoomsYesYesYesYes
+AWS Clean Rooms MLYesYesYesYes
+AWS Cloud9Yes No Yes  
+AWS Cloud Control APIYes No YesYes
+CloudFormation No No YesYes
+Services that support IPv6 74
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+Amazon CloudFrontYesYesYes  
+AWS CloudHSMYes No YesYes
+AWS CloudTrailYes No YesYes
+Amazon CloudWatchYesYesYesYes
+Amazon CloudWatch 
+Application InsightsNo No YesYes
+Amazon CloudWatch 
+Internet MonitorNo No YesYes
+Amazon CloudWatch 
+LogsYesYesYesYes
+Amazon CloudWatch 
+Observability Access 
+ManagerYesYesYes  
+Amazon CloudWatch 
+SyntheticsYes No YesYes
+AWS Cloud MapYesYesYesYes
+AWS Cloud WANYes No Yes No
+AWS CodeArtifactYes No YesYes
+Connect Customer 
+Customer ProﬁlesYes No YesYes
+AWS CodeBuild No No YesYes
+AWS CodeCommit No No YesYes
+Services that support IPv6 75
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS CodeDeploy No No YesYes
+AWS Compute 
+OptimizerNo No YesYes
+Amazon Comprehend 
+MedicalNo No YesYes
+Amazon CodeGuru 
+ProﬁlerYes No YesYes
+Amazon CognitoYes No Yes  
+AWS Conﬁg No No YesYes
+AWS Control Tower No No YesYes
+AWS Cost ExplorerYes No YesYes
+AWS Cost Optimization 
+HubYes No YesYes
+AWS Data Exchange No No YesYes
+Amazon Data Firehose No No YesYes
+Amazon Data Lifecycle 
+ManagerYes No YesYes
+AWS Database 
+Migration ServiceYes No No Yes
+AWS DataSyncYesYesYesYes
+Amazon DataZone No No YesYes
+AWS Deadline CloudYes No YesYes
+Services that support IPv6 76
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+Amazon DetectiveYesYesYes  
+Direct ConnectYesYes No Yes
+Directory Service No No YesYes
+Amazon EBS direct APIsYes No YesYes
+Amazon EC2YesYesYes No
+EC2 Image BuilderYesYesYesYes
+Amazon ECRYes No Yes No
+Amazon ECSYesYesYesYes
+Amazon EFSYesYesYesYes
+Amazon EKSPartialPartialYesYes
+Amazon EMR No No YesYes
+AWS Elastic BeanstalkYes No YesYes
+AWS Elastic Disaster 
+RecoveryNo No YesYes
+Elastic Load Balancing PartialPartialYes No
+Amazon ElastiCacheYesYes No Yes
+AWS Elemental 
+MediaConvertNo No YesYes
+AWS Elemental 
+MediaConnectYesYesYesPartial
+Services that support IPv6 77
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS End User 
+Messaging SocialYes No Yes No
+AWS Entity ResolutionYes No YesYes
+Amazon EventBridge No No YesYes
+AWS FargateYes No YesYes
+Amazon FSx No No YesYes
+Amazon GameLift 
+StreamsYes No YesYes
+AWS Global AcceleratorYes No Yes  
+AWS Glue Yes No No Yes
+AWS Glue DataBrew No No YesYes
+Amazon Managed 
+Grafana 3Yes No YesYes
+AWS Ground Station 4Yes No YesYes
+Amazon GuardDuty No No YesYes
+AWS HealthImaging No No YesYes
+AWS HealthLake No No YesYes
+AWS HealthOmics No No YesYes
+AWS Identity and 
+Access Management 
+(IAM)YesYesYes No
+Services that support IPv6 78
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS IAM Access 
+AnalyzerYes No YesYes
+AWS IAM Identity 
+CenterYes No Yes  
+AWS IAM Roles 
+AnywhereNo No YesYes
+Amazon InspectorYesYesYesYes
+Amazon Interactive 
+Video Service (IVS) 5Yes No YesYes
+AWS IoT CoreYes No YesYes
+AWS IoT Device 
+DefenderYes No Yes No
+AWS IoT Device 
+ManagementYes No Yes No
+AWS IoT FleetWiseYes No YesYes
+AWS IoT GreengrassYes No Yes No
+AWS IoT SiteWiseYes No YesYes
+AWS IoT TwinMakerYes No YesYes
+AWS IoT WirelessYes No YesYes
+Amazon Kendra No No Yes No
+AWS Key Management 
+ServiceYesPartialYesYes
+Services that support IPv6 79
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+Amazon KeyspacesYesYesYesYes
+Amazon Keyspaces CDC 
+streamsYesYesYesYes
+Amazon Kinesis Data 
+StreamsYes No YesYes
+AWS Lake Formation No No No Yes
+AWS LambdaYes No YesYes
+AWS Launch Wizard No No YesYes
+AWS License Manager No No YesYes
+Amazon LightsailYesYesYesYes
+Amazon Location 
+ServiceNo No YesYes
+Amazon MQ No No YesYes
+Amazon MWAA No No YesYes
+Amazon MacieYes No YesYes
+AWS Mainframe 
+ModernizationYes No YesYes
+Amazon Managed 
+GrafanaNo No YesYes
+Amazon Managed 
+Service for PrometheusYes No YesYes
+Services that support IPv6 80
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS Migration Hub 
+OrchestratorNo No YesYes
+AWS Network FirewallYesYes No Yes
+AWS Network ManagerYes No Yes No
+Amazon OpenSearch 
+ServiceYes No Yes  
+AWS OrganizationsYes No YesYes
+AWS Outposts No No YesYes
+Amazon PersonalizeYes No YesYes
+Amazon PinpointYes No YesYes
+Amazon PollyYes No YesYes
+AWS Price List No No Yes No
+AWS Private Certiﬁcate 
+AuthorityYes No YesYes
+AWS Private CA 
+Connector for Active 
+DirectoryYes No YesYes
+AWS Private CA 
+Connector for SCEPYes No YesYes
+AWS PrivateLinkYesYesYes  
+Amazon Q Business No No Yes No
+Amazon RDSYes No Yes No
+Services that support IPv6 81
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+Amazon RDS Data API No No YesYes
+Amazon RDS Performan 
+ce InsightsNo No YesYes
+Amazon RedshiftYes No Yes  
+Amazon Rekognition No No YesYes
+Recycle Bin Yes No YesYes
+AWS re:Post PrivateYes No YesYes
+AWS Resource Access 
+ManagerYes No YesYes
+AWS Resource ExplorerYes No Yes No
+AWS Resource GroupsYesYesYesYes
+AWS Resource Groups 
+Tagging APIYesYesYesYes
+Amazon Route 53YesYesYesYes
+Amazon S3 Yes No Yes No
+Amazon S3 on OutpostsNo No Yes No
+Amazon SageMaker No No YesYes
+AWS Secrets ManagerYes No YesYes
+AWS Security Hub No No YesYes
+Amazon Security LakeYes No YesYes
+Services that support IPv6 82
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+AWS Security Token 
+ServiceYes No YesYes
+AWS Service Catalog No No YesYes
+AWS Shield YesYes No Yes
+Amazon Simple Email 
+ServiceYes No YesYes
+Amazon Simple 
+Notiﬁcation ServiceYes No YesYes
+Amazon Simple Queue 
+ServiceYes No YesYes
+Amazon Simple 
+Workﬂow ServiceYes No YesYes
+AWS Site-to-Site VPNYes No Yes No
+AWS Snow Family No No Yes  
+AWS Step FunctionsYes No YesYes
+AWS Storage GatewayYesYesYesYes
+AWS Systems Manager No No YesYes
+AWS Systems Manager 
+Incident ManagerNo No YesYes
+AWS Systems Manager 
+for SAPNo No YesYes
+Amazon Textract No No YesYes
+Services that support IPv6 83
+
+Service name Dual stack 
+supportIPv6 only 
+supportPublic 
+endpoints 
+support IPv6Private 
+endpoints 
+support IPv6 1
+Amazon Timestream No No YesYes
+Amazon TranscribeYesYesYesYes
+AWS Transfer Family 6Yes No YesYes
+AWS Transit GatewayYes No Yes No
+Amazon TranslateYesYesYesYes
+AWS Trusted Advisor No No YesYes
+AWS User Notiﬁcations No No YesYes
+Amazon Veriﬁed 
+PermissionsYes No YesYes
+VMware Cloud on AWS No No YesYes
+Amazon VPCYesYesYes No
+Amazon VPC Lattice No No YesYes
+AWS WAF YesYes No  
+AWS WAFV2 No No YesYes
+AWS Well-Architected 
+ToolNo No YesYes
+Amazon WorkMail No No YesYes
+Amazon WorkSpacesYes No YesYes
+AWS X-Ray Yes No YesYes
+1 An empty cell indicates that the service does not integrate with AWS PrivateLink.
+Services that support IPv6 84
+
+2 This entry represents IPv6 support for AWS AppSync GraphlQL and Event API conﬁguration 
+operations, through the AWS AppSync SDK API. IPv6 is not supported for client connections to 
+customer managed AWS AppSync GraphQL and Event APIs.
+3 This entry represents IPv6 support for Grafana workspace management  operations, such as 
+updating workspaces and workspace permissions. There is no IPv6 support for general Grafana 
+workspace operations, such as creating and editing dashboards or querying data sources.
+4 This entry represents IPv6 support for AWS Ground Station control plane  operations, such as 
+calling the AWS Ground Station API. IPv6 is not supported by the AWS Ground Station data plane , 
+so make sure the resources you are delivering data to (such as Amazon EC2 instances) are accessible 
+over IPv4.
+5 This entry represents IPv6 support for Amazon IVS control plane  operations, such as calling an IVS 
+endpoint .
+6 For more details on IPv6 support in AWS Transfer Family, visit IPv6 limitations .
+Additional IPv6 support
+Compute
+•Amazon EC2 supports launching instances based on the Nitro System into IPv6-only subnets.
+•Amazon EC2 provides IPv6 endpoints for Instance Metadata Service (IMDS) and Amazon Time 
+Sync Service.
+Game Development
+•Amazon GameLift Streams supports streaming over IPv6 on the Microsoft Windows Server 2022 
+Base runtime.
+Networking and Content Delivery
+•Amazon VPC supports creating IPv6-only subnets.
+•Amazon VPC helps IPv6 AWS resources communicate with IPv4 resources by supporting DNS64 
+on your subnets and NAT64 on your NAT gateways.
+Additional IPv6 support 85
+
+Security, Identity, and Compliance
+•Amazon Detective supports IPv6 addresses in its network-related ﬁndings and entity proﬁles.
+•AWS Identity and Access Management (IAM) supports IPv6 addresses in IAM identity-based 
+policies.
+•Amazon Macie supports IPv6 addresses in personally identiﬁable information (PII).
+•Amazon Security Lake supports IPv6 addresses across all operations on log sources and 
+subscribers.
+Management and Governance
+•AWS CloudTrail records include source IPv6 information.
+•AWS CLI v2 supports download over IPv6 connections for IPv6-only clients.
+Learn more
+•IPv6 on AWS
+•Dual Stack and IPv6-only Amazon VPC Reference Architectures (PDF)
+Learn more 86
+
+Conﬁgure a virtual private cloud
+Amazon Virtual Private Cloud (VPC) is a fundamental building block, allowing you to provision 
+a logically isolated virtual network within the AWS cloud. By creating your own VPC, you gain 
+full control over the networking environment, including the ability to deﬁne IP address ranges, 
+subnets, routing tables, and connectivity options.
+Your AWS account contains a default VPC for each AWS Region. This default VPC comes pre-
+conﬁgured with settings that make it a convenient option for quickly launching resources. However, 
+the default VPC may not always align with your long-term networking needs. This is where creating 
+additional VPCs can be advantageous.
+Creating additional VPCs oﬀers several advantages over relying on the default VPC that comes 
+provisioned with every new AWS account. With a self-managed VPC, you can architect the network 
+topology to align precisely with your speciﬁc requirements, whether that's implementing a multi-
+tier application, connecting to on-premises resources, or segregating workloads by department or 
+business unit.
+In addition, creating multiple VPCs can enable greater security and isolation between your diﬀerent 
+applications or business units. Each VPC acts as a separate, virtual network, allowing you to apply 
+distinct security policies, access controls, and routing conﬁgurations tailored to each environment.
+Ultimately, the decision to use the default VPC or create one (or more) custom VPCs should be 
+based on your speciﬁc application requirements, security needs, and long-term scalability goals. 
+Investing the time to thoughtfully design your VPC infrastructure can pay dividends in the form of 
+a robust, secure, and adaptable cloud networking foundation.
+Contents
+•VPC basics
+•VPC conﬁguration options
+•Default VPCs
+•Create a VPC
+•Visualize the resources in your VPC
+•Add or remove a CIDR block from your VPC
+•DHCP option sets in Amazon VPC
+•DNS attributes for your VPC
+
+•Network Address Usage for your VPC
+•Share your VPC subnets with other accounts
+•Extend a VPC to a Local Zone, Wavelength Zone, or Outpost
+•Delete your VPC
+•Generate infrastructure-as-code from your VPC console actions with Console-to-Code
+VPC basics
+A VPC spans all of the Availability Zones in a Region. After you create a VPC, you can add one or 
+more subnets in each Availability Zone. For more information, see Subnets .
+Contents
+•VPC IP address range
+•VPC diagram
+•VPC resources
+VPC IP address range
+When you create a VPC, you specify its IP addresses as follows:
+•IPv4 only  – The VPC has an IPv4 CIDR block but does not have an IPv6 CIDR block.
+•Dual stack  – The VPC has both an IPv4 CIDR block and an IPv6 CIDR block.
+For more information, see IP addressing for your VPCs and subnets.
+VPC diagram
+The following diagram shows a VPC with no additional VPC resources. For example VPC 
+conﬁgurations, see Examples.
+VPC basics 88
+
+VPC resources
+Each VPC automatically comes with the following resources:
+•Default DHCP option set
+•Default network ACL
+•Default security group
+•Main route table
+You can create the following resources for your VPC:
+•Network ACLs
+•Custom route tables
+•Security groups
+•Internet gateway
+•NAT gateways
+VPC resources 89

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "c3_01_ec2_ssh",
+    "topic": "EC2 / SSH",
+    "prompt": "An EC2 Linux instance times out on SSH port 22. Give a concise diagnostic sequence covering security groups, network ACLs, routes, instance status checks, and host firewall.",
+    "expected_answer": "Check that the instance is running and passes status checks, the security group allows inbound TCP port 22 from the client, and the subnet network ACL and routes permit SSH and return traffic. If those pass, inspect sshd, the host firewall, and the login key/user.",
+    "answer_span": "For a Linux instance, you must allow SSH",
+    "source_document": "ec2-ug.txt"
+  },
+  {
+    "id": "c3_02_ec2_console",
+    "topic": "EC2 / connectivity",
+    "prompt": "I can reach an EC2 instance from the same subnet but not from the internet. List the network path checks, including public IPv4 address, internet gateway route, subnet route table, and security group.",
+    "expected_answer": "Confirm the instance has a public IPv4 address, its subnet's associated route table sends 0.0.0.0/0 to an attached internet gateway, and the security group allows the required inbound port from the client. Also check the network ACL and the instance's local firewall.",
+    "answer_span": "Attaching an internet gateway to a VPC does not automatically make your instances accessible from the internet.",
+    "source_document": "vpc-ug.txt"
+  },
+  {
+    "id": "c3_03_vpc_route",
+    "topic": "VPC routing",
+    "prompt": "A private subnet cannot connect to the internet to download updates. Explain how to check its route table and NAT gateway path, and name the required route destination.",
+    "expected_answer": "Check the private subnet's associated route table for an IPv4 default route (0.0.0.0/0) targeting a reachable NAT gateway in a public subnet; verify that subnet's route to the internet gateway and that the NAT gateway is available. The private subnet does not need a public IP on each instance.",
+    "answer_span": "0.0.0.0/0 nat-gateway-id",
+    "source_document": "vpc-ug.txt"
+  },
+  {
+    "id": "c3_04_s3_getobject",
+    "topic": "S3 / IAM",
+    "prompt": "An IAM role has an s3:GetObject allow but receives AccessDenied. Give a checklist for bucket policy, object ARN, permissions boundary, session policy, SCP, and encryption key permissions.",
+    "expected_answer": "Verify the role's identity policy allows s3:GetObject on the exact object ARN, then inspect the bucket policy and any explicit deny. Confirm permissions boundaries, session policies, and SCPs also allow the request; for SSE-KMS objects, check the caller and key policy allow kms:Decrypt on the key.",
+    "answer_span": "The existence of an AWS Organizations service control policy (SCP) or resource control policy (RCP), IAM permissions boundary, or a session policy overrides the allow.",
+    "source_document": "iam-ug.txt"
+  },
+  {
+    "id": "c3_05_s3_public_access",
+    "topic": "S3 access controls",
+    "prompt": "A bucket policy appears to allow a client but requests are still denied. How should I investigate S3 Block Public Access settings and policy conditions without making the bucket public?",
+    "expected_answer": "Inspect account- and bucket-level S3 Block Public Access settings and keep them enabled; these settings can override a bucket policy. Then check each applicable policy condition against the request context and grant only the specific access required rather than disabling public-access protections.",
+    "answer_span": "Amazon S3 Block Public Access settings can override ACLs and bucket policies",
+    "source_document": "s3-userguide.txt"
+  },
+  {
+    "id": "c3_06_lambda_timeout",
+    "topic": "Lambda",
+    "prompt": "A Lambda function reports Task timed out after 3 seconds. Provide steps to inspect duration metrics and logs, identify slow dependencies, and decide whether to optimize code or adjust timeout.",
+    "expected_answer": "Compare the CloudWatch duration metric and invocation REPORT logs with the three-second timeout, including initialization and memory use; use logs/traces to locate slow calls or dependencies. Optimize slow work and reuse initialized clients first, then raise the timeout only when the expected workload needs more time and remains within Lambda's limit.",
+    "answer_span": "Task timed out after 3.00 seconds",
+    "source_document": "lambda-dg.txt"
+  },
+  {
+    "id": "c3_07_lambda_vpc",
+    "topic": "Lambda / VPC",
+    "prompt": "A Lambda function attached to a VPC times out when calling a public API. Explain the subnet and egress checks, including NAT routing and security group outbound rules.",
+    "expected_answer": "Check that the function's VPC subnets have a route for 0.0.0.0/0 to a working NAT gateway, and that the NAT's public subnet routes to an internet gateway. Verify the function security group's outbound rules and subnet network ACLs allow the API traffic and return path; a VPC attachment alone does not provide public internet egress.",
+    "answer_span": "add a public NAT gateway in each active Availability Zone",
+    "source_document": "vpc-ug.txt"
+  },
+  {
+    "id": "c3_08_secretsmanager_iam",
+    "topic": "IAM / Secrets Manager",
+    "prompt": "A Lambda execution role gets AccessDenied for secretsmanager:GetSecretValue. Give the authorization checks for identity policy, secret ARN and region, resource policy, permissions boundary, SCP, and KMS key.",
+    "expected_answer": "Confirm the execution role's identity policy allows secretsmanager:GetSecretValue on the exact secret ARN in the function's Region and account. Check the secret resource policy and any boundary, session policy, SCP, or explicit deny; if the secret uses a customer-managed KMS key, verify the role and key policy permit decryption.",
+    "answer_span": "applicable permissions policies must allow every part of your request for IAM to authorize your request.",
+    "source_document": "iam-ug.txt"
+  },
+  {
+    "id": "c3_09_eventbridge_putevents",
+    "topic": "IAM / EventBridge",
+    "prompt": "An ECS task receives AccessDenied for events:PutEvents on an EventBridge event bus. Explain how to verify the task role, action, event bus ARN and region, and applicable policies.",
+    "expected_answer": "Verify the ECS task is using the intended task role and that its identity policy allows events:PutEvents on the target event-bus ARN in the correct account and Region. For cross-account publishing, check the bus resource policy; also check boundaries, session policies, SCPs, and explicit denies.",
+    "answer_span": "The permission policy that applies to the principal must include the necessary actions to perform an operation.",
+    "source_document": "iam-ug.txt"
+  },
+  {
+    "id": "c3_10_iam_role",
+    "topic": "IAM role assumption",
+    "prompt": "A workload cannot assume an IAM role. Provide a step-by-step check of the caller identity, target role trust policy, sts:AssumeRole permission, external ID if applicable, and CloudTrail error.",
+    "expected_answer": "Identify the caller, then verify the target role trust policy names that principal and allows sts:AssumeRole under the supplied conditions, including any required external ID. Confirm the caller's identity policy allows the action and use CloudTrail's failed AssumeRole event/error to locate the denial.",
+    "answer_span": "can assume the role, and under which conditions.",
+    "source_document": "iam-ug.txt"
+  }
+]

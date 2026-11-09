@@ -1,0 +1,16 @@
+# Standalone Assignment 2B environment: retrieval, reranking, model inference,
+# and notebook export. Install in a separate Prayogshala environment/kernel.
+# Select a PyTorch wheel compatible with the lab's CUDA image if needed.
+torch==2.3.1
+transformers==4.46.0
+peft==0.12.0
+bitsandbytes==0.43.3
+accelerate==0.34.2
+huggingface-hub==0.26.2
+sentencepiece==0.2.0
+numpy==1.26.4
+sentence-transformers==3.3.1
+faiss-cpu==1.10.0
+rank-bm25==0.2.2
+ipykernel==6.29.5
+nbconvert==7.17.1

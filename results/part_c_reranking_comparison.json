@@ -1,0 +1,544 @@
+{
+  "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "reranker_max_length": 512,
+  "selected_part_b_method": "BM25",
+  "candidate_count": 10,
+  "final_result_count": 3,
+  "warmup_runs_excluded": 1,
+  "reranking_time_per_query_ms": 49.69993500003511,
+  "rank_change_rate_pct": 90.0,
+  "hit_rate_at_1_before_pct": 50.0,
+  "hit_rate_at_1_after_pct": 0.0,
+  "per_query": [
+    {
+      "query_id": "c3_01_ec2_ssh",
+      "reranking_latency_ms": 47.071345999938785,
+      "top1_changed": true,
+      "hit_at_1_before": true,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "ec2-ug:8",
+          "source": "ec2-ug",
+          "score": 31.879650916122433,
+          "preview": "unsafe for production environments. In production, be sure to authorize access only from the appropriate individual IP address or range of a"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "cfn-ug:51",
+          "source": "cfn-ug",
+          "score": 30.654645803792274,
+          "preview": "Properties\": { \"BucketName\": \" amzn-s3-demo-bucket \" } } } } YAML Resources: MyBucket: Type: AWS::S3::Bucket Properties: BucketName: amzn-s3"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "ec2-ug:9",
+          "source": "ec2-ug",
+          "score": 29.91555297019541,
+          "preview": "the operating system of the instance. If you can't connect to your instance, see Troubleshoot issues connecting to your Amazon EC2 Linux ins"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "cfn-ug:52",
+          "source": "cfn-ug",
+          "score": 1.4257205724716187,
+          "preview": "!Ref InstanceSecurityGroup - sg-12a4c434 KeyName: MyKey ImageId: ami-1234567890abcdef0 InstanceSecurityGroup: Type: AWS::EC2::SecurityGroup "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "cfn-ug:51",
+          "source": "cfn-ug",
+          "score": 1.1763250827789307,
+          "preview": "Properties\": { \"BucketName\": \" amzn-s3-demo-bucket \" } } } } YAML Resources: MyBucket: Type: AWS::S3::Bucket Properties: BucketName: amzn-s3"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "ec2-ug:7",
+          "source": "ec2-ug",
+          "score": 0.06822600960731506,
+          "preview": "'t cover all possible options. To launch an instance 1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/. 2. In the naviga"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_02_ec2_console",
+      "reranking_latency_ms": 50.83926799989058,
+      "top1_changed": false,
+      "hit_at_1_before": false,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:6",
+          "source": "vpc-ug",
+          "score": 73.45730996499834,
+          "preview": "\ufb01gure route tables Access the internet You control how the instances that you launch into a VPC access resources outside the VPC. A default "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:69",
+          "source": "vpc-ug",
+          "score": 68.08237881769314,
+          "preview": "Example dual-stack VPC con\ufb01guration With a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication between resou"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:10",
+          "source": "vpc-ug",
+          "score": 64.24658875943376,
+          "preview": "will receive tra\ufb03c only from other servers in the VPC, create a separate subnet for these servers in each Availability Zone. \u2022If you have se"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:6",
+          "source": "vpc-ug",
+          "score": 2.6476597785949707,
+          "preview": "\ufb01gure route tables Access the internet You control how the instances that you launch into a VPC access resources outside the VPC. A default "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:13",
+          "source": "vpc-ug",
+          "score": 2.4420762062072754,
+          "preview": "an available IP address in the subnet range for you. For more information about network interfaces, see Elastic Network Interfaces in the Am"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:69",
+          "source": "vpc-ug",
+          "score": 1.4181605577468872,
+          "preview": "Example dual-stack VPC con\ufb01guration With a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication between resou"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_03_vpc_route",
+      "reranking_latency_ms": 47.979319999740255,
+      "top1_changed": true,
+      "hit_at_1_before": false,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:10",
+          "source": "vpc-ug",
+          "score": 67.81267804216921,
+          "preview": "will receive tra\ufb03c only from other servers in the VPC, create a separate subnet for these servers in each Availability Zone. \u2022If you have se"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:66",
+          "source": "vpc-ug",
+          "score": 64.30954621988,
+          "preview": "tra\ufb03c, because NAT gateways do not support IPv6. To update the route table for a public subnet 1. Open the Amazon VPC console at https://con"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:69",
+          "source": "vpc-ug",
+          "score": 62.498021635373995,
+          "preview": "Example dual-stack VPC con\ufb01guration With a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication between resou"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:66",
+          "source": "vpc-ug",
+          "score": 6.2331342697143555,
+          "preview": "tra\ufb03c, because NAT gateways do not support IPv6. To update the route table for a public subnet 1. Open the Amazon VPC console at https://con"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:10",
+          "source": "vpc-ug",
+          "score": 3.9249582290649414,
+          "preview": "will receive tra\ufb03c only from other servers in the VPC, create a separate subnet for these servers in each Availability Zone. \u2022If you have se"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:6",
+          "source": "vpc-ug",
+          "score": 3.1529924869537354,
+          "preview": "\ufb01gure route tables Access the internet You control how the instances that you launch into a VPC access resources outside the VPC. A default "
+        }
+      ]
+    },
+    {
+      "query_id": "c3_04_s3_getobject",
+      "reranking_latency_ms": 53.11495400019339,
+      "top1_changed": true,
+      "hit_at_1_before": true,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:16",
+          "source": "iam-ug",
+          "score": 42.84887315320488,
+          "preview": "can use identity-based policies. Resource-based policies can grant cross-account access. To make a request in a di\ufb00erent account, a policy i"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "lambda-dg:13",
+          "source": "lambda-dg",
+          "score": 36.504394391774525,
+          "preview": "a trigger works, start by completing the Use an Amazon S3 trigger tutorial, or for a general overview of using triggers and instructions on "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:0",
+          "source": "iam-ug",
+          "score": 35.631321842097925,
+          "preview": "User Guide AWS Identity and Access Management Copyright \u00a9 2026 Amazon Web Services, Inc. and/or its a\ufb03liates. All rights reserved. Require h"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:0",
+          "source": "iam-ug",
+          "score": 1.156169056892395,
+          "preview": "User Guide AWS Identity and Access Management Copyright \u00a9 2026 Amazon Web Services, Inc. and/or its a\ufb03liates. All rights reserved. Require h"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "iam-ug:27",
+          "source": "iam-ug",
+          "score": 0.36708423495292664,
+          "preview": "permissions to work with those services aren't included in the policy. Policies and IAM groups You can organize IAM users into IAM groups an"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:57",
+          "source": "iam-ug",
+          "score": -0.6461052894592285,
+          "preview": "about that entity. \u2022aws iam get-service-last-accessed-details-with-entities c. Learn more about the identity-based policies that an identity"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_05_s3_public_access",
+      "reranking_latency_ms": 48.11659700044402,
+      "top1_changed": true,
+      "hit_at_1_before": true,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "s3-userguide:58",
+          "source": "s3-userguide",
+          "score": 40.855926891872066,
+          "preview": "the user can create a bucket. But the user does not own the bucket; the AWS account that the user belongs to owns the bucket. The user needs"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "s3-userguide:25",
+          "source": "s3-userguide",
+          "score": 38.015105281321105,
+          "preview": "bucket-owner-full-control canned ACL, you can add a bucket policy that allows only object uploads that use this ACL. \u2022Object writer \u2013 The AW"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:16",
+          "source": "iam-ug",
+          "score": 37.49897671484158,
+          "preview": "can use identity-based policies. Resource-based policies can grant cross-account access. To make a request in a di\ufb00erent account, a policy i"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "s3-userguide:25",
+          "source": "s3-userguide",
+          "score": 2.943420171737671,
+          "preview": "bucket-owner-full-control canned ACL, you can add a bucket policy that allows only object uploads that use this ACL. \u2022Object writer \u2013 The AW"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "s3-userguide:58",
+          "source": "s3-userguide",
+          "score": 2.691028594970703,
+          "preview": "the user can create a bucket. But the user does not own the bucket; the AWS account that the user belongs to owns the bucket. The user needs"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "s3-userguide:11",
+          "source": "s3-userguide",
+          "score": 1.6177897453308105,
+          "preview": "ended user actions and application failures. For more information, see Retaining multiple versions of objects with S3 Versioning. Version ID"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_06_lambda_timeout",
+      "reranking_latency_ms": 51.56701100031569,
+      "top1_changed": true,
+      "hit_at_1_before": true,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "lambda-dg:23",
+          "source": "lambda-dg",
+          "score": 46.86116396268058,
+          "preview": "c01d1e2e1 REPORT RequestId: c3252230-c73d-49f6-8844-968c01d1e2e1 Duration: 933.59 ms Billed Duration: 934 ms Memory Size: 128 MB Max Memory "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "lambda-dg:21",
+          "source": "lambda-dg",
+          "score": 42.23845979381902,
+          "preview": "kes the function handler (the Invoke phase). Failures during the Restore phase If the Restore phase fails, Lambda emits error information in"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "s3-userguide:4",
+          "source": "s3-userguide",
+          "score": 40.71870840551705,
+          "preview": "Simple Noti\ufb01cation Service (Amazon SNS), Amazon Simple Queue Service (Amazon SQS), and AWS Lambda when a change is made to your S3 resources"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "lambda-dg:19",
+          "source": "lambda-dg",
+          "score": 1.3176078796386719,
+          "preview": "Function restarts from last checkpoint \u2022Shutdown: Cleanup of durable state and resources Topics \u2022Init phase \u2022Failures during the Init phase "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "lambda-dg:20",
+          "source": "lambda-dg",
+          "score": 1.2942546606063843,
+          "preview": "You might see gaps between your function's invocation and initialization phases. Depending on your function's runtime and memory con\ufb01guratio"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "lambda-dg:17",
+          "source": "lambda-dg",
+          "score": 0.48915550112724304,
+          "preview": "Watch Logs. In addition to logging your function's output, the runtime also logs entries when function invocation starts and ends. This incl"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_07_lambda_vpc",
+      "reranking_latency_ms": 48.218258999895625,
+      "top1_changed": true,
+      "hit_at_1_before": false,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:6",
+          "source": "vpc-ug",
+          "score": 44.170170175414434,
+          "preview": "\ufb01gure route tables Access the internet You control how the instances that you launch into a VPC access resources outside the VPC. A default "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:69",
+          "source": "vpc-ug",
+          "score": 39.464132973829024,
+          "preview": "Example dual-stack VPC con\ufb01guration With a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication between resou"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:66",
+          "source": "vpc-ug",
+          "score": 39.3828160528972,
+          "preview": "tra\ufb03c, because NAT gateways do not support IPv6. To update the route table for a public subnet 1. Open the Amazon VPC console at https://con"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "vpc-ug:69",
+          "source": "vpc-ug",
+          "score": -0.6562882661819458,
+          "preview": "Example dual-stack VPC con\ufb01guration With a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication between resou"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "vpc-ug:10",
+          "source": "vpc-ug",
+          "score": -1.54248046875,
+          "preview": "will receive tra\ufb03c only from other servers in the VPC, create a separate subnet for these servers in each Availability Zone. \u2022If you have se"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "vpc-ug:66",
+          "source": "vpc-ug",
+          "score": -1.6320459842681885,
+          "preview": "tra\ufb03c, because NAT gateways do not support IPv6. To update the route table for a public subnet 1. Open the Amazon VPC console at https://con"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_08_secretsmanager_iam",
+      "reranking_latency_ms": 50.91080800002601,
+      "top1_changed": true,
+      "hit_at_1_before": true,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:16",
+          "source": "iam-ug",
+          "score": 42.419386364652574,
+          "preview": "can use identity-based policies. Resource-based policies can grant cross-account access. To make a request in a di\ufb00erent account, a policy i"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "lambda-dg:13",
+          "source": "lambda-dg",
+          "score": 41.541443681347936,
+          "preview": "a trigger works, start by completing the Use an Amazon S3 trigger tutorial, or for a general overview of using triggers and instructions on "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "lambda-dg:61",
+          "source": "lambda-dg",
+          "score": 38.57643735715,
+          "preview": "choose the AWS Region closest to your geographical location. aws s3api create-bucket --bucket amzn-s3-demo-bucket --region us-east-2 \\ --cre"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "lambda-dg:13",
+          "source": "lambda-dg",
+          "score": -0.6084083914756775,
+          "preview": "a trigger works, start by completing the Use an Amazon S3 trigger tutorial, or for a general overview of using triggers and instructions on "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "iam-ug:57",
+          "source": "iam-ug",
+          "score": -2.637314796447754,
+          "preview": "about that entity. \u2022aws iam get-service-last-accessed-details-with-entities c. Learn more about the identity-based policies that an identity"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "lambda-dg:14",
+          "source": "lambda-dg",
+          "score": -4.092607498168945,
+          "preview": ". For example, if your function performs CRUD operations on a DynamoDB table, you can add the AmazonDynamoDBFullAccess policy to your role. "
+        }
+      ]
+    },
+    {
+      "query_id": "c3_09_eventbridge_putevents",
+      "reranking_latency_ms": 48.234418999982154,
+      "top1_changed": true,
+      "hit_at_1_before": false,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "lambda-dg:39",
+          "source": "lambda-dg",
+          "score": 37.93025818884529,
+          "preview": "potency \u2022Use multiple AWS accounts for managing quotas Designing an application 47 Use services instead of custom code Serverless applicatio"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "lambda-dg:14",
+          "source": "lambda-dg",
+          "score": 34.12340356941159,
+          "preview": ". For example, if your function performs CRUD operations on a DynamoDB table, you can add the AmazonDynamoDBFullAccess policy to your role. "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "lambda-dg:12",
+          "source": "lambda-dg",
+          "score": 32.98746209083686,
+          "preview": "contains a runtime , a language-speci\ufb01c environment that relays event information and responses between Lambda and your function. Lambda pro"
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:61",
+          "source": "iam-ug",
+          "score": -2.7326266765594482,
+          "preview": "could look like the following example policy. JSON { \"Version\":\"2012-10-17\", \"Statement\": [ { \"Sid\": \"FullAccessToSomeServices\", \"Effect\": \""
+        },
+        {
+          "rank": 2,
+          "chunk_id": "iam-ug:0",
+          "source": "iam-ug",
+          "score": -3.736133337020874,
+          "preview": "User Guide AWS Identity and Access Management Copyright \u00a9 2026 Amazon Web Services, Inc. and/or its a\ufb03liates. All rights reserved. Require h"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:54",
+          "source": "iam-ug",
+          "score": -5.193329334259033,
+          "preview": "the members of the user group and when they last accessed the service. \u2022User \u2013 View the list of services that the user can access. You can a"
+        }
+      ]
+    },
+    {
+      "query_id": "c3_10_iam_role",
+      "reranking_latency_ms": 50.94736799992461,
+      "top1_changed": true,
+      "hit_at_1_before": false,
+      "hit_at_1_after": false,
+      "top3_before": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:38",
+          "source": "iam-ug",
+          "score": 44.776677640763666,
+          "preview": "in IAM Identity Center (either federated or created in the IAM Identity Center directory) use IAM roles to access resources. Before you star"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "iam-ug:7",
+          "source": "iam-ug",
+          "score": 42.285610476178675,
+          "preview": "a speci\ufb01c type of resource-based policy for IAM roles. A role can have only one trust policy. \u2022Identity-based policies (inline and managed) "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:6",
+          "source": "iam-ug",
+          "score": 39.864044133216666,
+          "preview": "CLI to cryptographically sign requests. For more information, see AWS Signature Version 4 for API requests in the IAM User Guide . When you "
+        }
+      ],
+      "top3_after": [
+        {
+          "rank": 1,
+          "chunk_id": "iam-ug:66",
+          "source": "iam-ug",
+          "score": 2.3473196029663086,
+          "preview": "trust policies, role tags for ABAC, and con\ufb01gurable role paths. You can use it alongside permission sets or on its own. For more information"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "iam-ug:7",
+          "source": "iam-ug",
+          "score": 0.32479116320610046,
+          "preview": "a speci\ufb01c type of resource-based policy for IAM roles. A role can have only one trust policy. \u2022Identity-based policies (inline and managed) "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "iam-ug:21",
+          "source": "iam-ug",
+          "score": 0.03259453549981117,
+          "preview": "create separate IAM users or users in IAM Identity Center for them. Instead, you can federate those user identities into AWS using either IA"
+        }
+      ]
+    }
+  ]
+}

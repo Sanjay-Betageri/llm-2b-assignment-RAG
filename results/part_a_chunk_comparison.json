@@ -1,0 +1,26 @@
+{
+  "100": {
+    "total_chunks": 1837,
+    "hit_rate_at_3_pct": 0.0,
+    "avg_top3_tokens_per_query": 300.0,
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "vector_size": 384,
+    "similarity": "cosine similarity (L2-normalized vectors, IndexFlatIP)",
+    "batch_size": 32,
+    "embedding_max_length": 512,
+    "max_chunk_input_tokens_including_special_tokens": 103,
+    "index_build_seconds": 3.3504586210001435
+  },
+  "400": {
+    "total_chunks": 461,
+    "hit_rate_at_3_pct": 20.0,
+    "avg_top3_tokens_per_query": 1200.0,
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "vector_size": 384,
+    "similarity": "cosine similarity (L2-normalized vectors, IndexFlatIP)",
+    "batch_size": 32,
+    "embedding_max_length": 512,
+    "max_chunk_input_tokens_including_special_tokens": 403,
+    "index_build_seconds": 4.120402742000351
+  }
+}

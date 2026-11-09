@@ -1,0 +1,305 @@
+[
+  {
+    "query_id": "c3_01_ec2_ssh",
+    "question": "An EC2 Linux instance times out on SSH port 22. Give a concise diagnostic sequence covering security groups, network ACLs, routes, instance status checks, and host firewall.",
+    "answer": "Answer only from these passages. Cite factual claims as [1], [2], or [3]. Do not use outside knowledge. If they do not answer the question, reply exactly: Not found in the documents.\n\nQuestion: An EC2 Linux instance times out on SSH port 22. Give a concise diagnostic sequence covering security groups, network ACLs, routes, instance status checks, and host firewall.\n\nEvidence:\n[1] cfn-ug | cfn-ug:52\n!Ref InstanceSecurityGroup \n        - sg-",
+    "input_token_count": 1667,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [
+      1,
+      2,
+      3
+    ],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "cfn-ug:52",
+        "source": "cfn-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "cfn-ug:51",
+        "source": "cfn-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "ec2-ug:7",
+        "source": "ec2-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_02_ec2_console",
+    "question": "I can reach an EC2 instance from the same subnet but not from the internet. List the network path checks, including public IPv4 address, internet gateway route, subnet route table, and security group.",
+    "answer": "1. Create a VPC with a CIDR block of 10.0.0.0/16.\n2. Create a public subnet with a CIDR block of 10.0.0.0/24.\n3. Create a private subnet with a CIDR block of 10.0.1.0/24.\n4. Launch an instance in the public subnet with a public IPv4 address.\n5. Launch an instance in the private subnet with a private IPv4 address.\n6. Con",
+    "input_token_count": 1569,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "vpc-ug:6",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "vpc-ug:13",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "vpc-ug:69",
+        "source": "vpc-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_03_vpc_route",
+    "question": "A private subnet cannot connect to the internet to download updates. Explain how to check its route table and NAT gateway path, and name the required route destination.",
+    "answer": "1. Create a VPC with a CIDR block of 10.0.0.0/16.\n2. Create two public subnets in the VPC with CIDR blocks of 10.0.0.0/24 and 10.0.1.0/24.\n3. Create a private subnet in the VPC with a CIDR block of 10.0.2.0/24.\n4. Create an internet gateway and attach it to the VPC.\n5. Update the route table",
+    "input_token_count": 1551,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "vpc-ug:66",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "vpc-ug:10",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "vpc-ug:6",
+        "source": "vpc-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_04_s3_getobject",
+    "question": "An IAM role has an s3:GetObject allow but receives AccessDenied. Give a checklist for bucket policy, object ARN, permissions boundary, session policy, SCP, and encryption key permissions.",
+    "answer": "1. Generate a report. The request must include the ARN of the IAM resource (user, user group, role, or policy) for which you want a report. It returns a JobId that you can then use in the GetServiceLastAccessedDetails and GetServiceLastAccessedDetailsWithEntities operations to monitor the JobStatus until the job is complete.\n2. Retrieve details about the report using the JobId parameter from the previous step.\n\nAnswer:\n\n1. Generate a report. The request must include the ARN of the IAM resource (user, user group, role",
+    "input_token_count": 1497,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "iam-ug:0",
+        "source": "iam-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "iam-ug:27",
+        "source": "iam-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "iam-ug:57",
+        "source": "iam-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_05_s3_public_access",
+    "question": "A bucket policy appears to allow a client but requests are still denied. How should I investigate S3 Block Public Access settings and policy conditions without making the bucket public?",
+    "answer": "1. Choose Create bucket.\n2. In the Bucket name \ufb01eld, enter a name for your bucket.\n3. (Optional) Under Region, choose the region where you want to store your bucket.\n4. (Optional) Under Storage class, choose the storage class for your bucket.\n5. (Optional) Under Block Public Access settings for this bucket, choose the Block Public Access settings that you want to apply to the bucket.\n6. (Optional) By default, Bucket Versioning is disabled. Versioning is a means of keeping multiple variants of an object in the same bucket",
+    "input_token_count": 1492,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "s3-userguide:25",
+        "source": "s3-userguide"
+      },
+      {
+        "number": 2,
+        "chunk_id": "s3-userguide:58",
+        "source": "s3-userguide"
+      },
+      {
+        "number": 3,
+        "chunk_id": "s3-userguide:11",
+        "source": "s3-userguide"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_06_lambda_timeout",
+    "question": "A Lambda function reports Task timed out after 3 seconds. Provide steps to inspect duration metrics and logs, identify slow dependencies, and decide whether to optimize code or adjust timeout.",
+    "answer": "Lambda execution environments support both standard functions (up to 15 minutes) and Durable  Functions (up to one year). While both share the same basic lifecycle, Durable Functions add state  management capabilities for long-running work\ufb02ows.\nLambda invokes your function in an execution environment, which provides a secure and isolated  runtime environment. The execution environment\n\nAnswer:\n\nLambda execution environments support both standard functions (up to 15 minutes) and Durable  Functions (up to one year). While both share the same basic lifecycle, Durable Functions add state",
+    "input_token_count": 1561,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "lambda-dg:19",
+        "source": "lambda-dg"
+      },
+      {
+        "number": 2,
+        "chunk_id": "lambda-dg:20",
+        "source": "lambda-dg"
+      },
+      {
+        "number": 3,
+        "chunk_id": "lambda-dg:17",
+        "source": "lambda-dg"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_07_lambda_vpc",
+    "question": "A Lambda function attached to a VPC times out when calling a public API. Explain the subnet and egress checks, including NAT routing and security group outbound rules.",
+    "answer": "A Lambda function attached to a VPC times out when calling a public API. Explain the subnet and egress checks, including NAT routing and security group outbound rules.\n\nEvidence:\n[1] vpc-ug | vpc-ug:69\nExample dual-stack VPC con\ufb01guration\nWith a dual-stack con\ufb01guration, you can use both IPv4 and IPv6 addresses for communication \nbetween resources in your VPC and resources over the internet.\nThe following diagram represents the architecture of your VPC. Your VPC has a",
+    "input_token_count": 1573,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [
+      1
+    ],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "vpc-ug:69",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "vpc-ug:10",
+        "source": "vpc-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "vpc-ug:66",
+        "source": "vpc-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_08_secretsmanager_iam",
+    "question": "A Lambda execution role gets AccessDenied for secretsmanager:GetSecretValue. Give the authorization checks for identity policy, secret ARN and region, resource policy, permissions boundary, SCP, and KMS key.",
+    "answer": "1. The following are the authorization checks for identity policy, secret ARN and region, resource policy, permissions boundary, SCP, and KMS key.\n\nIdentity policy:\n\n{ \"Version\": \"2012-10-17\", \"Statement\": [ { \"Effect\": \"Allow\", \"Principal\": { \"Service\": \"lambda.amazonaws.com\" }, \"Action\": \"sts:AssumeRole\", \"Condition\": { \"StringEquals\": { \"sts:ExternalId\": \"externalId\" } } } ] }\n\nSecret ARN and region:",
+    "input_token_count": 1460,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "lambda-dg:13",
+        "source": "lambda-dg"
+      },
+      {
+        "number": 2,
+        "chunk_id": "iam-ug:57",
+        "source": "iam-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "lambda-dg:14",
+        "source": "lambda-dg"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_09_eventbridge_putevents",
+    "question": "An ECS task receives AccessDenied for events:PutEvents on an EventBridge event bus. Explain how to verify the task role, action, event bus ARN and region, and applicable policies.",
+    "answer": "1. Create an IAM user.\n2. Create an IAM role.\n3. Create an IAM policy.\n4. Attach the policy to the role.\n5. Attach the role to an EC2 instance.\n6. Launch the instance.\n7. Verify that the instance has the role attached.\n8. Verify that the instance has the policy attached.\n9. Verify that the instance has the policy attached.\n10. Verify that the instance has the policy attached.\n11. Verify that the instance has the policy attached.\n12. Verify that",
+    "input_token_count": 1543,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "iam-ug:61",
+        "source": "iam-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "iam-ug:0",
+        "source": "iam-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "iam-ug:54",
+        "source": "iam-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_10_iam_role",
+    "question": "A workload cannot assume an IAM role. Provide a step-by-step check of the caller identity, target role trust policy, sts:AssumeRole permission, external ID if applicable, and CloudTrail error.",
+    "answer": "1. Create an IAM user.\n2. Create an IAM role.\n3. Attach a policy to the IAM role.\n4. Trust the IAM role.\n5. Use the IAM role.\n\nExplanation:\n\nTo grant a workload access to AWS resources, you must create an IAM role and attach a policy to the role. Then, you must trust the role by adding a trust policy that grants the workload permission to assume the role. Finally, you must use the role by calling the AssumeRole API.\n\n1. Create an IAM",
+    "input_token_count": 1494,
+    "is_not_found_test": false,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": null,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "iam-ug:66",
+        "source": "iam-ug"
+      },
+      {
+        "number": 2,
+        "chunk_id": "iam-ug:7",
+        "source": "iam-ug"
+      },
+      {
+        "number": 3,
+        "chunk_id": "iam-ug:21",
+        "source": "iam-ug"
+      }
+    ]
+  },
+  {
+    "query_id": "c3_not_found_account_id",
+    "question": "What is the 12-digit AWS account ID of the customer who owns the S3 bucket mentioned in these documents?",
+    "answer": "The 12-digit AWS account ID of the customer who owns the S3 bucket mentioned in these documents is 111122223333.\n\nExplanation:\nThe 12-digit AWS account ID of the customer who owns the S3 bucket mentioned in these documents is 111122223333.\n\nThe bucket name pre\ufb01x that you create, and a su\ufb03x that contains your 12-digit AWS account ID, the AWS Region code, and ends with -an.",
+    "input_token_count": 1449,
+    "is_not_found_test": true,
+    "cited_passage_numbers": [],
+    "citations_in_range": true,
+    "not_found_response_exact": false,
+    "supporting_chunks": [
+      {
+        "number": 1,
+        "chunk_id": "s3-userguide:77",
+        "source": "s3-userguide"
+      },
+      {
+        "number": 2,
+        "chunk_id": "s3-userguide:11",
+        "source": "s3-userguide"
+      },
+      {
+        "number": 3,
+        "chunk_id": "s3-userguide:13",
+        "source": "s3-userguide"
+      }
+    ]
+  }
+]

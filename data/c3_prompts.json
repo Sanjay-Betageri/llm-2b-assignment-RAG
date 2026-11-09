@@ -1,0 +1,52 @@
+[
+  {
+    "id": "c3_01_ec2_ssh",
+    "topic": "EC2 / SSH",
+    "prompt": "An EC2 Linux instance times out on SSH port 22. Give a concise diagnostic sequence covering security groups, network ACLs, routes, instance status checks, and host firewall."
+  },
+  {
+    "id": "c3_02_ec2_console",
+    "topic": "EC2 / connectivity",
+    "prompt": "I can reach an EC2 instance from the same subnet but not from the internet. List the network path checks, including public IPv4 address, internet gateway route, subnet route table, and security group."
+  },
+  {
+    "id": "c3_03_vpc_route",
+    "topic": "VPC routing",
+    "prompt": "A private subnet cannot connect to the internet to download updates. Explain how to check its route table and NAT gateway path, and name the required route destination."
+  },
+  {
+    "id": "c3_04_s3_getobject",
+    "topic": "S3 / IAM",
+    "prompt": "An IAM role has an s3:GetObject allow but receives AccessDenied. Give a checklist for bucket policy, object ARN, permissions boundary, session policy, SCP, and encryption key permissions."
+  },
+  {
+    "id": "c3_05_s3_public_access",
+    "topic": "S3 access controls",
+    "prompt": "A bucket policy appears to allow a client but requests are still denied. How should I investigate S3 Block Public Access settings and policy conditions without making the bucket public?"
+  },
+  {
+    "id": "c3_06_lambda_timeout",
+    "topic": "Lambda",
+    "prompt": "A Lambda function reports Task timed out after 3 seconds. Provide steps to inspect duration metrics and logs, identify slow dependencies, and decide whether to optimize code or adjust timeout."
+  },
+  {
+    "id": "c3_07_lambda_vpc",
+    "topic": "Lambda / VPC",
+    "prompt": "A Lambda function attached to a VPC times out when calling a public API. Explain the subnet and egress checks, including NAT routing and security group outbound rules."
+  },
+  {
+    "id": "c3_08_secretsmanager_iam",
+    "topic": "IAM / Secrets Manager",
+    "prompt": "A Lambda execution role gets AccessDenied for secretsmanager:GetSecretValue. Give the authorization checks for identity policy, secret ARN and region, resource policy, permissions boundary, SCP, and KMS key."
+  },
+  {
+    "id": "c3_09_eventbridge_putevents",
+    "topic": "IAM / EventBridge",
+    "prompt": "An ECS task receives AccessDenied for events:PutEvents on an EventBridge event bus. Explain how to verify the task role, action, event bus ARN and region, and applicable policies."
+  },
+  {
+    "id": "c3_10_iam_role",
+    "topic": "IAM role assumption",
+    "prompt": "A workload cannot assume an IAM role. Provide a step-by-step check of the caller identity, target role trust policy, sts:AssumeRole permission, external ID if applicable, and CloudTrail error."
+  }
+]

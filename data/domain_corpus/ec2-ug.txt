@@ -1,0 +1,2215 @@
+User Guide
+Amazon Elastic Compute Cloud
+Copyright © 2026 Amazon Web Services, Inc. and/or its aﬃliates. All rights reserved.
+
+Diﬀerences between simpliﬁed automatic recovery and CloudWatch action based 
+
+Tutorial: Conﬁgure EC2 Fleet to launch On-Demand Instances using targeted Capacity 
+Tutorial: Conﬁgure your EC2 Fleet to launch instances into Interruptible Capacity 
+Tutorial: Conﬁgure your EC2 Fleet to launch instances into multiple Capacity Reservation 
+Example 5: Launch On-Demand Instances using Capacity Reservations when the total 
+Example 12: Launch instances into multiple Capacity Reservation types using a Capacity 
+
+The requested conﬁguration is currently not supported. Please check the documentation 
+Error: The instance may not be terminated. Modify its 'disableApiTermination' instance 
+
+Error: Private key must begin with "-----BEGIN RSA PRIVATE KEY-----" and end with "-----
+request_module: runaway loop modprobe (Looping legacy kernel modprobe on older 
+"FATAL: kernel too old" and "fsck: No such ﬁle or directory while trying to open /
+Error: Unable to determine major/minor number of root device... (Root ﬁle system/device 
+Bringing up interface eth0: Device eth0 has diﬀerent MAC address than expected, 
+Unable to load SELinux Policy. Machine is in enforcing mode. Halting now. (SELinux 
+
+Unable to connect AWS Systems Manager Sessions Manager to a Windows Server 2025 
+
+What is Amazon EC2?
+Amazon Elastic Compute Cloud (Amazon EC2) provides on-demand, scalable computing capacity 
+in the Amazon Web Services (AWS) Cloud. Using Amazon EC2 reduces hardware costs so you can 
+develop and deploy applications faster. You can use Amazon EC2 to launch as many or as few 
+virtual servers as you need, conﬁgure security and networking, and manage storage. You can add 
+capacity (scale up) to handle compute-heavy tasks, such as monthly or yearly processes, or spikes in 
+website traﬃc. When usage decreases, you can reduce capacity (scale down) again.
+An EC2 instance is a virtual server in the AWS Cloud. When you launch an EC2 instance, the 
+instance type that you specify determines the hardware available to your instance. Each instance 
+type oﬀers a diﬀerent balance of compute, memory, network, and storage resources. For more 
+information, see the Amazon EC2 Instance Types Guide.
+Features of Amazon EC2
+Amazon EC2 provides the following high-level features:
+Instances
+Virtual servers.
+Amazon Machine Images (AMIs)
+Preconﬁgured templates for your instances that package the components you need for your 
+server (including the operating system and additional software).
+Instance types
+Various conﬁgurations of CPU, memory, storage, networking capacity, and graphics hardware 
+for your instances.
+Features 1
+
+Amazon EBS volumes
+Persistent storage volumes for your data using Amazon Elastic Block Store (Amazon EBS).
+Instance store volumes
+Storage volumes for temporary data that is deleted when you stop, hibernate, or terminate 
+your instance.
+Key pairs
+Secure login information for your instances. AWS stores the public key and you store the private 
+key in a secure place.
+Security groups
+A virtual ﬁrewall that allows you to specify the protocols, ports, and source IP ranges that can 
+reach your instances, and the destination IP ranges to which your instances can connect.
+Amazon EC2 supports the processing, storage, and transmission of credit card data by a merchant 
+or service provider, and has been validated as being compliant with Payment Card Industry (PCI) 
+Data Security Standard (DSS). For more information about PCI DSS, including how to request a 
+copy of the AWS PCI Compliance Package, see PCI DSS Level 1.
+Related services
+Services to use with Amazon EC2
+You can use other AWS services with the instances that you deploy using Amazon EC2.
+Amazon EC2 Auto Scaling
+Helps ensure you have the correct number of Amazon EC2 instances available to handle the 
+load for your application.
+AWS Backup
+Automate backing up your Amazon EC2 instances and the Amazon EBS volumes attached to 
+them.
+Amazon CloudWatch
+Monitor your instances and Amazon EBS volumes.
+Related services 2
+
+Elastic Load Balancing
+Automatically distribute incoming application traﬃc across multiple instances.
+Amazon GuardDuty
+Detect potentially unauthorized or malicious use of your EC2 instances.
+EC2 Image Builder
+Automate the creation, management, and deployment of customized, secure, and up-to-date 
+server images.
+AWS Launch Wizard
+Size, conﬁgure, and deploy AWS resources for third-party applications without having to 
+manually identify and provision individual AWS resources.
+AWS Systems Manager
+Perform operations at scale on EC2 instances with this secure end-to-end management 
+solution.
+Additional compute services
+You can launch instances using another AWS compute service instead of using Amazon EC2.
+Amazon Lightsail
+Build websites or web applications using Amazon Lightsail, a cloud platform that provides the 
+resources that you need to deploy your project quickly, for a low, predictable monthly price. To 
+compare Amazon EC2 and Lightsail, see Amazon Lightsail or Amazon EC2.
+Amazon Elastic Container Service (Amazon ECS)
+Deploy, manage, and scale containerized applications on a cluster of EC2 instances. For more 
+information, see Choosing an AWS container service.
+Amazon Elastic Kubernetes Service (Amazon EKS)
+Run your Kubernetes applications on AWS. For more information, see Choosing an AWS 
+container service.
+Related services 3
+
+Access Amazon EC2
+You can create and manage your Amazon EC2 instances using the following interfaces:
+Amazon EC2 console
+A simple web interface to create and manage Amazon EC2 instances and resources. If you've 
+signed up for an AWS account, you can access the Amazon EC2 console by signing into the AWS 
+Management Console and selecting EC2 from the console home page.
+AWS Command Line Interface
+Enables you to interact with AWS services using commands in your command-line shell. It is 
+supported on Windows, Mac, and Linux. For more information about the AWS CLI , see AWS 
+Command Line Interface User Guide. You can ﬁnd the Amazon EC2 commands in the AWS CLI 
+Command Reference.
+CloudFormation
+Amazon EC2 supports creating resources using CloudFormation. You create a template, in 
+JSON or YAML format, that describes your AWS resources, and CloudFormation provisions and 
+conﬁgures those resources for you. You can reuse your CloudFormation templates to provision 
+the same resources multiple times, whether in the same Region and account or in multiple 
+Regions and accounts. For more information about supported resource types and properties for 
+Amazon EC2, see EC2 resource type reference in the AWS CloudFormation User Guide.
+AWS SDKs
+If you prefer to build applications using language-speciﬁc APIs instead of submitting a request 
+over HTTP or HTTPS, AWS provides libraries, sample code, tutorials, and other resources 
+for software developers. These libraries provide basic functions that automate tasks such 
+as cryptographically signing your requests, retrying requests, and handling error responses, 
+making it easier for you to get started. For more information, see Tools to Build on AWS.
+AWS Tools for PowerShell
+A set of PowerShell modules that are built on the functionality exposed by the SDK for .NET. 
+The Tools for PowerShell enable you to script operations on your AWS resources from the 
+PowerShell command line. To get started, see the AWS Tools for PowerShell User Guide. You 
+can ﬁnd the cmdlets for Amazon EC2, in the AWS Tools for PowerShell Cmdlet Reference.
+Access EC2 4
+
+Query API
+Amazon EC2 provides a Query API. These requests are HTTP or HTTPS requests that use the 
+HTTP verbs GET or POST and a Query parameter named Action. For more information about 
+the API actions for Amazon EC2, see Actions in the Amazon EC2 API Reference.
+Pricing for Amazon EC2
+Amazon EC2 provides the following pricing options:
+Free Tier
+You can get started with Amazon EC2 for free. To explore the Free Tier options, see AWS Free 
+Tier.
+On-Demand Instances
+Pay for the instances that you use by the second, with a minimum of 60 seconds, with no long-
+term commitments or upfront payments.
+Savings Plans
+You can reduce your Amazon EC2 costs by making a commitment to a consistent amount of 
+usage, in USD per hour, for a term of 1 or 3 years.
+Reserved Instances
+You can reduce your Amazon EC2 costs by making a commitment to a speciﬁc instance 
+conﬁguration, including instance type and Region, for a term of 1 or 3 years.
+Spot Instances
+Request unused EC2 instances, which can reduce your Amazon EC2 costs signiﬁcantly.
+Dedicated Hosts
+Reduce costs by using a physical EC2 server that is fully dedicated for your use, either On-
+Demand or as part of a Savings Plan. You can use your existing server-bound software licenses 
+and get help meeting compliance requirements.
+On-Demand Capacity Reservations
+Reserve compute capacity for your EC2 instances in a speciﬁc Availability Zone for any duration 
+of time.
+Pricing 5
+
+Per-second billing
+Removes the cost of unused minutes and seconds from your bill.
+For a complete list of charges and prices for Amazon EC2 and more information about the purchase 
+models, see Amazon EC2 pricing.
+Estimates, billing, and cost optimization
+To create estimates for your AWS use cases, use the AWS Pricing Calculator.
+To estimate the cost of transforming Microsoft workloads to a modern architecture that uses 
+open source and cloud-native services deployed on AWS, use the AWS Modernization Calculator for 
+Microsoft Workloads.
+To see your bill, go to the Billing and Cost Management Dashboard  in the AWS Billing and Cost 
+Management console. Your bill contains links to usage reports that provide details about your bill. 
+To learn more about AWS account billing, see AWS Billing and Cost Management User Guide.
+If you have questions concerning AWS billing, accounts, and events, contact AWS Support.
+To calculate the cost of a sample provisioned environment, see Cloud Economics Center. When 
+calculating the cost of a provisioned environment, remember to include incidental costs such as 
+snapshot storage for EBS volumes.
+You can optimize the cost, security, and performance of your AWS environment using AWS Trusted 
+Advisor.
+You can use AWS Cost Explorer to analyze the cost and usage of your EC2 instances. You can view 
+data up to the last 13 months, and forecast how much you are likely to spend for the next 12 
+months. For more information, see Analyzing your costs and usage with AWS Cost Explorer in the
+AWS Cost Management User Guide.
+Resources
+•Amazon EC2 features
+•AWS re:Post
+•AWS Skill Builder
+•AWS Support
+Estimates, billing, and cost optimization 6
+
+•Hands-on Tutorials
+•Web Hosting
+•Windows on AWS
+Resources 7
+
+Get started with Amazon EC2
+Use this tutorial to get started with Amazon Elastic Compute Cloud (Amazon EC2). You'll learn how 
+to launch and connect to an EC2 instance. An instance  is a virtual server in the AWS Cloud. With 
+Amazon EC2, you can set up and conﬁgure the operating system and applications that run on your 
+instance.
+Overview
+The following diagram shows the key components that you'll use in this tutorial:
+•An image  – A template that contains the software to run on your instance, such as the operating 
+system.
+•A key pair – A set of security credentials that you use to prove your identity when connecting to 
+your instance. The public key is on your instance and the private key is on your computer.
+•A network – A virtual private cloud (VPC) is a virtual network dedicated to your AWS account. 
+To help you get started quickly, your account comes with a default VPC in each AWS Region, and 
+each default VPC has a default subnet in each Availability Zone.
+•A security group – Acts as a virtual ﬁrewall to control inbound and outbound traﬃc.
+•An EBS volume – A root volume is required for the image. You can optionally add data volumes.
+
+Cost for this tutorial
+When you create your AWS account, you can get started with Amazon EC2 for free using the AWS 
+Free Tier.
+If you created your AWS account before July 15, 2025, it's less than 12 months old, and you haven't 
+already exceeded the Free Tier beneﬁts for Amazon EC2, it won't cost you anything to complete 
+this tutorial, because this tutorial helps you select options that are within the Free Tier beneﬁts. 
+Otherwise, you'll incur the standard Amazon EC2 usage fees from the time that you launch the 
+instance (even if it remains idle) until you terminate it.
+If you created your AWS account on or after July 15, 2025, it's less than 6 months old, and you 
+haven't used up all your credits, it won't cost you anything to complete this tutorial, because this 
+tutorial helps you select options that are within the Free Tier beneﬁts.
+For information on how to determine whether you are eligible for the Free Tier, see the section 
+called “Track your Free Tier usage”.
+Tasks
+•Step 1: Launch an instance
+•Step 2: Connect to your instance
+•Step 3: Clean up your instance
+
+•Next steps
+Step 1: Launch an instance
+You can launch an EC2 instance using the AWS Management Console as described in the following 
+procedure. This tutorial is intended to help you quickly launch your ﬁrst instance, so it doesn't 
+cover all possible options.
+To launch an instance
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation bar at the top of the screen, the current AWS Region is displayed — for 
+example, Ohio . You can use the selected Region, or optionally select a Region that is closer to 
+you.
+3. From the EC2 console dashboard, in the Launch instance pane, choose Launch instance.
+4. Under Name and tags , for Name , enter a descriptive name for your instance.
+5. Under Application and OS Images (Amazon Machine Image), do the following:
+a. Choose Quick Start, and then choose the operating system (OS) for your instance. For 
+your ﬁrst Linux instance, we recommend that you choose Amazon Linux.
+b. From Amazon Machine Image (AMI), select an AMI that is marked Free Tier eligible.
+6. Under Instance type, for Instance type, select an instance type that is marked Free Tier 
+eligible.
+7. Under Key pair (login), for Key pair name, choose an existing key pair or choose Create new 
+key pair to create your ﬁrst key pair.
+Warning
+If you choose Proceed without a key pair (Not recommended), you won't be able to 
+connect to your instance using the methods described in this tutorial.
+8. Under Network settings, notice that your default VPC is selected, the option to use the default 
+subnet in an Availability Zone that is chosen for you, and a security group with a rule that 
+allows connections to your instance from anywhere (0.0.0.0/0 ).
+Step 1: Launch an instance 10
+
+Warning
+If you specify 0.0.0.0/0 , you are enabling traﬃc from any IP addresses in the world. 
+For the SSH and RDP protocols, you might consider this acceptable for a short time 
+in a test environment, but it's unsafe for production environments. In production, be 
+sure to authorize access only from the appropriate individual IP address or range of 
+addresses.
+For your ﬁrst instance, we recommend that you use the default settings. Otherwise, you can 
+update your network settings as follows:
+• (Optional) To use a speciﬁc default subnet, choose Edit and then choose a subnet.
+• (Optional) To use a diﬀerent VPC, choose Edit and then choose an existing VPC. If the VPC 
+isn't conﬁgured for public internet access, you won't be able to connect to your instance.
+• (Optional) To restrict inbound connection traﬃc to a speciﬁc network, choose Custom
+instead of Anywhere, and enter the CIDR block for your network.
+• (Optional) To use a diﬀerent security group, choose Select existing security group and 
+choose an existing security group. If the security group does not have a rule that allows 
+connection traﬃc from your network, you won't be able to connect to your instance. For 
+a Linux instance, you must allow SSH traﬃc. For a Windows instance, you must allow RDP 
+traﬃc.
+9. Under Conﬁgure storage , notice that a root volume is conﬁgured but no data volumes. This is 
+suﬃcient for test purposes.
+10. Review a summary of your instance conﬁguration in the Summary panel, and when you're 
+ready, choose Launch instance.
+11. If the launch is successful, choose the ID of the instance from the Success notiﬁcation to open 
+the Instances page and monitor the status of the launch.
+12. Select the checkbox for the instance. The initial instance state is pending. After the instance 
+starts, its state changes to running . Choose the Status and alarms  tab. After your instance 
+passes its status checks, it is ready to receive connection requests.
+Step 1: Launch an instance 11
+
+Step 2: Connect to your instance
+The procedure that you use depends on the operating system of the instance. If you can't connect 
+to your instance, see Troubleshoot issues connecting to your Amazon EC2 Linux instance for 
+assistance.
+Linux instances
+You can connect to your Linux instance using any SSH client. If you are running Windows on 
+your computer, open a terminal and run the ssh command to verify that you have an SSH client 
+installed. If the command is not found, install OpenSSH for Windows.
+To connect to your instance using SSH
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose Instances.
+3. Select the instance and then choose Connect.
+4. On the Connect to instance page, choose the SSH client tab.
+5. (Optional) If you created a key pair when you launched the instance and downloaded the 
+private key (.pem ﬁle) to a computer running Linux or macOS, run the example chmod
+command to set the permissions for your private key.
+6. Copy the example SSH command. The following is an example, where key-pair-name .pem 
+is the name of your private key ﬁle, ec2-user  is the username associated with the image, and 
+the string after the @ symbol is the public DNS name of the instance.
+ssh -i key-pair-name .pem ec2-user @ec2-198-51-100-1.us-east-2.compute.amazonaws.com
+7. In a terminal window on your computer, run the ssh command that you saved in the previous 
+step. If the private key ﬁle is not in the current directory, you must specify the fully-qualiﬁed 
+path to the key ﬁle in this command.
+The following is an example response:
+The authenticity of host 'ec2-198-51-100-1.us-east-2.compute.amazonaws.com 
+ (198-51-100-1)' can't be established.
+ECDSA key fingerprint is l4UB/neBad9tvkgJf1QZWxheQmR59WgrgzEimCG6kZY.
+Are you sure you want to continue connecting (yes/no)?
+Step 2: Connect to your instance 12
+
+8. (Optional) Verify that the ﬁngerprint in the security alert matches the instance ﬁngerprint 
+contained in the console output when you ﬁrst start an instance. To get the console output, 
+choose Actions, Monitor and troubleshoot, Get system log. If the ﬁngerprints don't match, 
+someone might be attempting a man-in-the-middle attack. If they match, continue to the next 
+step.
+9. Enter yes.
+The following is an example response:
+Warning: Permanently added 'ec2-198-51-100-1.us-
+east-2.compute.amazonaws.com' (ECDSA) to the list of known hosts.
+Windows instances
+To connect to a Windows instance using RDP, you must retrieve the initial administrator password 
+and then enter this password when you connect to your instance. It takes a few minutes after 
+instance launch before this password is available. Your account must have permission to call the
+GetPasswordData action. For more information, see Example policies to control access the Amazon 
+EC2 API.
+The default username for the Administrator account depends on the language of the operating 
+system (OS) contained in the AMI. To determine the correct username, identify the language 
+of the OS, and then choose the corresponding username. For example, for an English OS, the 
+username is Administrator , for a French OS it's Administrateur , and for a Portuguese OS it's
+Administrador . If a language version of the OS does not have a username in the same language, 
+choose the username Administrator (Other) . For more information, see Localized Names for 
+Administrator Account in Windows in the Microsoft website.
+To retrieve the initial administrator password
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose Instances.
+3. Select the instance and then choose Connect.
+4. On the Connect to instance page, choose the RDP client  tab.
+5. For Username , choose the default username for the Administrator account. The username you 
+choose must match the language of the operating system (OS) contained in the AMI that you 
+Step 2: Connect to your instance 13
+
+used to launch your instance. If there is no username in the same language as your OS, choose
+Administrator (Other) .
+6. Choose Get password.
+7. On the Get Windows password page, do the following:
+a. Choose Upload private key ﬁle and navigate to the private key (.pem) ﬁle that you 
+speciﬁed when you launched the instance. Select the ﬁle and choose Open  to copy the 
+entire contents of the ﬁle to this window.
+b. Choose Decrypt password. The Get Windows password page closes, and the default 
+administrator password for the instance appears under Password, replacing the Get 
+password link shown previously.
+c. Copy the password and save it in a safe place. This password is required to connect to the 
+instance.
+The following procedure uses the Remote Desktop Connection client for Windows (MSTSC). If 
+you're using a diﬀerent RDP client, download the RDP ﬁle and then see the documentation for the 
+RDP client for the steps to establish the RDP connection.
+To connect to a Windows instance using an RDP client
+1. On the Connect to instance page, choose Download remote desktop ﬁle. When the 
+ﬁle download is ﬁnished, choose Cancel to return to the Instances page. The RDP ﬁle is 
+downloaded to your Downloads  folder.
+2. Run mstsc.exe  to open the RDP client.
+3. Expand Show options, choose Open , and select the .rdp ﬁle from your Downloads  folder.
+4. By default, Computer  is the public IPv4 DNS name of the instance and User name  is the 
+administrator account. To connect to the instance using IPv6 instead, replace the public IPv4 
+DNS name of the instance with its IPv6 address. Review the default settings and change them 
+as needed.
+5. Choose Connect. If you receive a warning that the publisher of the remote connection is 
+unknown, choose Connect to continue.
+6. Enter the password that you saved previously, and then choose OK.
+7. Due to the nature of self-signed certiﬁcates, you might get a warning that the security 
+certiﬁcate could not be authenticated. Do one of the following:
+• If you trust the certiﬁcate, choose Yes to connect to your instance.
+Step 2: Connect to your instance 14
+
+• [Windows] Before you proceed, compare the thumbprint of the certiﬁcate with the value 
+in the system log to conﬁrm the identity of the remote computer. Choose View certiﬁcate
+and then choose Thumbprint  from the Details  tab. Compare this value to the value of
+RDPCERTIFICATE-THUMBPRINT  in Actions, Monitor and troubleshoot, Get system log.
+• [Mac OS X] Before you proceed, compare the ﬁngerprint of the certiﬁcate with the 
+value in the system log to conﬁrm the identity of the remote computer. Choose Show 
+Certiﬁcate, expand Details , and choose SHA1 Fingerprints . Compare this value to the 
+value of RDPCERTIFICATE-THUMBPRINT  in Actions, Monitor and troubleshoot, Get 
+system log.
+8. If the RDP connection is successful, the RDP client displays the Windows login screen and 
+then the Windows desktop. If you receive an error message instead, see the section called 
+“Remote Desktop can't connect to the remote computer”. When you are ﬁnished with the RDP 
+connection, you can close the RDP client.
+Step 3: Clean up your instance
+Warning
+Terminating an instance is permanent and irreversible.
+After you terminate an instance, you can no longer connect to it, and it can't be recovered. 
+All attached Amazon EBS volumes that are conﬁgured to be deleted on termination are 
+also permanently deleted and can't be recovered. All data stored on instance store volumes 
+is permanently lost. For more information, see How instance termination works.
+Before you terminate an instance, ensure that you have backed up all data that you need to 
+retain after the termination to persistent storage.
+After you've ﬁnished with the instance that you created for this tutorial, you should clean up by 
+terminating the instance. If you want to do more with this instance before you clean up, see Next 
+steps .
+You'll stop incurring charges for that instance or usage that counts against your Free Tier limits as 
+soon as the instance status changes to shutting down  or terminated . To keep your instance 
+for later, but not incur charges or usage that counts against your Free Tier limits, you can stop the 
+instance now and then start it again later. For more information, see Stop and start Amazon EC2 
+instances.
+Step 3: Clean up your instance 15
+
+To terminate your instance
+1. In the navigation pane, choose Instances. In the list of instances, select the instance.
+2. Choose Instance state, Terminate (delete) instance.
+3. Choose Terminate (delete) when prompted for conﬁrmation.
+Amazon EC2 shuts down and terminates your instance. After your instance is terminated, it 
+remains visible on the console for a short while, and then the entry is automatically deleted. 
+You cannot remove the terminated instance from the console display yourself.
+Next steps
+After you start your instance, you might want to explore the following next steps:
+•Explore the Amazon EC2 core concepts with the introductory tutorials. For more information, see
+Tutorials for launching EC2 instances.
+•Learn how to track your Amazon EC2 Free Tier usage using the console. For more information, 
+see the section called “Track your Free Tier usage”.
+•Conﬁgure a CloudWatch alarm to notify you if your usage exceeds the Free Tier (for accounts 
+created before July 15, 2025). For more information, see Tracking your AWS Free Tier usage in 
+the AWS Billing User Guide.
+•Add an EBS volume. For more information, see Create an Amazon EBS volume in the Amazon EBS 
+User Guide .
+•Learn how to remotely manage your EC2 instance using the Run command. For more 
+information, see AWS Systems Manager Run Command in the AWS Systems Manager User Guide.
+•Learn about instance purchasing options. For more information, see Amazon EC2 billing and 
+purchasing options.
+•Get advice about instance types. For more information, see Get recommendations from EC2 
+instance type ﬁnder.
+Next steps 16
+
+Best practices for Amazon EC2
+To ensure the maximum beneﬁt from Amazon EC2, we recommend that you perform the following 
+best practices.
+Security
+•Manage access to AWS resources and APIs using identity federation with an identity provider and 
+IAM roles whenever possible. For more information, see Identity providers and federation in the
+IAM User Guide .
+•Implement the least permissive rules for your security group.
+•Regularly patch, update, and secure the operating system and applications on your instance. 
+For more information, see Update management . For guidelines speciﬁc to Windows operating 
+systems, see Security best practices for Windows instances.
+•Use Amazon Inspector to automatically discover and scan Amazon EC2 instances for software 
+vulnerabilities and unintended network exposure. For more information, see the Amazon 
+Inspector User Guide.
+•Use AWS Security Hub CSPM controls to monitor your Amazon EC2 resources against security 
+best practices and security standards. For more information about using Security Hub CSPM, see
+Amazon Elastic Compute Cloud controls in the AWS Security Hub CSPM User Guide.
+Storage
+•Understand the implications of the root volume type for data persistence, backup, and recovery. 
+For more information, see Root volume type.
+•Use separate Amazon EBS volumes for the operating system versus your data. Ensure that the 
+volume with your data persists after instance termination. For more information, see Preserve 
+data when an instance is terminated.
+•Use the instance store available for your instance to store temporary data. Remember that the 
+data stored in instance store is deleted when you stop, hibernate, or terminate your instance. 
+If you use instance store for database storage, ensure that you have a cluster with a replication 
+factor that ensures fault tolerance.
+•Encrypt EBS volumes and snapshots. For more information, see Amazon EBS encryption in the
+Amazon EBS User Guide .
+
+Resource management
+•Use instance metadata and custom resource tags to track and identify your AWS resources. 
+For more information, see Use instance metadata to manage your EC2 instance and Tag your 
+Amazon EC2 resources.
+•View your current limits for Amazon EC2. Plan to request any limit increases in advance of the 
+time that you'll need them. For more information, see Amazon EC2 service quotas.
+•Use AWS Trusted Advisor to inspect your AWS environment, and then make recommendations 
+when opportunities exist to save money, improve system availability and performance, or help 
+close security gaps. For more information, see AWS Trusted Advisor in the AWS Support User 
+Guide .
+Backup and recovery
+•Regularly back up your EBS volumes using Amazon EBS snapshots, and create an Amazon 
+Machine Image (AMI)  from your instance to save the conﬁguration as a template for launching 
+future instances. For more information about AWS services that help achieve this use case, see
+AWS Backup and Amazon Data Lifecycle Manager.
+•Deploy critical components of your application across multiple Availability Zones, and replicate 
+your data appropriately.
+•Design your applications to handle dynamic IP addressing when your instance restarts. For more 
+information, see Amazon EC2 instance IP addressing.
+•Monitor and respond to events. For more information, see Monitor Amazon EC2 resources.
+•Ensure that you are prepared to handle failover. For a basic solution, you can manually attach 
+a network interface or Elastic IP address to a replacement instance. For more information, see
+Elastic network interfaces. For an automated solution, you can use Amazon EC2 Auto Scaling. For 
+more information, see the Amazon EC2 Auto Scaling User Guide.
+•Regularly test the process of recovering your instances and Amazon EBS volumes to ensure data 
+and services are restored successfully.
+Networking
+•Set the time-to-live (TTL) value for your applications to 255, for IPv4 and IPv6. If you use a 
+smaller value, there is a risk that the TTL will expire while application traﬃc is in transit, causing 
+reachability issues for your instances.
+
+Amazon Machine Images in Amazon EC2
+An Amazon Machine Image (AMI) is an image that provides the software that is required to set up 
+and boot an Amazon EC2 instance. Each AMI also contains a block device mapping that speciﬁes 
+the block devices to attach to the instances that you launch. You must specify an AMI when you 
+launch an instance. The AMI must be compatible with the instance type that you chose for your 
+instance. You can use an AMI provided by AWS, a public AMI, an AMI that someone else shared with 
+you, or an AMI that you purchased from the AWS Marketplace.
+An AMI is speciﬁc to the following:
+•Region
+•Operating system
+•Processor architecture
+•Root volume type
+•Virtualization type
+You can launch multiple instances from a single AMI when you require multiple instances with the 
+same conﬁguration. You can use diﬀerent AMIs to launch instances when you require instances 
+with diﬀerent conﬁgurations, as shown in the following diagram.
+
+You can create an AMI from your Amazon EC2 instances and then use it to launch instances with 
+the same conﬁguration. You can copy an AMI to another AWS Region, and then use it to launch 
+instances in that Region. You can also share an AMI that you created with other accounts so that 
+they can launch instances with the same conﬁguration. You can sell your AMI using the AWS 
+Marketplace.
+Contents
+•AMI types and characteristics in Amazon EC2
+•Find an AMI that meets the requirements for your EC2 instance
+•Paid AMIs in the AWS Marketplace for Amazon EC2 instances
+•Amazon EC2 AMI lifecycle
+•Instance launch behavior with Amazon EC2 boot modes
+•Use encryption with EBS-backed AMIs
+•Understand shared AMI usage in Amazon EC2
+•Monitor AMI events using Amazon EventBridge
+•Understand AMI billing information
+•AMI quotas in Amazon EC2
+
+AMI types and characteristics in Amazon EC2
+When you launch an instance, the AMI that you choose must be compatible with the instance type 
+that you choose. You can select an AMI to use based on the following characteristics:
+•Region
+•Operating system
+•Processor architecture
+•Launch permissions
+•Root volume type
+•Virtualization types
+Launch permissions
+Launch permissions determine who can use an AMI to launch instances. You can think of launch 
+permissions as sharing an AMI —when you grant launch permissions, you're sharing the AMI 
+with other users. Only the owner of an AMI can determine its availability by specifying launch 
+permissions. Launch permissions fall into the following categories.
+Launch 
+permissionDescription
+public The owner grants launch permissions to all AWS accounts.
+explicit The owner grants launch permissions to speciﬁc AWS accounts, organizat 
+ions,  or organizational units (OUs).
+implicit The owner has implicit launch permissions for an AMI.
+Amazon and the Amazon EC2 community provide a large selection of public AMIs. For more 
+information, see Understand shared AMI usage in Amazon EC2. Developers can charge for their 
+AMIs. For more information, see Paid AMIs in the AWS Marketplace for Amazon EC2 instances.
+Root volume type
+All AMIs are categorized as either backed by Amazon EBS  or backed by Amazon S3 .
+AMI characteristics 21
+
+•Amazon EBS-backed AMI – The root volume for an instance launched from the AMI is an Amazon 
+Elastic Block Store (Amazon EBS) volume created from an Amazon EBS snapshot. Supported for 
+both Linux and Windows AMIs.
+•Amazon S3-backed AMI – The root volume for an instance launched from the AMI is an instance 
+store volume created from a template stored in Amazon S3. Supported for Linux AMIs only. 
+Windows AMIs do not support instance store for the root volume.
+For more information, see Root volumes for your Amazon EC2 instances.
+Note
+Amazon S3-backed AMIs are considered end of life and are not recommended for new 
+usage. They are only supported on the following older instance types: C1, C3, D2, I2, M1, 
+M2, M3, R3, and X1.
+The following table summarizes the important diﬀerences when using the two types of AMIs.
+Characteristic Amazon EBS-backed AMI Amazon S3-backed AMI
+Root volume EBS volume Instance store volume
+Boot time for an 
+instanceUsually less than 1 minute Usually less than 5 minutes
+Data persistence
+By default, the root volume 
+is deleted when the instance 
+terminates.* Data on any  other 
+EBS volumes persists after 
+instance termination by  default.Data on any instance store 
+volumes persists only during the 
+life of the  instance.
+Stopped state
+Can be in a stopped state. Even 
+when the instance is stopped and 
+not running, the root  volume is 
+persisted in Amazon EBS.Cannot be in a stopped state; 
+instances are running or 
+terminated.
+Modiﬁcations
+Root volume type 22
+
+CharacteristicAmazon EBS-backed AMIAmazon S3-backed AMI
+The instance type, kernel, RAM 
+disk, and user data can be 
+changed while the  instance is 
+stopped.Instance attributes are ﬁxed for 
+the life of an instance.
+Charges
+You're charged for instance 
+usage, EBS volume usage, and 
+storing your AMI as an EBS  snaps 
+hot.You're charged for instance usage 
+and storing your AMI in Amazon 
+S3.
+AMI creation/bundlingUses a single command/callRequires installation and use of 
+AMI tools
+* By default, EBS root volumes have the DeleteOnTermination  ﬂag set to true. For information 
+about how to change this ﬂag so that the volume persists after termination, see Keep an Amazon 
+EBS root volume after an Amazon EC2 instance terminates.
+** Supported with io2 EBS Block Express only. For more information, see Provisioned IOPS SSD 
+Block Express volumes in the Amazon EBS User Guide .
+Identify the root volume type determined by your AMI
+The AMI that you use to launch an EC2 instance determines the type of the root volume. The root 
+volume of an EC2 instance is either an EBS volume or an instance store volume.
+Nitro-based instances support only EBS root volumes. The following previous generation instance 
+types are the only instance types that support instance store root volumes: C1, C3, D2, I2, M1, M2, 
+M3, R3, and X1.
+Console
+To identify the root volume type determined by an AMI
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose AMIs , and select the AMI.
+3. On the Details  tab, check the value of Root device type as follows:
+Identify the AMI root volume type 23
+
+•ebs – Instances launched from this AMI will get an EBS root volume
+•instance store  – Instances launched from this AMI will get an instance store root 
+volume.
+AWS CLI
+To identify the root volume type determined by an AMI
+Use the describe-images  command.
+aws ec2 describe-images \ 
+    --image-ids ami-0abcdef1234567890  \ 
+    --query Images[].RootDeviceType
+The following is example output.
+ebs
+PowerShell
+To identify the root volume type determined by an AMI
+Use the Get-EC2Image cmdlet.
+(Get-EC2Image ` 
+    -ImageId ami-0abcdef1234567890 ).RootDeviceType.Value
+The following is example output.
+ebs
+Virtualization types
+Amazon Machine Images use one of two types of virtualization: paravirtual (PV) or hardware virtual 
+machine (HVM). The main diﬀerences between PV and HVM AMIs are the way in which they boot 
+and whether they can take advantage of special hardware extensions (CPU, network, and storage) 
+for better performance. Windows AMIs are HVM AMIs.
+The following table compares HVM and PV AMIs.
+Virtualization types 24
+
+Characteristic HVM PV
+Description HVM AMIs are presented 
+with a fully virtualized set 
+of hardware and boot by 
+executing the master boot 
+record of the root block 
+device of your image. This 
+virtualization type provides 
+the ability to run an operating 
+ system directly on top of a 
+virtual machine without any 
+modiﬁcation, as if it were run 
+on the bare-metal hardware. 
+The Amazon EC2 host system 
+emulates some or all of the 
+underlying hardware that is 
+presented to the guest.PV AMIs boot with a special 
+boot loader called PV-
+GRUB, which starts the boot 
+cycle and then chain loads 
+the kernel speciﬁed in the
+menu.lst  ﬁle on your image. 
+Paravirtual guests can run 
+on host hardware that does 
+not have explicit support 
+for virtualization. For more 
+information about PV-GRUB 
+and its use in Amazon EC2, 
+see User provided kernels.
+Supported instance typesAll current generation 
+instance types support HVM 
+AMIs.The following previous 
+generation instance types 
+support PV AMIs: C1, C3, 
+M1, M3, M2, and T1. Current 
+generation instance types do 
+not support PV AMIs.
+Support for hardware 
+extensionsHVM guests can take 
+advantage of hardware 
+extensions that provide 
+fast access to the underlyin 
+g hardware on the host 
+system. They are required 
+to use enhanced networkin 
+g and GPU processing. To 
+pass through instructions to 
+specialized network and GPU 
+devices, the OS must have No, they can't take advantage 
+of special hardware extension 
+s such as enhanced networkin 
+g or GPU processing.
+Virtualization types 25
+
+Characteristic HVM PV
+access to the native hardware 
+platform, and HVM virtualiz 
+ation provides this access. 
+For more information, see
+Enhanced networking on 
+Amazon EC2 instances.
+How to ﬁnd Verify that the virtualization 
+type of the AMI is set to hvm, 
+using the console or the
+describe-images  command.Verify that the virtualization 
+type of the AMI is set to
+paravirtual , using the 
+console or the describe- 
+images  command.
+PV on HVM
+Paravirtual guests traditionally performed better with storage and network operations than HVM 
+guests because they could leverage special drivers for I/O that avoided the overhead of emulating 
+network and disk hardware, whereas HVM guests had to translate these instructions to emulated 
+hardware. Now PV drivers are available for HVM guests, so operating systems that cannot be 
+ported to run in a paravirtualized environment can still see performance advantages in storage and 
+network I/O by using them. With these PV on HVM drivers, HVM guests can get the same, or better, 
+performance than paravirtual guests.
+Find an AMI that meets the requirements for your EC2 instance
+An AMI includes the components and applications, such as the operating system and type of root 
+volume, required to launch an instance. To launch an instance, you must ﬁnd an AMI that meets 
+your needs.
+When selecting an AMI, consider the following requirements you might have for the instances that 
+you want to launch:
+•The AWS Region of the AMI as AMI IDs are unique to each Region.
+•The operating system (for example, Linux or Windows).
+•The architecture (for example, 32-bit, 64-bit, or 64-bit ARM).
+Find an AMI 26
+
+•The root volume type (for example, Amazon EBS or instance store).
+•The provider (for example, Amazon Web Services).
+•Additional software (for example, SQL Server).
+Console
+You can select from the list of AMIs when you use the launch instance wizard, or you can search 
+all available AMIs using the Images  page.
+To ﬁnd a Quick Start AMI using the launch instance wizard
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. From the navigation bar, select the Region in which to launch your instances. You can select 
+any Region that's available to you, regardless of your location. AMI IDs are unique to each 
+AWS Region.
+3. From the console dashboard, choose Launch instance.
+4. Under Application and OS Images (Amazon Machine Image), choose Quick Start, choose 
+the operating system (OS) for your instance, and then, from Amazon Machine Image 
+(AMI) , select from one of the commonly used AMIs in the list. If you don't see the AMI 
+that you want to use, choose Browse more AMIs to browse the full AMI catalog. For more 
+information, see Application and OS Images (Amazon Machine Image).
+To ﬁnd an AMI using the AMIs page
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. From the navigation bar, select the Region in which to launch your instances. You can select 
+any Region that's available to you, regardless of your location. AMI IDs are unique to each 
+AWS Region.
+3. In the navigation pane, choose AMIs .
+4. (Optional) Use the ﬁlter and search options to scope the list of displayed AMIs to see only 
+the AMIs that match your criteria.
+For example, to list all AMIs provided by AWS, choose Public images . Then use the search 
+options to further scope the list of displayed AMIs. Choose the Search  bar and, from the 
+menu, choose Owner alias , then the = operator, and then the value amazon. To ﬁnd AMIs 
+that match a speciﬁc platform, for example Linux or Windows, choose the Search  bar 
+Find an AMI 27
+
+again to choose Platform, then the = operator, and then the operating system from the list 
+provided.
+5. (Optional) Choose the Preferences icon to select which image attributes to display, such 
+as the root volume type. Alternatively, you can select an AMI from the list and view its 
+properties on the Details  tab.
+6. Before you select an AMI, it's important that you check whether it's backed by instance 
+store or by Amazon EBS and that you are aware of the eﬀects of this diﬀerence. For more 
+information, see Root volume type.
+7. To launch an instance from this AMI, select it and then choose Launch instance from 
+image . For more information about launching an instance using the console, see Launch an 
+EC2 instance using the launch instance wizard in the console. If you're not ready to launch 
+the instance now, make note of the AMI ID for later.
+AWS CLI
+Use the describe-images  command to ﬁnd an AMI that meets your requirements. By default, 
+this command returns all AMIs that are public, that you own, and that are shared with you.
+To ﬁnd an AMI owned by Amazon
+Use the describe-images  command with the --owners  option.
+aws ec2 describe-images --owners amazon
+To ﬁnd a Windows AMI
+Add the following ﬁlter to display only Windows AMIs.
+--filters "Name=platform,Values=windows"
+To ﬁnd an EBS-backed AMI
+Add the following ﬁlter to display only AMIs backed by Amazon EBS.
+--filters "Name=root-device-type,Values=ebs"
+Find an AMI 28
+
+PowerShell
+Use the Get-EC2Image cmdlet to ﬁnd an AMI that meets your requirements. By default, this 
+cmdlet returns all AMIs that are public, that you own, or that are shared with you.
+To ﬁnd an AMI owned by Amazon
+Use the Get-EC2Image command with the -Owner parameter.
+Get-EC2Image -Owner amazon
+To ﬁnd a Windows AMI
+Add the following ﬁlter to display only Windows AMIs.
+-Filter @{Name="platform"; Values="windows"}
+For additional examples, see Find an Amazon Machine Image Using Windows PowerShell in the
+AWS Tools for PowerShell User Guide.
+Related resources
+For more information about AMIs for a speciﬁc operating system, see the following:
+•Amazon Linux 2023 – AL2023 on Amazon EC2 in the Amazon Linux 2023 User Guide
+•Ubuntu – Amazon EC2 AMI Locator on the Canonical Ubuntu website
+•RHEL – Red Hat Enterprise Linux Images (AMI) Available on Amazon Web Services (AWS) on the 
+Red Hat website
+•Windows Server – AWS Windows AMI reference
+For information about AMIs that you can subscribe to on the AWS Marketplace see Paid AMIs in the 
+AWS Marketplace for Amazon EC2 instances.
+For information about using Systems Manager to help your users ﬁnd the latest AMI that they 
+should use when launching an instance, see the following:
+•Reference AMIs using Systems Manager parameters
+•Reference the latest AMIs using Systems Manager public parameters
+Find an AMI 29
+
+Reference AMIs using Systems Manager parameters
+When you launch an instance using the EC2 launch instance wizard in the Amazon EC2 console, you 
+can either select an AMI from the list, or you can select an AWS Systems Manager parameter that 
+points to an AMI ID (described in this section). If you use automation code to launch your instances, 
+you can specify the Systems Manager parameter instead of the AMI ID.
+A Systems Manager parameter is a customer-deﬁned key-value pair that you can create in Systems 
+Manager Parameter Store. The Parameter Store provides a central store to externalize your 
+application conﬁguration values. For more information, see AWS Systems Manager Parameter 
+Store in the AWS Systems Manager User Guide.
+When you create a parameter that points to an AMI ID, make sure that you specify the data 
+type as aws:ec2:image . Specifying this data type ensures that when the parameter is created 
+or modiﬁed, the parameter value is validated as an AMI ID. For more information, see Native 
+parameter support for Amazon Machine Image IDs in the AWS Systems Manager User Guide.
+Contents
+•Use cases
+•Permissions
+•Limitations
+•Launch an instance using a Systems Manager parameter
+Use cases
+When you use Systems Manager parameters to point to AMI IDs, it is easier for your users to select 
+the correct AMI when launching instances. Systems Manager parameters can also simplify the 
+maintenance of automation code.
+Easier for users
+If you require instances to be launched using a speciﬁc AMI, and the AMI is regularly updated, we 
+recommend that you require your users to select a Systems Manager parameter to ﬁnd the AMI. 
+Requiring your users to select a Systems Manager parameter ensures that the latest AMI is used to 
+launch instances.
+For example, every month in your organization you might create a new version of your AMI that 
+has the latest operating system and application patches. You also require your users to launch 
+Systems Manager parameters 30
+
+instances using the latest version of your AMI. To ensure that your users use the latest version, 
+you can create a Systems Manager parameter (for example, golden-ami ) that points to the 
+correct AMI ID. Each time a new version of the AMI is created, you update the AMI ID value in the 
+parameter so that it always points to the latest AMI. Your users don't have to know about the 
+periodic updates to the AMI because they continue to select the same Systems Manager parameter 
+each time. Using a Systems Manager parameter for your AMI makes it easier for them to select the 
+correct AMI for an instance launch.
+Simplify automation code maintenance
+If you use automation code to launch your instances, you can specify the Systems Manager 
+parameter instead of the AMI ID. If a new version of the AMI is created, you can change the AMI 
+ID value in the parameter so that it points to the latest AMI. The automation code that references 
+the parameter doesn’t have to be modiﬁed each time a new version of the AMI is created. This 
+simpliﬁes the maintenance of the automation and helps to drive down deployment costs.
+Note
+Running instances are not aﬀected when you change the AMI ID pointed to by the Systems 
+Manager parameter.
+Permissions
+If you use Systems Manager parameters that point to AMI IDs in the launch instance wizard, you 
+must add the following permissions to your IAM policy:
+•ssm:DescribeParameters  – Grants permission to view and select Systems Manager 
+parameters.
+•ssm:GetParameters  – Grants permission to retrieve the values of the Systems Manager 
+parameters.
+You can also restrict access to speciﬁc Systems Manager parameters. For more information and 
+example IAM policies, see Example: Use the EC2 launch instance wizard.
+Limitations
+AMIs and Systems Manager parameters are Region speciﬁc. To use the same Systems Manager 
+parameter name across Regions, create a Systems Manager parameter in each Region with the 
+Systems Manager parameters 31
+
+same name (for example, golden-ami ). In each Region, point the Systems Manager parameter to 
+an AMI in that Region.
+Parameter names are case-sensitive. Backslashes for the parameter name are only necessary when 
+the parameter is part of a hierarchy, for example, /amis/production/golden-ami . You can 
+omit the backslash if the parameter is not part of a hierarchy.
+Launch an instance using a Systems Manager parameter
+When you launch an instance, instead of specifying an AMI ID, you can specify a Systems Manager 
+parameter that points to an AMI ID.
+To specify the parameter programmatically, use the following syntax, where resolve:ssm  is the 
+standard preﬁx and parameter-name  is the unique parameter name.
+resolve:ssm: parameter-name
+Systems Manager parameters have version support. Each iteration of a parameter is assigned a 
+unique version number. You can reference the version of the parameter as follows, where version
+is the unique version number. By default, the latest version of the parameter is used when no 
+version is speciﬁed.
+resolve:ssm: parameter-name :version
+To launch an instance using a public parameter provided by AWS, see Reference the latest AMIs 
+using Systems Manager public parameters.
+Console
+To ﬁnd an AMI using a Systems Manager parameter
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. From the navigation bar, select the Region in which to launch your instances. You can select 
+any Region that's available to you, regardless of your location.
+3. From the console dashboard, choose Launch instance.
+4. Under Application and OS Images (Amazon Machine Image), choose Browse more AMIs.
+5. Choose the arrow button to the right of the search bar, and then choose Search by 
+Systems Manager parameter .
+Systems Manager parameters 32
+
+6. For Systems Manager parameter , select a parameter. The corresponding AMI ID appears 
+below Currently resolves to.
+7. Choose Search . The AMIs that match the AMI ID appear in the list.
+8. Select the AMI from the list, and choose Select.
+For more information about launching an instance using the launch instance wizard, see Launch 
+an EC2 instance using the launch instance wizard in the console.
+AWS CLI
+To launch an instance using a Systems Manager parameter
+Use the run-instances command with the --image-id  option. This example uses a Systems 
+Manager parameter named golden-ami , which speciﬁes an AMI ID.
+--image-id resolve:ssm:/ golden-ami
+You can create versions of a Systems Manager parameter. The following example speciﬁes 
+version 2 of the golden-ami  parameter.
+--image-id resolve:ssm:/ golden-ami:2
+PowerShell
+To launch an instance using a Systems Manager parameter
+Use the New-EC2Instance cmdlet with the -ImageId  parameter. This example uses a Systems 
+Manager parameter named golden-ami , which speciﬁes an AMI ID.
+-ImageId "resolve:ssm:/golden-ami"
+You can create versions of a Systems Manager parameter. The following example speciﬁes 
+version 2 of the golden-ami  parameter.
+-ImageId "resolve:ssm:/golden-ami:2"
+Systems Manager parameters 33
+
+Reference the latest AMIs using Systems Manager public parameters
+AWS Systems Manager provides public parameters for public AMIs maintained by AWS. You can 
+use the public parameters when launching instances to ensure that you're using the latest AMIs.
+For example, the public parameter /aws/service/ami-amazon-linux-latest/al2023-ami-
+kernel-default-arm64  is available in all Regions and always points to the latest version of the 
+Amazon Linux 2023 AMI for arm64 architecture in a given Region.
+The public parameters are available from the following paths:
+•Linux  – /aws/service/ami-amazon-linux-latest
+•Windows – /aws/service/ami-windows-latest
+For more information, see Working with public parameters in the AWS Systems Manager User 
+Guide .
+Find the SSM parameter for a public AMI
+When you describe a public AMI, the response includes the associated AWS Systems Manager 
+(SSM) parameter in the PublicSsmParameterName  ﬁeld. Use this parameter to identify the SSM 
+parameter that always points to the latest version of that AMI.
+Console
+To ﬁnd the SSM parameter for a public AMI
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose AMIs .
+3. Select a public AMI.
+4. On the Details  tab, ﬁnd Public SSM parameter name.
+AWS CLI
+To ﬁnd the SSM parameter for a public AMI
+Use the describe-images  command. The response includes the PublicSsmParameterName
+ﬁeld for public AMIs that have an associated SSM parameter.
+aws ec2 describe-images \ 
+Systems Manager public parameters 34
+
+    --image-ids ami-0abcdef1234567890
+The following example output shows the PublicSsmParameterName  ﬁeld. Some ﬁelds are 
+omitted for brevity.
+{ 
+    "Images": [ 
+        { 
+            "ImageId": "ami-0abcdef1234567890", 
+            "Name": "al2023-ami-2023.7.20260601.0-kernel-6.1-x86_64", 
+            ... 
+            "PublicSsmParameterName": "aws/service/ami-amazon-linux-latest/al2023-
+ami-kernel-default-x86_64" 
+        } 
+    ]
+}
+PowerShell
+To ﬁnd the SSM parameter for a public AMI
+Use the Get-EC2Image cmdlet. The response includes the PublicSsmParameterName  ﬁeld for 
+public AMIs that have an associated SSM parameter.
+Get-EC2Image -ImageId ami-0abcdef1234567890
+The following example output shows the PublicSsmParameterName  ﬁeld. Some ﬁelds are 
+omitted for brevity.
+ImageId                : ami-0abcdef1234567890
+Name                   : al2023-ami-2023.7.20260601.0-kernel-6.1-x86_64
+...
+PublicSsmParameterName : aws/service/ami-amazon-linux-latest/al2023-ami-kernel-
+default-x86_64
+List the Amazon Linux AMIs
+AWS CLI
+To list the Linux AMIs in the current AWS Region
+Systems Manager public parameters 35
+
+Use the following get-parameters-by-path command. The value for the --path  parameter is 
+speciﬁc to Linux AMIs.
+aws ssm get-parameters-by-path \ 
+    --path /aws/service/ami-amazon-linux-latest \ 
+    --query "Parameters[].Name"
+PowerShell
+To list the Linux AMIs in the current AWS Region
+Use the Get-SSMParametersByPath cmdlet.
+Get-SSMParametersByPath ` 
+    -Path "/aws/service/ami-amazon-linux-latest" | ` 
+    Sort-Object Name | Format-Table Name 
+List the Windows AMIs
+AWS CLI
+To list the Windows AMIs in the current AWS Region
+Use the following get-parameters-by-path command. The value for the --path  parameter is 
+speciﬁc to Windows AMIs.
+aws ssm get-parameters-by-path \ 
+    --path /aws/service/ami-windows-latest \ 
+    --query "Parameters[].Name"
+PowerShell
+To list the Windows AMIs in the current AWS Region
+Use the Get-SSMParametersByPath cmdlet.
+Get-SSMParametersByPath ` 
+    -Path "/aws/service/ami-windows-latest" | ` 
+    Sort-Object Name | Format-Table Name 
+Systems Manager public parameters 36
+
+Launch an instance using a public parameter
+To specify the public parameter when launching an instance, use the following syntax:
+resolve:ssm: public-parameter , where resolve:ssm  is the standard preﬁx and public-
+parameter  is the path and name of the public parameter.
+AWS CLI
+To launch an instance using a public parameter
+Use the run-instances command with the --image-id  option. This example speciﬁes a Systems 
+Manager public parameter for the image ID to launch an instance using the latest Amazon Linux 
+2023 AMI
+--image-id resolve:ssm: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-
+default-x86_64
+PowerShell
+To launch an instance using a public parameter
+Use the New-EC2Instance cmdlet with the -ImageId  parameter. This example speciﬁes a 
+Systems Manager public parameter for the image ID to launch an instance using the latest AMI 
+for Windows Server 2022.
+-ImageId "resolve:ssm: /aws/service/ami-windows-latest/Windows_Server-2022-English-
+Full-Base "
+For more examples that use Systems Manager parameters, see Query for the latest Amazon Linux 
+AMI IDs Using AWS Systems Manager Parameter Store and Query for the Latest Windows AMI 
+Using AWS Systems Manager Parameter Store.
+Paid AMIs in the AWS Marketplace for Amazon EC2 instances
+A paid AMI  is an AMI that is listed for sale in the AWS Marketplace. The AWS Marketplace is an 
+online store where you can buy software that runs on AWS, including AMIs that you can use 
+to launch your EC2 instance. The AWS Marketplace AMIs are organized into categories, such as 
+Developer Tools, to enable you to ﬁnd products to suit your requirements. For more information 
+about AWS Marketplace, see the AWS Marketplace website.
+Paid AMIs in the AWS Marketplace 37
+
+You can purchase AMIs in the AWS Marketplace from a third party, including AMIs that come 
+with service contracts from organizations such as Red Hat. You can also create an AMI and sell 
+it in the AWS Marketplace to other Amazon EC2 users. Building a safe, secure, usable AMI for 
+public consumption is a fairly straightforward process, if you follow a few simple guidelines. 
+For information about how to create and use shared AMIs, see Understand shared AMI usage in 
+Amazon EC2.
+Launching an instance from a paid AMI is the same as launching an instance from any other AMI. 
+No additional parameters are required. The instance is charged according to the rates set by the 
+owner of the AMI, as well as the standard usage fees for the related web services, for example, 
+the hourly rate for running an m5.small instance type in Amazon EC2. Additional taxes might also 
+apply. The owner of the paid AMI can conﬁrm whether a speciﬁc instance was launched using that 
+paid AMI.
+Important
+Amazon DevPay is no longer accepting new sellers or products. AWS Marketplace is now 
+the single, uniﬁed e-commerce platform for selling software and services through AWS. For 
+information about how to deploy and sell software from AWS Marketplace, see Selling in 
+AWS Marketplace. AWS Marketplace supports AMIs backed by Amazon EBS.
+Contents
+•Sell your AMI in the AWS Marketplace
+•Find a paid AMI
+•Purchase a paid AMI in the AWS Marketplace
+•Retrieve the AWS Marketplace product code from your instance
+•Use paid support for supported AWS Marketplace oﬀerings
+•Bills for paid and supported AMIs
+•Manage your AWS Marketplace subscriptions
+Sell your AMI in the AWS Marketplace
+You can sell your AMI using AWS Marketplace. AWS Marketplace oﬀers an organized shopping 
+experience. Additionally, AWS Marketplace also supports AWS features such as Amazon EBS-backed 
+AMIs, Reserved Instances, and Spot Instances.
+Sell your AMI in the AWS Marketplace 38
+
+For information about how to sell your AMI on the AWS Marketplace, see Selling in AWS 
+Marketplace.
+Find a paid AMI
+A paid AMI is an Amazon Machine Image (AMI) that is available for purchase. A paid AMI also has a 
+product code. You can ﬁnd AMIs that are available for purchase in the AWS Marketplace.
+Console
+To ﬁnd a paid AMI
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose AMIs .
+3. Choose Public images  for the ﬁrst ﬁlter.
+4. Do one of the following:
+• If you know the product code, choose Product code, then =, and then enter the 
+product code.
+• If you do not know the product code, in the Search bar, specify the following ﬁlter:
+Owner alias=aws-marketplace. Specify additional ﬁlters as needed.
+5. Save the ID of the AMI.
+AWS CLI
+To ﬁnd a paid AMI
+Use the following describe-images  command.
+aws ec2 describe-images --owners aws-marketplace
+The output includes a large number of images. You can specify ﬁlters to help you determine 
+which AMI you need. After you ﬁnd an AMI, specify its ID in the following command to get its 
+product code.
+aws ec2 describe-images \ 
+    --image-ids ami-0abcdef1234567890  \ 
+    --query Images[*].ProductCodes[].ProductCodeId
+Find a paid AMI 39
+
+The following is example output.
+[ 
+    "cdef1234abc567def8EXAMPLE"
+]
+If you know the product code, you can ﬁlter the results by product code. This example returns 
+the most recent AMI with the speciﬁed product code.
+aws ec2 describe-images \ 
+    --filters "Name=product-code,Values= cdef1234abc567def8EXAMPLE " \ 
+    --query "sort_by(Images, &CreationDate)[-1].[ImageId]"
+PowerShell
+To ﬁnd a paid AMI
+Use the Get-EC2Image cmdlet.
+Get-EC2Image -Owner aws-marketplace
+The output includes a large number of images. You can specify ﬁlters to help you determine 
+which AMI you need. After you ﬁnd an AMI, specify its ID in the following command to get its 
+product code.
+(Get-EC2Image -ImageId ami-0abcdef1234567890 ).ProductCodes
+The following is example output.
+ProductCodeId             ProductCodeType
+-------------             ---------------
+cdef1234abc567def8EXAMPLE marketplace
+If you know the product code, you can ﬁlter the results by product code. This example returns 
+the most recent AMI with the speciﬁed product code.
+(Get-EC2Image -Owner aws-marketplace -Filter @{"Name"="product-
+code";"Value"=" cdef1234abc567def8EXAMPLE "} | sort CreationDate -Descending | Select-
+Object -First 1).ImageId
+Find a paid AMI 40
+
+Purchase a paid AMI in the AWS Marketplace
+You must sign up for (purchase) a paid AMI before you can launch an Amazon EC2 instance using 
+the AMI.
+Typically a seller of a paid AMI presents you with information about the AMI, including its price and 
+a link where you can buy it. When you choose the link, you're ﬁrst asked to log into AWS, and then 
+you can purchase the AMI.
+Purchase a paid AMI using the console
+You can purchase a paid AMI by using the Amazon EC2 launch wizard. For more information, see
+Launch an Amazon EC2 instance from an AWS Marketplace AMI.
+Subscribe to a product using AWS Marketplace
+To use the AWS Marketplace, you must have an AWS account. To launch instances from AWS 
+Marketplace products, you must be signed up to use the Amazon EC2 service, and you must be 
+subscribed to the product from which to launch the instance. You can use one of the following 
+methods to subscribe to products in the AWS Marketplace:
+•AWS Marketplace website: You can launch preconﬁgured software quickly with the 1-Click 
+deployment feature. For more information, see AMI-based products in AWS Marketplace.
+•Amazon EC2 launch wizard: You can search for an AMI and launch an instance directly from the 
+wizard. For more information, see Launch an Amazon EC2 instance from an AWS Marketplace 
+AMI.
+Retrieve the AWS Marketplace product code from your instance
+You can retrieve the AWS Marketplace product code for your instance using its instance metadata. 
+If the instance has a product code, Amazon EC2 returns it. For more information about retrieving 
+metadata, see Access instance metadata for an EC2 instance.
+IMDSv2
+Linux
+Run the following command from your Linux instance.
+Purchase a paid AMI 41
+
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-
+token-ttl-seconds: 21600"` \ 
+    && curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/
+meta-data/product-codes
+Windows
+Run the following cmdlets from your Windows instance.
+[string]$token = Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token-ttl-seconds" 
+ = "21600"} ` 
+    -Method PUT -Uri http://169.254.169.254/latest/api/token
+Invoke-RestMethod -Headers @{"X-aws-ec2-metadata-token" = $token} ` 
+    -Method GET -Uri http://169.254.169.254/latest/meta-data/product-codes
+IMDSv1
+Linux
+Run the following command from your Linux instance.
+curl http://169.254.169.254/latest/meta-data/product-codes
+Windows
+Run the following command from your Windows instance.
+Invoke-RestMethod -Uri http://169.254.169.254/latest/meta-data/product-codes
+Use paid support for supported AWS Marketplace oﬀerings
+Amazon EC2 also enables developers to oﬀer support for software (or derived AMIs). Developers 
+can create support products that you can sign up to use. During sign-up for the support product, 
+the developer gives you a product code, which you must then associate with your own AMI. This 
+enables the developer to conﬁrm that your instance is eligible for support. It also ensures that 
+when you run instances of the product, you are charged according to the terms for the product 
+speciﬁed by the developer.
+Use paid support 42
+
+Limitations
+•After you set the product code attribute, it can't be changed or removed.
+•You can't use a support product with Reserved Instances. You always pay the price that's 
+speciﬁed by the seller of the support product.
+AWS CLI
+To associate a product code with your AMI
+Use the modify-image-attribute command.
+aws ec2 modify-image-attribute \ 
+    --image-id ami-0abcdef1234567890  \ 
+    --product-codes " cdef1234abc567def8EXAMPLE "
+PowerShell
+To associate a product code with your AMI
+Use the Edit-EC2ImageAttribute cmdlet.
+Edit-EC2ImageAttribute ` 
+    -ImageId ami-0abcdef1234567890  ` 
+    -ProductCode " cdef1234abc567def8EXAMPLE "
+Bills for paid and supported AMIs
+At the end of each month, you receive an email with the amount your credit card has been charged 
+for using any paid or supported AMIs during the month. This bill is separate from your regular 
+Amazon EC2 bill. For more information, see Paying for products in the AWS Marketplace Buyer 
+Guide .
+Manage your AWS Marketplace subscriptions
+On the AWS Marketplace website, you can check your subscription details, view the vendor's usage 
+instructions, manage your subscriptions, and more.
+Bills for paid and supported AMIs 43
+
+Check subscription details
+To check your subscription details
+1. Log in to the AWS Marketplace.
+2. Choose Your Marketplace Account.
+3. Choose Manage your software subscriptions.
+4. All your current subscriptions are listed. Choose  Usage Instructions to view speciﬁc 
+instructions for using the product, for example, a username for connecting to your running 
+instance.
+Cancel subscription
+Note
+•Canceling a subscription does not terminate the instances launched with that AMI. 
+We'll continue to bill you for your running instances until they're terminated. You must 
+terminate all instances launched with the AMI in order to stop billing for the subscription.
+•After you've canceled your subscription, you are no longer able to launch any instances 
+from that AMI. To use that AMI again, you need to resubscribe to it, either on the AWS 
+Marketplace website, or through the launch wizard in the Amazon EC2 console.
+To cancel an AWS Marketplace subscription
+1. To stop billing for the subscription, ensure that you have terminated any instances running 
+from the subscription.
+Warning
+Terminating an instance is permanent and irreversible.
+After you terminate an instance, you can no longer connect to it, and it can't be 
+recovered. All attached Amazon EBS volumes that are conﬁgured to be deleted on 
+termination are also permanently deleted and can't be recovered. All data stored on 
+instance store volumes is permanently lost. For more information, see How instance 
+termination works.
+Manage your subscriptions 44
+
+Before you terminate an instance, ensure that you have backed up all data that you 
+need to retain after the termination to persistent storage.
+a. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+b. In the navigation pane, choose Instances.
+c. Select the instance, and then choose Instance state, Terminate (delete) instance.
+d. Choose Terminate (delete) when prompted for conﬁrmation.
+2. Log in to the AWS Marketplace, and choose Your Marketplace Account, then Manage your 
+software subscriptions.
+3. Choose Cancel subscription. You are prompted to conﬁrm your cancellation.
+Amazon EC2 AMI lifecycle
+An Amazon Machine Image (AMI) is an image that contains the software conﬁguration required to 
+set up and boot an instance. You must specify an AMI when you launch an instance. You can use 
+AMIs provided by Amazon, or you can create your own AMIs. The AMI must be located in the AWS 
+Region in which you want to launch your instance.
+The lifecycle of an AMI includes creating, copying, deprecating, disabling, and deleting 
+(deregistering) the AMI.
+Create AMIs.  While Amazon provides AMIs that you can use to launch your instances, you can 
+create custom AMIs tailored to your needs. To create a custom AMI, launch an instance from an 
+existing AMI, customize the instance (for example, install software and conﬁgure operating system 
+settings), and then create an AMI from the instance. Any instance customizations are saved to the 
+new AMI, so that instances launched from your new AMI include these customizations.
+Attestable AMIs. To create an AMI that supports EC2 instance attestation, see Attestable AMIs.
+Copy AMIs. You can use an AMI to launch an instance only in the AWS Region in which the AMI is 
+located. If you need to launch instances with the same conﬁguration in multiple Regions, copy the 
+AMI to the other Regions.
+Deprecate AMIs.  To mark an AMI as superseded or out of date, you can set an immediate or 
+future deprecation date. Deprecated AMIs are hidden from AMI listings, but users and services can 
+continue to use deprecated AMIs if they know the AMI ID.
+AMI lifecycle 45
+
+Disable AMIs. To temporarily prevent an AMI from being used, you can disable it. When an AMI is 
+disabled, it can't be used to launch new instances. However, if you re-enable the AMI, it can be used 
+to launch instances again. Note that disabling an AMI doesn't aﬀect existing instances that have 
+already been launched from it.
+Deregister (delete) AMIs. When you no longer need an AMI, you can deregister it, preventing 
+it from being used to launch new instances. If the AMI matches a retention rule, it moves to 
+the Recycle Bin, where it can be restored before its retention period expires, after which it is 
+permanently deleted. If it doesn't match a retention rule, it is permanently deleted immediately. 
+Note that deregistering an AMI does not aﬀect existing instances that were launched from the AMI.
+Automate the AMI lifecycle. You can use Amazon Data Lifecycle Manager to automate the 
+creation, retention, copy, deprecation, and deregistration of Amazon EBS-backed AMIs and their 
+backing snapshots. You can also use EC2 Image Builder to automate the creation, management, an 
+deployment of customized AMIs. For more information, see Automate backups with Amazon Data 
+Lifecycle Manager in the Amazon EBS User Guide  and the EC2 Image Builder User Guide.
+Contents
+•Create an Amazon EBS-backed AMI
+•Create an Amazon S3-backed AMI
+•Create an Amazon EC2 AMI using Windows Sysprep
+•Copy an Amazon EC2 AMI
+•Store and restore an AMI using S3
+•Use AMI ancestry to trace the origin of an AMI
+•Use AMI watermarks to track and identify AMIs
+•AMI allowed instance types
+•Manage and monitor AMI usage
+•Deprecate an Amazon EC2 AMI
+•Disable an Amazon EC2 AMI
+•Deregister an Amazon EC2 AMI
+Create an Amazon EBS-backed AMI
+You can create your own Amazon EBS-backed AMI from an Amazon EC2 instance or from a 
+snapshot of the root volume of an Amazon EC2 instance.
+Create an AMI 46
+
+To create an Amazon EBS-backed AMI from an instance, start by launching an instance using an 
+existing Amazon EBS-backed AMI. This AMI can be one you obtained from the AWS Marketplace, 
+created using VM Import/Export, or any other AMI that you can access. After customizing the 
+instance to meet your speciﬁc requirements, create and register a new AMI. You can then use the 
+new AMI to launch new instances with your customizations.
+Note
+To create an AMI that supports EC2 instance attestation, see Attestable AMIs.
+The procedures described below work for Amazon EC2 instances backed by encrypted Amazon 
+Elastic Block Store (Amazon EBS) volumes (including the root volume) as well as for unencrypted 
+volumes.
+The AMI creation process is diﬀerent for Amazon S3-backed AMIs. For more information, see Create 
+an Amazon S3-backed AMI.
+Contents
+•Overview of AMI creation from an instance
+•Create an AMI from an instance
+•Create an AMI from a snapshot
+Overview of AMI creation from an instance
+The following diagram summarizes the process for creating an Amazon EBS-backed AMI from a 
+running EC2 instance: Start with an existing AMI, launch an instance, customize it, create a new AMI 
+from it, and ﬁnally launch an instance of your new AMI. The numbers in the diagram match the 
+numbers in the description that follows.
+Create an AMI 47
+
+1 – AMI #1: Start with an existing AMI
+Find an existing AMI that is similar to the AMI that you'd like to create. This can be an AMI you 
+have obtained from the AWS Marketplace, an AMI that you have created using VM Import/
+Export, or any other AMI that you can access. You'll customize this AMI for your needs.
+In the diagram, EBS root volume snapshot #1 indicates that the AMI is an Amazon EBS-backed 
+AMI and that information about the root volume is stored in this snapshot.
+2 – Launch instance from existing AMI
+The way to conﬁgure an AMI is to launch an instance from the AMI on which you'd like to base 
+your new AMI, and then customize the instance (indicated at 3 in the diagram). Then, you'll 
+create a new AMI that includes the customizations (indicated at 4 in the diagram).
+3 – EC2 instance #1: Customize the instance
+Connect to your instance and customize it for your needs. Your new AMI will include these 
+customizations.
+You can perform any of the following actions on your instance to customize it:
+•Install software and applications
+•Copy data
+•Reduce start time by deleting temporary ﬁles and defragmenting your hard drive
+•Attach additional EBS volumes
+4 – Create image
+When you create an AMI from an instance, Amazon EC2 powers down the instance before 
+creating the AMI to ensure that everything on the instance is stopped and in a consistent 
+state during the creation process. If you're conﬁdent that your instance is in a consistent state 
+appropriate for AMI creation, you can tell Amazon EC2 not to power down and reboot the 
+instance. Some ﬁle systems, such as XFS, can freeze and unfreeze activity, making it safe to 
+create the image without rebooting the instance.
+During the AMI-creation process, Amazon EC2 creates snapshots of your instance's root volume 
+and any other EBS volumes attached to your instance. You're charged for the snapshots until 
+you deregister the AMI and delete the snapshots. If any volumes attached to the instance are 
+encrypted, the new AMI only launches successfully on instances that support Amazon EBS 
+encryption.
+Create an AMI 48
+
+Depending on the size of the volumes, it can take several minutes for the AMI-creation process 
+to complete (sometimes up to 24 hours). You might ﬁnd it more eﬃcient to create snapshots 
+of your volumes before creating your AMI. This way, only small, incremental snapshots need to 
+be created when the AMI is created, and the process completes more quickly (the total time for 
+snapshot creation remains the same).
+5 – AMI #2: New AMI
+After the process completes, you have a new AMI and snapshot (snapshot #2 ) created from 
+the root volume of the instance. If you added instance store volumes or EBS volumes to the 
+instance, in addition to the root volume, the block device mapping for the new AMI contains 
+information for these volumes.
+Amazon EC2 automatically registers the AMI for you.
+6 – Launch instance from new AMI
+You can use the new AMI to launch an instance.
+7 – EC2 instance #2: New instance
+When you launch an instance using the new AMI, Amazon EC2 creates a new EBS volume for 
+the instance's root volume using the snapshot. If you added instance store volumes or EBS 
+volumes when you customized the instance, the block device mapping for the new AMI contains 
+information for these volumes, and the block device mappings for instances that you launch 
+from the new AMI automatically contain information for these volumes. The instance store 
+volumes speciﬁed in the block device mapping for the new instance are new and don't contain 
+any data from the instance store volumes of the instance you used to create the AMI. The data 
+on EBS volumes persists. For more information, see Block device mappings for volumes on 
+Amazon EC2 instances.
+When you create a new instance from an EBS-backed AMI, you should initialize both its root 
+volume and any additional EBS storage before putting it into production. For more information, 
+see Initialize Amazon EBS volumes in the Amazon EBS User Guide .
+Create an AMI from an instance
+If you have an existing instance, you can create an AMI from this instance.
+Create an AMI 49
+
+Console
+To create an AMI
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose Instances.
+3. Select the instance from which to create the AMI, and then choose Actions, Image and 
+templates , Create image .
+Tip
+If this option is disabled, your instance isn't an Amazon EBS-backed instance.
+4. On the Create image  page, specify the following information:
+a. For Image name , enter a unique name for the image, up to 127 characters.
+b. For Image description , enter an optional description of the image, up to 255 
+characters.
+c. For Reboot instance, either keep the checkbox selected (the default), or clear it.
+•If Reboot instance is selected, when Amazon EC2 creates the new AMI, it reboots the 
+instance so that it can take snapshots of the attached volumes while data is at rest, 
+to ensure a consistent state.
+•If Reboot instance is cleared, when Amazon EC2 creates the new AMI, it does not 
+shut down and reboot the instance.
+Warning
+If you clear Reboot instance, we can't guarantee the ﬁle system integrity of the 
+created image.
+d. Instance volumes – You can modify the root volume, and add additional Amazon EBS 
+and instance store volumes, as follows:
+i. The root volume is deﬁned in the ﬁrst row.
+•To change the size of the root volume, for Size, enter the required value.
+Create an AMI 50
+
+•If you select Delete on termination, when you terminate the instance created 
+from this AMI, the EBS volume is deleted. If you clear Delete on termination, 
+when you terminate the instance, the EBS volume is not deleted. For more 
+information, see Preserve data when an instance is terminated.
+ii. To add an EBS volume, choose Add volume (which adds a new row). For Storage 
+type, choose EBS, and ﬁll in the ﬁelds in the row. When you launch an instance 
+from your new AMI, additional volumes are automatically attached to the instance. 
+Empty volumes must be formatted and mounted. Volumes based on a snapshot 
+must be mounted.
+iii. To add an instance store volume, see Add instance store volumes to an Amazon 
+EC2 AMI. When you launch an instance from your new AMI, additional volumes are 
+automatically initialized and mounted. These volumes do not contain data from 
+the instance store volumes of the running instance on which you based your AMI.
+e. Snapshot destination  – If your instance volumes are in a Local Zone that supports EBS 
+local snapshots, choose where to create the AMI’s snapshots:
+•AWS Region: Create snapshots in the parent Region of the Local Zone of your 
+volumes.
+•AWS Local Zone: Create snapshots in the same Local Zone as your volumes.
+Note
+This option appears only in Local Zones that support EBS local snapshots, and 
+only if your instance was created in a Local Zone. If the volume is in a Region, 
+this option does not appear, and the snapshot is automatically created in the 
+same Region as the volume. For more information, see Local snapshots in Local 
+Zones in the Amazon EBS User Guide .
+Important
+All snapshots of the instance’s volumes must be in the same location. Verify 
+the location of existing snapshots. If any existing snapshots are in a diﬀerent 
+location than your selected destination, the AMI creation will fail.
+Create an AMI 51
+
+f.Tags – You can tag the AMI and the snapshots with the same tags, or you can tag them 
+with diﬀerent tags.
+•To tag the AMI and the snapshots with the same  tags, choose Tag image and 
+snapshots together . The same tags are applied to the AMI and every snapshot that 
+is created.
+•To tag the AMI and the snapshots with diﬀerent  tags, choose Tag image and 
+snapshots separately . Diﬀerent tags are applied to the AMI and the snapshots 
+that are created. However, all the snapshots get the same tags; you can't tag each 
+snapshot with a diﬀerent tag.
+g. Boot mode override – To create an AMI that only supports UEFI boot mode, choose
+uefi. Otherwise, keep the default so that the AMI inherits the boot mode of the 
+instance.
+Note
+This option works only if the current instance boot mode is UEFI. For more 
+information, see Set the boot mode of an Amazon EC2 AMI.
+h. To add a tag, choose Add tag , and enter the key and value for the tag. Repeat for each 
+tag.
+i. When you're ready to create your AMI, choose Create image .
+5. To view the status of your AMI while it is being created:
+a. In the navigation pane, choose AMIs .
+b. Set the ﬁlter to Owned by me, and ﬁnd your AMI in the list.
+Initially, the status is pending  but should change to available  after a few minutes.
+6. (Optional) To view the snapshot that was created for the new AMI:
+a. Note the ID of your AMI that you located in the previous step.
+b. In the navigation pane, choose Snapshots .
+c. Set the ﬁlter to Owned by me, and then ﬁnd the snapshot with the new AMI ID in the
+Description  column.
+When you launch an instance from this AMI, Amazon EC2 uses this snapshot to create 
+the instance's root volume.
+Create an AMI 52
+
+AWS CLI
+To create an AMI
+Use the create-image command.
+aws ec2 create-image \ 
+    --instance-id i-1234567890abcdef0  \ 
+    --name " my-web-server " \ 
+    --description " My web server image " \ 
+    --no-reboot
+PowerShell
+To create an AMI
+Use the New-EC2Image cmdlet.
+New-EC2Image ` 
+    -InstanceId i-1234567890abcdef0  `  
+    -Name "my-web-server"  ` 
+    -Description " My web server image " ` 
+    -NoReboot $true
+Create an AMI from a snapshot
+If you have a snapshot of the root volume of an instance, you can create an AMI from this snapshot.
+Note
+In most cases, AMIs for Windows, Red Hat, SUSE, and SQL Server require correct licensing 
+information to be present on the AMI. For more information, see Understand AMI billing 
+information . When creating an AMI from a snapshot, the RegisterImage  operation 
+derives the correct billing information from the snapshot's metadata, but this requires the 
+appropriate metadata to be present. To verify if the correct billing information was applied, 
+check the Platform details ﬁeld on the new AMI. If the ﬁeld is empty or doesn't match the 
+expected operating system code (for example, Windows, Red Hat, SUSE, or SQL), the AMI 
+creation was unsuccessful, and you should discard the AMI and follow the instructions in
+Create an AMI from an instance.
+Create an AMI 53
+
+Console
+To create an AMI from a snapshot
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, choose Snapshots .
+3. Select the snapshot from which to create the AMI, and then choose Actions, Create image 
+from snapshot .
+4. On the Create image from snapshot  page, specify the following information:
+a. For Image name , enter a descriptive name for the image.
+b. For Description , enter a brief description for the image.
+c. For Architecture, choose the image architecture. Choose i386  for 32-bit, x86_64  for 
+64-bit, arm64  for 64-bit ARM, or x86_64  for 64-bit macOS.
+d. For Root device name, enter the device name to use for the root volume. For more 
+information, see Device names for volumes on Amazon EC2 instances.
+e. For Virtualization type, choose the virtualization type to be used by instances 
+launched from this AMI. For more information, see Virtualization types.
+f.(For paravirtual virtualization only) For Kernel ID, select the operating system kernel 
+for the image. If you're using a snapshot of the root volume of an instance, select the 
+same kernel ID as the original instance. If you're unsure, use the default kernel.
+g. (For paravirtual virtualization only) For RAM disk ID, select the RAM disk for the image. 
+If you select a speciﬁc kernel, you may need to select a speciﬁc RAM disk with the 
+drivers to support it.
+h. For Boot mode , choose the boot mode for the image, or choose Use default  so that 
+when an instance is launched with this AMI, it boots with the boot mode supported 
+by the instance type. For more information, see Set the boot mode of an Amazon EC2 
+AMI.
+i. (Optional) Under Block device mappings, customize the root volume and add 
+additional data volumes.
+For each volume, you can specify the size, type, performance characteristics, the 
+behavior of delete on termination, and encryption status. For the root volume, the size 
+can't be smaller than the size of the snapshot. For volume type, General Purpose SSD
+gp3 is the default selection.
+Create an AMI 54
+
+j. (Optional) Under Tags, you can add one or more tags to the new AMI. To add a tag, 
+choose Add tag , and enter the key and value for the tag. Repeat for each tag.
+k. When you're ready to create your AMI, choose Create image .
+5. (Windows, Red Hat, SUSE, and SQL Server only) To verify if the correct billing information 
+was applied, check the Platform details ﬁeld on the new AMI. If the ﬁeld is empty or 
+doesn't match the expected operating system code (for example, Windows or Red Hat), the 
+AMI creation was unsuccessful, and you should discard the AMI and follow the instructions 
+in Create an AMI from an instance.
+AWS CLI
+To create an AMI from a snapshot using the AWS CLI
+Use the register-image command.
+aws ec2 register-image \ 
+    --name my-image  \ 
+    --root-device-name /dev/xvda  \ 
+    --block-device-mappings DeviceName= /dev/
+xvda,Ebs={SnapshotId= snap-0db2cf683925d191f }
+PowerShell
+To create an AMI from a snapshot using PowerShell
+Use the Register-EC2Image cmdlet.
+$block = @{SnapshotId= snap-0db2cf683925d191f }
+Register-EC2Image ` 
+    -Name my-image  ` 
+    -RootDeviceName /dev/xvda  ` 
+    -BlockDeviceMapping @{DeviceName="/dev/xvda";Ebs=$block}
+Create an Amazon S3-backed AMI
+The AMI that you specify when you launch your instance determines the type of root volume.
+To create an Amazon S3-backed Linux AMI, start from an instance that you've launched from an 
+existing Amazon S3-backed Linux AMI. After you've customized the instance to suit your needs, 
+Create an Amazon S3-backed AMI 55
+
+bundle the volume and register a new AMI, which you can use to launch new instances with these 
+customizations.
+You can't create an Amazon S3-backed Windows AMI because Windows AMIs don't support 
+instance store for the root volume.
+Important
+Only the following instance types support an instance store volume as the root volume and 
+require an Amazon S3-backed AMI: C1, C3, D2, I2, M1, M2, M3, R3, and X1.
+The AMI creation process is diﬀerent for Amazon EBS-backed AMIs. For more information, see
+Create an Amazon EBS-backed AMI.
+Contents
+•Overview of AMI creation
+•Prerequisites
+•Create an AMI from an Amazon Linux instance
+•Set up the Amazon EC2 AMI tools
+•Amazon EC2 AMI tools reference
+•Convert your Amazon S3-backed AMI to an EBS-backed AMI
+Overview of AMI creation
+The following diagram summarizes the process of creating an AMI from an instance with an 
+instance store root volume.
+Create an Amazon S3-backed AMI 56
+
+First, launch an instance from an AMI that's similar to the AMI that you'd like to create. You can 
+connect to your instance and customize it. When the instance is set up the way you want it, you 
+can bundle it. It takes several minutes for the bundling process to complete. After the process 
+completes, you have a bundle, which consists of an image manifest (image.manifest.xml ) and 
+ﬁles (image.part. xx) that contain a template for the root volume. Next you upload the bundle to 
+your Amazon S3 bucket and then register your AMI.
+Note
+To upload objects to an S3 bucket for your Amazon S3-backed Linux AMI, ACLs must 
+be enabled for the bucket. Otherwise, Amazon EC2 will not be able to set ACLs on the 
+objects to upload. If your destination bucket uses the bucket owner enforced setting for S3 
+Object Ownership, this won’t work because ACLs are disabled. For more information, see
+Controlling ownership of objects and disabling ACLs for your bucket.
+When you launch an instance using the new AMI, we create the root volume for the instance using 
+the bundle that you uploaded to Amazon S3. The storage space used by the bundle in Amazon S3 
+incurs charges to your account until you delete it. For more information, see Deregister an Amazon 
+EC2 AMI.
+If you add instance store volumes to your instance in addition to the root volume, the block device 
+mapping for the new AMI contains information for these volumes, and the block device mappings 
+for instances that you launch from the new AMI automatically contain information for these 
+volumes. For more information, see Block device mappings for volumes on Amazon EC2 instances.
+Create an Amazon S3-backed AMI 57
+
+Prerequisites
+Before you can create an AMI, you must complete the following tasks:
+•Install the AMI tools. For more information, see Set up the Amazon EC2 AMI tools.
+•Install the AWS CLI. For more information, see Getting started with the AWS CLI.
+•Ensure that you have an S3 bucket for the bundle, and that your bucket has ACLs enabled. For 
+more information on conﬁguring ACLs, see Conﬁguring ACLs.
+•To create an S3 bucket using the AWS Management Console, open the Amazon S3 console at
+https://console.aws.amazon.com/s3/ and choose Create Bucket.
+•To create an S3 bucket with the AWS CLI, you can use the mb command. If your installed 
+version of the AMI tools is 1.5.18 or later, you can also use the ec2-upload-bundle
+command to create the S3 bucket. For more information, see ec2-upload-bundle .
+•Ensure that the ﬁles in your bundle aren't encrypted in the S3 bucket. If you require encryption 
+for your AMI, you can use an EBS-backed AMI instead. For more information, see Use encryption 
+with EBS-backed AMIs.
+•Ensure that you have your AWS account ID. For more information, see View AWS account 
+identiﬁers  in the AWS Account Management Reference Guide.
+•Ensure that you have credentials to use the AWS CLI. For more information, see Authentication 
+and access credentials for the AWS CLI in the AWS Command Line Interface User Guide.
+•Ensure that you have an X.509 certiﬁcate and corresponding private key.
+•If you need to create an X.509 certiﬁcate, see Manage signing certiﬁcates. The X.509 certiﬁcate 
+and private key are used to encrypt and decrypt your AMI.
+•[China (Beijing)] Use the $EC2_AMITOOL_HOME/etc/ec2/amitools/cert-ec2-cn-
+north-1.pem  certiﬁcate.
+•[AWS GovCloud (US-West)] Use the $EC2_AMITOOL_HOME/etc/ec2/amitools/cert-ec2-
+gov.pem certiﬁcate.
+•Connect to your instance and customize it. For example, you can install software and 
+applications, copy data, delete temporary ﬁles, and modify the Linux conﬁguration.
+Create an AMI from an Amazon Linux instance
+The following procedures describe how to create an AMI from an instance with an instance store 
+root volume running Amazon Linux 1. They might not work for instances running other Linux 
+distributions.
+Create an Amazon S3-backed AMI 58
+
+To prepare to use the AMI tools (HVM instances only)
+1. The AMI tools require GRUB Legacy to boot properly. Use the following command to install 
+GRUB:
+[ec2-user ~]$ sudo yum install -y grub
+2. Install the partition management packages with the following command:
+[ec2-user ~]$ sudo yum install -y gdisk kpartx parted
+To create an AMI from an Amazon Linux instance with an instance store root volume
+This procedure assumes that you have satisﬁed the prerequisites in Prerequisites.
+In the following commands, replace each user input placeholder  with your own information.
+1. Upload your credentials to your instance. We use these credentials to ensure that only you and 
+Amazon EC2 can access your AMI.
+a. Create a temporary directory on your instance for your credentials as follows:
+[ec2-user ~]$ mkdir /tmp/cert
+This enables you to exclude your credentials from the created image.
+b. Copy your X.509 certiﬁcate and corresponding private key from your computer to the /
+tmp/cert  directory on your instance using a secure copy tool such as scp. The -i my-
+private-key .pem option in the following scp command is the private key you use to 
+connect to your instance with SSH, not the X.509 private key. For example:
+you@your_computer:~ $ scp -i my-private-key .pem /
+path/to/pk-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  /
+path/to/cert-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  ec2-
+user@ec2-203-0-113-25.compute-1.amazonaws.com :/tmp/cert/
+pk-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  100%  717     0.7KB/s   00:00
+cert-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  100%  685     0.7KB/s   00:00
+Create an Amazon S3-backed AMI 59
+
+Alternatively, because these are plain text ﬁles, you can open the certiﬁcate and key in a text 
+editor and copy their contents into new ﬁles in /tmp/cert .
+2. Prepare the bundle to upload to Amazon S3 by running the ec2-bundle-vol command from 
+inside your instance. Be sure to specify the -e option to exclude the directory where your 
+credentials are stored. By default, the bundle process excludes ﬁles that might contain 
+sensitive information. These ﬁles include *.sw , *.swo , *.swp , *.pem , *.priv , *id_rsa* ,
+*id_dsa*  *.gpg , *.jks , */.ssh/authorized_keys , and */.bash_history . To include 
+all of these ﬁles, use the --no-filter  option. To include some of these ﬁles, use the --
+include  option.
+Important
+By default, the AMI bundling process creates a compressed, encrypted collection of 
+ﬁles in the /tmp directory that represents your root volume. If you do not have enough 
+free disk space in /tmp to store the bundle, you need to specify a diﬀerent location 
+for the bundle to be stored with the -d /path/to/bundle/storage  option. Some 
+instances have ephemeral storage mounted at /mnt  or /media/ephemeral0  that you 
+can use, or you can also create, attach, and mount a new Amazon EBS) volume to store 
+the bundle. For more information, see Create an Amazon EBS volume in the Amazon 
+EBS User Guide .
+a. You must run the ec2-bundle-vol command as root. For most commands, you can use
+sudo  to gain elevated permissions, but in this case, you should run sudo -E su  to keep 
+your environment variables.
+[ec2-user ~]$ sudo -E su
+Note that bash prompt now identiﬁes you as the root user, and that the dollar sign has 
+been replaced by a hash tag, signalling that you are in a root shell:
+[root ec2-user]#
+b. To create the AMI bundle, run the ec2-bundle-vol command as follows:
+Create an Amazon S3-backed AMI 60
+
+[root ec2-user]# ec2-bundle-vol -k /tmp/cert/ pk-
+HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  -c /tmp/cert/ cert-
+HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem  -u 123456789012  -r x86_64 -e /tmp/cert --
+partition gpt
+Note
+For the China (Beijing) and AWS GovCloud (US-West) Regions, use the --ec2cert
+parameter and specify the certiﬁcates as per the prerequisites.
+It can take a few minutes to create the image. When this command completes, your /tmp
+(or non-default) directory contains the bundle (image.manifest.xml , plus multiple
+image.part. xx ﬁles).
+c. Exit from the root shell.
+[root ec2-user]# exit
+3. (Optional) To add more instance store volumes, edit the block device mappings in the
+image.manifest.xml  ﬁle for your AMI. For more information, see Block device mappings for 
+volumes on Amazon EC2 instances.
+a. Create a backup of your image.manifest.xml  ﬁle.
+[ec2-user ~]$ sudo cp /tmp/image.manifest.xml /tmp/image.manifest.xml.bak
+b. Reformat the image.manifest.xml  ﬁle so that it is easier to read and edit.
+[ec2-user ~]$ sudo xmllint --format /tmp/image.manifest.xml.bak > /tmp/
+image.manifest.xml
+c. Edit the block device mappings in image.manifest.xml  with a text editor. The example 
+below shows a new entry for the ephemeral1  instance store volume.
+Note
+For a list of excluded ﬁles, see ec2-bundle-vol.
+Create an Amazon S3-backed AMI 61
+
+    <block_device_mapping> 
+      <mapping> 
+        <virtual>ami</virtual> 
+        <device>sda</device> 
+      </mapping> 
+      <mapping> 
+        <virtual>ephemeral0</virtual> 
+        <device>sdb</device> 
+      </mapping>
+      <mapping> 
+        <virtual>ephemeral1</virtual> 
+        <device>sdc</device> 
+      </mapping>
+      <mapping> 
+        <virtual>root</virtual> 
+        <device>/dev/sda1</device> 
+      </mapping> 
+    </block_device_mapping>
+d. Save the image.manifest.xml  ﬁle and exit your text editor.
+4. To upload your bundle to Amazon S3, run the ec2-upload-bundle  command as follows.
+[ec2-user ~]$ ec2-upload-bundle -b amzn-s3-demo-bucket /bundle_folder /bundle_name  -
+m /tmp/image.manifest.xml -a your_access_key_id  -s your_secret_access_key
+Important
+To register your AMI in a Region other than US East (N. Virginia), you must specify both 
+the target Region with the --region  option and a bucket path that already exists in 
+the target Region or a unique bucket path that can be created in the target Region.
+5. (Optional) After the bundle is uploaded to Amazon S3, you can remove the bundle from the /
+tmp directory on the instance using the following rm command:
+[ec2-user ~]$ sudo rm /tmp/image.manifest.xml /tmp/image.part.* /tmp/image
+Create an Amazon S3-backed AMI 62
+
+Important
+If you speciﬁed a path with the -d /path/to/bundle/storage  option in Step 2 , use 
+that path instead of /tmp .
+6. To register your AMI, run the register-image command as follows.
+[ec2-user ~]$ aws ec2 register-image --image-location amzn-s3-demo-
+bucket/bundle_folder /bundle_name /image.manifest.xml --name AMI_name  --
+virtualization-type hvm
+Important
+If you previously speciﬁed a Region for the ec2-upload-bundle  command, specify that 
+Region again for this command.
+Set up the Amazon EC2 AMI tools
+You can use the AMI tools to create and manage Amazon S3-backed Linux AMIs. To use the tools, 
+you must install them on your Linux instance. The AMI tools are available as both an RPM and as 
+a .zip ﬁle for Linux distributions that don't support RPM.
+To set up the AMI tools using the RPM
+1. Install Ruby using the package manager for your Linux distribution, such as yum. For example:
+[ec2-user ~]$ sudo yum  install -y ruby
+2. Download the RPM ﬁle using a tool such as wget or curl. For example:
+[ec2-user ~]$ wget https://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.noarch.rpm
+3. Verify the RPM ﬁle's signature using the following command:
+[ec2-user ~]$ rpm -K ec2-ami-tools.noarch.rpm
+Create an Amazon S3-backed AMI 63
+
+The command above should indicate that the ﬁle's SHA1 and MD5 hashes are OK. If the 
+command indicates that the hashes are NOT OK, use the following command to view the ﬁle's 
+Header SHA1 and MD5 hashes:
+[ec2-user ~]$ rpm -Kv ec2-ami-tools.noarch.rpm
+Then, compare your ﬁle's Header SHA1 and MD5 hashes with the following veriﬁed AMI tools 
+hashes to conﬁrm the ﬁle's authenticity:
+•Header SHA1: a1f662d6f25f69871104e6a62187fa4df508f880
+•MD5: 9faﬀ05258064e2f7909b66142de6782
+If your ﬁle's Header SHA1 and MD5 hashes match the veriﬁed AMI tools hashes, continue to 
+the next step.
+4. Install the RPM using the following command:
+[ec2-user ~]$ sudo yum  install ec2-ami-tools.noarch.rpm
+5. Verify your AMI tools installation using the ec2-ami-tools-version command.
+[ec2-user ~]$ ec2-ami-tools-version
+Note
+If you receive a load error such as "cannot load such ﬁle -- ec2/amitools/version 
+(LoadError)", complete the next step to add the location of your AMI tools installation 
+to your RUBYLIB  path.
+6. (Optional) If you received an error in the previous step, add the location of your AMI tools 
+installation to your RUBYLIB  path.
+a. Run the following command to determine the paths to add.
+[ec2-user ~]$ rpm -qil ec2-ami-tools | grep ec2/amitools/version
+/usr/lib/ruby/site_ruby/ec2/amitools/version.rb
+/usr/lib64/ruby/site_ruby/ec2/amitools/version.rb
+Create an Amazon S3-backed AMI 64
+
+In the above example, the missing ﬁle from the previous load error is located at /usr/
+lib/ruby/site_ruby  and /usr/lib64/ruby/site_ruby .
+b. Add the locations from the previous step to your RUBYLIB  path.
+[ec2-user ~]$ export RUBYLIB=$RUBYLIB: /usr/lib/ruby/site_ruby :/usr/lib64/ruby/
+site_ruby
+c. Verify your AMI tools installation using the ec2-ami-tools-version command.
+[ec2-user ~]$ ec2-ami-tools-version
+To set up the AMI tools using the .zip ﬁle
+1. Install Ruby and unzip using the package manager for your Linux distribution, such as apt-get. 
+For example:
+[ec2-user ~]$ sudo apt-get update  -y && sudo apt-get install -y  ruby unzip
+2. Download the .zip ﬁle using a tool such as wget or curl. For example:
+[ec2-user ~]$ wget https://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip
+3. Unzip the ﬁles into a suitable installation directory, such as /usr/local/ec2 .
+[ec2-user ~]$ sudo mkdir  -p /usr/local/ec2
+$ sudo unzip  ec2-ami-tools.zip -d /usr/local/ec2
+Notice that the .zip ﬁle contains a folder ec2-ami-tools-x.x.x, where x.x.x is the version 
+number of the tools (for example, ec2-ami-tools-1.5.7 ).
+4. Set the EC2_AMITOOL_HOME  environment variable to the installation directory for the tools. 
+For example:
+[ec2-user ~]$ export EC2_AMITOOL_HOME=/usr/local/ec2/ec2-ami-tools- x.x.x
+5. Add the tools to your PATH environment variable. For example:
+[ec2-user ~]$ export PATH=$EC2_AMITOOL_HOME/bin:$PATH
+Create an Amazon S3-backed AMI 65
+
+6. You can verify your AMI tools installation using the ec2-ami-tools-version command.
+[ec2-user ~]$ ec2-ami-tools-version
+Manage signing certiﬁcates
+Certain commands in the AMI tools require a signing certiﬁcate (also known as X.509 certiﬁcate). 
+You must create the certiﬁcate and then upload it to AWS. For example, you can use a third-party 
+tool such as OpenSSL to create the certiﬁcate.
+To create a signing certiﬁcate
+1. Install and conﬁgure OpenSSL.
+2. Create a private key using the openssl genrsa  command and save the output to a .pem  ﬁle. 
+We recommend that you create a 2048- or 4096-bit RSA key.
+openssl genrsa 2048 > private-key.pem
+3. Generate a certiﬁcate using the openssl req  command.
+openssl req -new -x509 -nodes -sha256 -days 365 -key private-key.pem  -outform PEM -
+out certificate.pem
+To upload the certiﬁcate to AWS, use the upload-signing-certiﬁcate command.
+aws iam upload-signing-certificate --user-name user-name  --certificate-body 
+ file:// path/to/certificate .pem
+To list the certiﬁcates for a user, use the list-signing-certiﬁcates command:
+aws iam list-signing-certificates --user-name user-name
+To disable or re-enable a signing certiﬁcate for a user, use the update-signing-certiﬁcate command. 
+The following command disables the certiﬁcate:
+aws iam update-signing-certificate --certificate-id OFHPLP4ZULTHYPMSYEX7O4BEXAMPLE  --
+status Inactive  --user-name user-name
+Create an Amazon S3-backed AMI 66
+
+To delete a certiﬁcate, use the delete-signing-certiﬁcate command:
+aws iam delete-signing-certificate --user-name user-name  --certificate-
+id OFHPLP4ZULTHYPMSYEX7O4BEXAMPLE
+Amazon EC2 AMI tools reference
+You can use the AMI tools commands to create and manage Amazon S3-backed Linux AMIs. To set 
+up the tools, see Set up the Amazon EC2 AMI tools.
+For information about your access keys, see Managing access keys for IAM users in the IAM User 
+Guide .
+Commands
+•ec2-ami-tools-version
+•ec2-bundle-image
+•ec2-bundle-vol
+•ec2-delete-bundle
+•ec2-download-bundle
+•ec2-migrate-manifest
+•ec2-unbundle
+•ec2-upload-bundle
+•Common options for AMI tools
+ec2-ami-tools-version
+Description
+Describes the version of the AMI tools.
+Syntax
+ec2-ami-tools-version
+Output
+The version information.
+Create an Amazon S3-backed AMI 67
+
+Example
+This example command displays the version information for the AMI tools that you're using.
+[ec2-user ~]$ ec2-ami-tools-version
+1.5.2 20071010
+ec2-bundle-image
+Description
+Creates an Amazon S3-backed Linux AMI from an operating system image created in a loopback 
+ﬁle.
+Syntax
+ec2-bundle-image  -c path -k path -u account -i path [-d path] [--ec2cert
+path] [-r architecture ] [--productcodes code1,code2,...] [-B mapping] [-p
+prefix]
+Options
+-c, --cert  path
+The user's PEM encoded RSA public key certiﬁcate ﬁle.
+Required: Yes
+-k, --privatekey  path
+The path to a PEM-encoded RSA key ﬁle. You'll need to specify this key to unbundle this bundle, 
+so keep it in a safe place. Note that the key doesn't have to be registered to your AWS account.
+Required: Yes
+-u, --user  account
+The user's AWS account ID, without dashes.
+Required: Yes
+-i, --image  path
+The path to the image to bundle.
+Create an Amazon S3-backed AMI 68
+
+Required: Yes
+-d, --destination  path
+The directory in which to create the bundle.
+Default: /tmp
+Required: No
+--ec2cert  path
+The path to the Amazon EC2 X.509 public key certiﬁcate used to encrypt the image manifest.
+The us-gov-west-1  and cn-north-1  Regions use a non-default public key certiﬁcate and 
+the path to that certiﬁcate must be speciﬁed with this option. The path to the certiﬁcate varies 
+based on the installation method of the AMI tools. For Amazon Linux, the certiﬁcates are 
+located at /opt/aws/amitools/ec2/etc/ec2/amitools/ . If you installed the AMI tools 
+from the RPM or ZIP ﬁle in Set up the Amazon EC2 AMI tools, the certiﬁcates are located at
+$EC2_AMITOOL_HOME/etc/ec2/amitools/ .
+Required: Only for the us-gov-west-1  and cn-north-1  Regions.
+-r, --arch  architecture
+Image architecture. If you don't provide the architecture on the command line, you'll be 
+prompted for it when bundling starts.
+Valid values: i386  | x86_64
+Required: No
+--productcodes  code1,code2,...
+Product codes to attach to the image at registration time, separated by commas.
+Required: No
+-B, --block-device-mapping  mapping
+Deﬁnes how block devices are exposed to an instance of this AMI if its instance type supports 
+the speciﬁed device.
+Specify a comma-separated list of key-value pairs, where each key is a virtual name and each 
+value is the corresponding device name. Virtual names include the following:
+Create an Amazon S3-backed AMI 69
+
+•ami—The root ﬁle system device, as seen by the instance
+•root—The root ﬁle system device, as seen by the kernel
+•swap—The swap device, as seen by the instance
+•ephemeralN —The Nth instance store volume
+Required: No
+-p, --prefix  preﬁx
+The ﬁlename preﬁx for bundled AMI ﬁles.
+Default: The name of the image ﬁle. For example, if the image path is /var/spool/my-
+image/version-2/debian.img , then the default preﬁx is debian.img .
+Required: No
+--kernel  kernel_id
+Deprecated. Use register-image to set the kernel.
+Required: No
+--ramdisk  ramdisk_id
+Deprecated. Use register-image to set the RAM disk if required.
+Required: No
+Output
+Status messages describing the stages and status of the bundling process.
+Example
+This example creates a bundled AMI from an operating system image that was created in a 
+loopback ﬁle.
+[ec2-user ~]$ ec2-bundle-image  -k pk-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem -c cert-
+HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem -u 111122223333 -i image.img -d bundled/ -r x86_64
+Please specify a value for arch [i386]:  
+Bundling image file...
+Create an Amazon S3-backed AMI 70
+
+Splitting bundled/image.gz.crypt...
+Created image.part.00
+Created image.part.01
+Created image.part.02
+Created image.part.03
+Created image.part.04
+Created image.part.05
+Created image.part.06
+Created image.part.07
+Created image.part.08
+Created image.part.09
+Created image.part.10
+Created image.part.11
+Created image.part.12
+Created image.part.13
+Created image.part.14
+Generating digests for each part...
+Digests generated.
+Creating bundle manifest...
+ec2-bundle-image complete.
+ec2-bundle-vol
+Description
+Creates an Amazon S3-backed Linux AMI by compressing, encrypting, and signing a copy of the 
+root volume for the instance.
+Amazon EC2 attempts to inherit product codes, kernel settings, RAM disk settings, and block device 
+mappings from the instance.
+By default, the bundle process excludes ﬁles that might contain sensitive information. These ﬁles 
+include *.sw , *.swo , *.swp , *.pem , *.priv , *id_rsa* , *id_dsa*  *.gpg , *.jks , */.ssh/
+authorized_keys , and */.bash_history . To include all of these ﬁles, use the --no-filter
+option. To include some of these ﬁles, use the --include  option.
+For more information, see Create an Amazon S3-backed AMI.
+Syntax
+ec2-bundle-vol  -c path -k path -u account [-d path] [--ec2cert path] [-
+r architecture ] [--productcodes code1,code2,...] [-B mapping] [--all] [-e
+Create an Amazon S3-backed AMI 71
+
+directory1 ,directory2 ,...] [-i file1,file2,...] [--no-filter] [-p prefix] 
+[-s size] [--[no-]inherit] [-v volume] [-P type] [-S script] [--fstab path] 
+[--generate-fstab] [--grub-config path]
+Options
+-c, --cert  path
+The user's PEM encoded RSA public key certiﬁcate ﬁle.
+Required: Yes
+-k, --privatekey  path
+The path to the user's PEM-encoded RSA key ﬁle.
+Required: Yes
+-u, --user  account
+The user's AWS account ID, without dashes.
+Required: Yes
+-d, --destination  destination
+The directory in which to create the bundle.
+Default: /tmp
+Required: No
+--ec2cert  path
+The path to the Amazon EC2 X.509 public key certiﬁcate used to encrypt the image manifest.
+The us-gov-west-1  and cn-north-1  Regions use a non-default public key certiﬁcate and 
+the path to that certiﬁcate must be speciﬁed with this option. The path to the certiﬁcate varies 
+based on the installation method of the AMI tools. For Amazon Linux, the certiﬁcates are 
+located at /opt/aws/amitools/ec2/etc/ec2/amitools/ . If you installed the AMI tools 
+from the RPM or ZIP ﬁle in Set up the Amazon EC2 AMI tools, the certiﬁcates are located at
+$EC2_AMITOOL_HOME/etc/ec2/amitools/ .
+Required: Only for the us-gov-west-1  and cn-north-1  Regions.
+Create an Amazon S3-backed AMI 72
+
+-r, --arch  architecture
+The image architecture. If you don't provide this on the command line, you'll be prompted to 
+provide it when the bundling starts.
+Valid values: i386  | x86_64
+Required: No
+--productcodes  code1,code2,...
+Product codes to attach to the image at registration time, separated by commas.
+Required: No
+-B, --block-device-mapping  mapping
+Deﬁnes how block devices are exposed to an instance of this AMI if its instance type supports 
+the speciﬁed device.
+Specify a comma-separated list of key-value pairs, where each key is a virtual name and each 
+value is the corresponding device name. Virtual names include the following:
+•ami—The root ﬁle system device, as seen by the instance
+•root—The root ﬁle system device, as seen by the kernel
+•swap—The swap device, as seen by the instance
+•ephemeralN —The Nth instance store volume
+Required: No
+-a, --all
+Bundle all directories, including those on remotely mounted ﬁle systems.
+Required: No
+-e, --exclude  directory1,directory2,...
+A list of absolute directory paths and ﬁles to exclude from the bundle operation. This parameter 
+overrides the --all option. When exclude is speciﬁed, the directories and subdirectories listed 
+with the parameter will not be bundled with the volume.
+Required: No
+Create an Amazon S3-backed AMI 73
+
+-i, --include  ﬁle1,ﬁle2,...
+A list of ﬁles to include in the bundle operation. The speciﬁed ﬁles would otherwise be excluded 
+from the AMI because they might contain sensitive information.
+Required: No
+--no-filter
+If speciﬁed, we won't exclude ﬁles from the AMI because they might contain sensitive 
+information.
+Required: No
+-p, --prefix  preﬁx
+The ﬁle name preﬁx for bundled AMI ﬁles.
+Default: image
+Required: No
+-s, --size  size
+The size, in MB (1024 * 1024 bytes), of the image ﬁle to create. The maximum size is 10240 MB.
+Default: 10240
+Required: No
+--[no-]inherit
+Indicates whether the image should inherit the instance's metadata (the default is to inherit). 
+Bundling fails if you enable --inherit  but the instance metadata is not accessible.
+Required: No
+-v, --volume  volume
+The absolute path to the mounted volume from which to create the bundle.
+Default: The root directory (/)
+Required: No
+Create an Amazon S3-backed AMI 74
+
+-P, --partition  type
+Indicates whether the disk image should use a partition table. If you don't specify a partition 
+table type, the default is the type used on the parent block device of the volume, if applicable, 
+otherwise the default is gpt.
+Valid values: mbr | gpt | none
+Required: No
+-S, --script  script
+A customization script to be run right before bundling. The script must expect a single 
+argument, the mount point of the volume.
+Required: No
+--fstab  path
+The path to the fstab to bundle into the image. If this is not speciﬁed, Amazon EC2 bundles /
+etc/fstab.
+Required: No
+--generate-fstab
+Bundles the volume using an Amazon EC2-provided fstab.
+Required: No
+--grub-config
+The path to an alternate grub conﬁguration ﬁle to bundle into the image. By default, ec2-
+bundle-vol  expects either /boot/grub/menu.lst  or /boot/grub/grub.conf  to exist on 
+the cloned image. This option allows you to specify a path to an alternative grub conﬁguration 
+ﬁle, which will then be copied over the defaults (if present).
+Required: No
+--kernel  kernel_id
+Deprecated. Use register-image to set the kernel.
+Required: No
+Create an Amazon S3-backed AMI 75
+
+--ramdisk ramdisk_id
+Deprecated. Use register-image to set the RAM disk if required.
+Required: No
+Output
+Status messages describing the stages and status of the bundling.
+Example
+This example creates a bundled AMI by compressing, encrypting and signing a snapshot of the 
+local machine's root ﬁle system.
+[ec2-user ~]$ ec2-bundle-vol  -d /mnt -k pk-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem -c 
+ cert-HKZYKTAIG2ECMXYIBH3HXV4ZBEXAMPLE.pem -u 111122223333 -r x86_64
+  Copying / into the image file /mnt/image... 
+  Excluding: 
+       sys 
+       dev/shm 
+       proc 
+       dev/pts 
+       proc/sys/fs/binfmt_misc 
+       dev 
+       media 
+       mnt 
+       proc 
+       sys 
+       tmp/image 
+       mnt/img-mnt 
+  1+0 records in 
+  1+0 records out 
+  mke2fs 1.38 (30-Jun-2005) 
+  warning: 256 blocks unused. 
+  Splitting /mnt/image.gz.crypt... 
+  Created image.part.00 
+  Created image.part.01 
+  Created image.part.02 
+  Created image.part.03 
+  ... 
+  Created image.part.22 
+Create an Amazon S3-backed AMI 76
+
+  Created image.part.23 
+  Generating digests for each part... 
+  Digests generated. 
+  Creating bundle manifest... 
+  Bundle Volume complete.
+ec2-delete-bundle
+Description
+Deletes the speciﬁed bundle from Amazon S3 storage. After you delete a bundle, you can't launch 
+instances from the corresponding AMI.
+Syntax
+ec2-delete-bundle  -b bucket -a access_key_id  -s secret_access_key  [-t
+token] [--url url] [--region region] [--sigv version] [-m path] [-p prefix] 
+[--clear] [--retry] [-y]
+Options
+-b, --bucket bucket
+The name of the Amazon S3 bucket containing the bundled AMI, followed by an optional '/'-
+delimited path preﬁx
+Required: Yes
+-a, --access-key  access_key_id
+The AWS access key ID.
+Required: Yes
+-s, --secret-key  secret_access_key
+The AWS secret access key.
+Required: Yes
+-t, --delegation-token  token
+The delegation token to pass along to the AWS request. For more information, see Temporary 
+security credentials in the IAM User Guide .
+Required: Only when you are using temporary security credentials.
+Create an Amazon S3-backed AMI 77
+
+Default: The value of the AWS_DELEGATION_TOKEN  environment variable (if set).
+--region region
+The Region to use in the request signature.
+Default: us-east-1
+Required: Required if using signature version 4
+--sigv version
+The signature version to use when signing the request.
+Valid values: 2 | 4
+Default: 4
+Required: No
+-m, --manifest path
+The path to the manifest ﬁle.
+Required: You must specify --prefix  or --manifest .
+-p, --prefix  preﬁx
+The bundled AMI ﬁlename preﬁx. Provide the entire preﬁx. For example, if the preﬁx is 
+image.img, use -p image.img  and not -p image .
+Required: You must specify --prefix  or --manifest .
+--clear
+Deletes the Amazon S3 bucket if it's empty after deleting the speciﬁed bundle.
+Required: No
+--retry
+Automatically retries on all Amazon S3 errors, up to ﬁve times per operation.
+Required: No
+-y, --yes
+Automatically assumes the answer to all prompts is yes.
+Required: No
+Create an Amazon S3-backed AMI 78

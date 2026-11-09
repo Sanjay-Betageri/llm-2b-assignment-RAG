@@ -1,0 +1,32 @@
+flowchart LR
+    corpus["AWS corpus<br/>6 cleaned documents"] --> chunks["Token-exact chunking<br/>100 vs 400; selected 400"]
+    queries["10 C3 queries<br/>expected answers + exact spans"] --> eval["Shared hit@k evaluation"]
+    chunks --> dense["Dense retrieval<br/>BGE-small 384-d<br/>normalized vectors + FAISS IndexFlatIP"]
+    chunks --> bm25["Keyword retrieval<br/>BM25Okapi"]
+
+    subgraph completed["Completed: Parts A and B"]
+        chunks
+        dense
+        bm25
+        dense --> compare["Part B comparison<br/>top 5 per method"]
+        dense --> rrf["RRF fusion<br/>top 20 per method; k=60"]
+        bm25 --> compare
+        bm25 --> rrf
+        rrf --> compare
+        compare --> eval
+        dense --> eval
+        compare --> winner["Best measured method<br/>BM25"]
+    end
+
+    subgraph upcoming["To complete: Parts C and D"]
+        top10["Part C: retrieve top 10<br/>with selected Part B method"]
+        rerank["Cross-encoder reranking<br/>top 10 -> top 3"]
+        answer["Part D: Mistral-7B-v0.1<br/>QLoRA adapter; cite retrieved chunks"]
+        judge["Independent LLM judge<br/>correctness + evidence support"]
+        spotcheck["Spot-check, failure analysis<br/>and not-found query"]
+        top10 --> rerank --> answer --> judge --> spotcheck
+    end
+
+    winner --> top10
+    queries --> top10
+    

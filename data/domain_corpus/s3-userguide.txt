@@ -1,0 +1,2100 @@
+User Guide
+Amazon Simple Storage Service
+API Version 2006-03-01
+Copyright © 2026 Amazon Web Services, Inc. and/or its aﬃliates. All rights reserved.
+
+What is Amazon S3?
+Amazon Simple Storage Service (Amazon S3) is an object storage service that oﬀers industry-
+leading scalability, data availability, security, and performance. Customers of all sizes and 
+industries can use Amazon S3 to store and protect any amount of data for a range of use 
+cases, such as data lakes, websites, mobile applications, backup and restore, archive, enterprise 
+applications, IoT devices, and big data analytics. Amazon S3 provides management features so 
+that you can optimize, organize, and conﬁgure access to your data to meet your speciﬁc business, 
+organizational, and compliance requirements.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Topics
+•Features of Amazon S3
+•How Amazon S3 works
+•Amazon S3 data consistency model
+•Related services
+•Accessing Amazon S3
+•Paying for Amazon S3
+•PCI DSS compliance
+Features of Amazon S3
+Storage classes
+Amazon S3 oﬀers a range of storage classes designed for diﬀerent use cases. For example, you can 
+store mission-critical production data in S3 Standard or S3 Express One Zone for frequent access, 
+save costs by storing infrequently accessed data in S3 Standard-IA or S3 One Zone-IA, and archive 
+data at the lowest costs in S3 Glacier Instant Retrieval, S3 Glacier Flexible Retrieval, and S3 Glacier 
+Deep Archive.
+Features of Amazon S3 API Version 2006-03-01 1
+
+Amazon S3 Express One Zone is a high-performance, single-zone Amazon S3 storage class that 
+is purpose-built to deliver consistent, single-digit millisecond data access for your most latency-
+sensitive applications. S3 Express One Zone is the lowest latency cloud object storage class 
+available today, with data access speeds up to 10x faster and with request costs 80 percent lower 
+than S3 Standard. S3 Express One Zone is the ﬁrst S3 storage class where you can select a single 
+Availability Zone with the option to co-locate your object storage with your compute resources, 
+which provides the highest possible access speed. Additionally, to further increase access speed 
+and support hundreds of thousands of requests per second, data is stored in a new bucket type: 
+an Amazon S3 directory bucket. For more information, see S3 Express One Zone and Working with 
+directory buckets.
+You can store data with changing or unknown access patterns in S3 Intelligent-Tiering, which 
+optimizes storage costs by automatically moving your data between four access tiers when your 
+access patterns change. These four access tiers include two low-latency access tiers optimized for 
+frequent and infrequent access, and two opt-in archive access tiers designed for asynchronous 
+access for rarely accessed data.
+For more information, see Understanding and managing Amazon S3 storage classes.
+Storage management
+Amazon S3 has storage management features that you can use to manage costs, meet regulatory 
+requirements, reduce latency, and save multiple distinct copies of your data for compliance 
+requirements.
+•S3 Lifecycle – Conﬁgure a lifecycle conﬁguration to manage your objects and store them cost 
+eﬀectively throughout their lifecycle. You can transition objects to other S3 storage classes or 
+expire objects that reach the end of their lifetimes.
+•S3 Object Lock – Prevent Amazon S3 objects from being deleted or overwritten for a ﬁxed 
+amount of time or indeﬁnitely. You can use Object Lock to help meet regulatory requirements 
+that require write-once-read-many (WORM) storage or to simply add another layer of protection 
+against object changes and deletions.
+•S3 Replication – Replicate objects and their respective metadata and object tags to one or more 
+destination buckets in the same or diﬀerent AWS Regions for reduced latency, compliance, 
+security, and other use cases.
+•S3 Batch Operations  – Manage billions of objects at scale with a single S3 API request or a few 
+clicks in the Amazon S3 console. You can use Batch Operations to perform operations such as
+Copy, Invoke AWS Lambda function, and Restore on millions or billions of objects.
+Storage management API Version 2006-03-01 2
+
+Access management and security
+Amazon S3 provides features for auditing and managing access to your buckets and objects. By 
+default, S3 buckets and the objects in them are private. You have access only to the S3 resources 
+that you create. To grant granular resource permissions that support your speciﬁc use case or to 
+audit the permissions of your Amazon S3 resources, you can use the following features.
+•S3 Block Public Access – Block public access to S3 buckets and objects. By default, Block Public 
+Access settings are turned on at the bucket level. We recommend that you keep all Block Public 
+Access settings enabled unless you know that you need to turn oﬀ one or more of them for your 
+speciﬁc use case. For more information, see Conﬁguring block public access settings for your S3 
+buckets.
+•AWS Identity and Access Management (IAM) – IAM is a web service that helps you securely 
+control access to AWS resources, including your Amazon S3 resources. With IAM, you can 
+centrally manage permissions that control which AWS resources users can access. You use IAM to 
+control who is authenticated (signed in) and authorized (has permissions) to use resources.
+•Bucket policies – Use IAM-based policy language to conﬁgure resource-based permissions for 
+your S3 buckets and the objects in them.
+•Amazon S3 access points – Conﬁgure named network endpoints with dedicated access policies to 
+manage data access at scale for shared datasets in Amazon S3.
+•Access control lists (ACLs) – Grant read and write permissions for individual buckets and objects 
+to authorized users. As a general rule, we recommend using S3 resource-based policies (bucket 
+policies and access point policies) or IAM user policies for access control instead of ACLs. Policies 
+are a simpliﬁed and more ﬂexible access control option. With bucket policies and access point 
+policies, you can deﬁne rules that apply broadly across all requests to your Amazon S3 resources. 
+For more information about the speciﬁc cases when you'd use ACLs instead of resource-based 
+policies or IAM user policies, see Managing access with ACLs.
+•S3 Object Ownership – Take ownership of every object in your bucket, simplifying access 
+management for data stored in Amazon S3. S3 Object Ownership is an Amazon S3 bucket-
+level setting that you can use to disable or enable ACLs. By default, ACLs are disabled. With 
+ACLs disabled, the bucket owner owns all the objects in the bucket and manages access to data 
+exclusively by using access-management policies.
+•IAM Access Analyzer for S3 – Evaluate and monitor your S3 bucket access policies, ensuring that 
+the policies provide only the intended access to your S3 resources.
+Access management and security API Version 2006-03-01 3
+
+Data processing
+To transform data and trigger workﬂows to automate a variety of other processing activities at 
+scale, you can use the following features.
+•S3 Object Lambda – Add your own code to S3 GET, HEAD, and LIST requests to modify and 
+process data as it is returned to an application. Filter rows, dynamically resize images, redact 
+conﬁdential data, and much more.
+•Event notiﬁcations – Trigger workﬂows that use Amazon Simple Notiﬁcation Service (Amazon 
+SNS), Amazon Simple Queue Service (Amazon SQS), and AWS Lambda when a change is made to 
+your S3 resources.
+Storage logging and monitoring
+Amazon S3 provides logging and monitoring tools that you can use to monitor and control how 
+your Amazon S3 resources are being used. For more information, see Monitoring tools .
+Automated monitoring tools
+•Amazon CloudWatch metrics for Amazon S3  – Track the operational health of your S3 resources 
+and conﬁgure billing alerts when estimated charges reach a user-deﬁned threshold.
+•AWS CloudTrail – Record actions taken by a user, a role, or an AWS service in Amazon S3. 
+CloudTrail logs provide you with detailed API tracking for S3 bucket-level and object-level 
+operations.
+Manual monitoring tools
+•Server access logging – Get detailed records for the requests that are made to a bucket. You can 
+use server access logs for many use cases, such as conducting security and access audits, learning 
+about your customer base, and understanding your Amazon S3 bill.
+•AWS Trusted Advisor – Evaluate your account by using AWS best practice checks to identify 
+ways to optimize your AWS infrastructure, improve security and performance, reduce costs, and 
+monitor service quotas. You can then follow the recommendations to optimize your services and 
+resources.
+Data processing API Version 2006-03-01 4
+
+Analytics and insights
+Amazon S3 oﬀers features to help you gain visibility into your storage usage, which empowers you 
+to better understand, analyze, and optimize your storage at scale.
+•Amazon S3 Storage Lens – Understand, analyze, and optimize your storage. S3 Storage Lens 
+provides 60+ usage and activity metrics and interactive dashboards to aggregate data for your 
+entire organization, speciﬁc accounts, AWS Regions, buckets, or preﬁxes.
+•Storage Class Analysis  – Analyze storage access patterns to decide when it's time to move data to 
+a more cost-eﬀective storage class.
+•S3 Inventory with Inventory reports – Audit and report on objects and their corresponding 
+metadata and conﬁgure other Amazon S3 features to take action in Inventory reports. For 
+example, you can report on the replication and encryption status of your objects. For a list of all 
+the metadata available for each object in Inventory reports, see Amazon S3 Inventory list.
+Strong consistency
+Amazon S3 provides strong read-after-write consistency for PUT and DELETE requests of objects 
+in your Amazon S3 bucket in all AWS Regions. This behavior applies to both writes of new objects 
+as well as PUT requests that overwrite existing objects and DELETE requests. In addition, read 
+operations on Amazon S3 Select, Amazon S3 access control lists (ACLs), Amazon S3 Object Tags, 
+and object metadata (for example, the HEAD object) are strongly consistent. For more information, 
+see Amazon S3 data consistency model.
+How Amazon S3 works
+Amazon S3 is an object storage service that stores data as objects, hierarchical data, or tabular data 
+within buckets. An object  is a ﬁle and any metadata that describes the ﬁle. A bucket  is a container 
+for objects.
+To store your data in Amazon S3, you ﬁrst create a bucket and specify a bucket name and AWS 
+Region. Then, you upload your data to that bucket as objects in Amazon S3. Each object has a key
+(or key name ), which is the unique identiﬁer for the object within the bucket.
+S3 provides features that you can conﬁgure to support your speciﬁc use case. For example, you can 
+use S3 Versioning to keep multiple versions of an object in the same bucket, which allows you to 
+restore objects that are accidentally deleted or overwritten.
+Analytics and insights API Version 2006-03-01 5
+
+Buckets and the objects in them are private and can be accessed only if you explicitly grant access 
+permissions. You can use bucket policies, AWS Identity and Access Management (IAM) policies, 
+access control lists (ACLs), and S3 Access Points to manage access.
+Topics
+•Buckets
+•Objects
+•Keys
+•S3 Versioning
+•Version ID
+•Bucket policy
+•S3 access points
+•Access control lists (ACLs)
+•Regions
+Buckets
+Amazon S3 supports four types of buckets—general purpose buckets, directory buckets, table 
+buckets, and vector buckets. Each type of bucket provides a unique set of features for diﬀerent use 
+cases.
+General purpose buckets – General purpose buckets are recommended for most use cases and 
+access patterns and are the original S3 bucket type. A general purpose bucket is a container for 
+objects stored in Amazon S3, and you can store any number of objects in a bucket and across all 
+storage classes (except for S3 Express One Zone), so you can redundantly store objects across 
+multiple Availability Zones. For more information, see Creating, conﬁguring, and working with 
+Amazon S3 general purpose buckets.
+By default, general purpose buckets exist in a global namespace, which means that each bucket 
+name must be unique across all AWS accounts in all the AWS Regions within a partition. A partition 
+is a grouping of Regions. AWS currently has four partitions: aws (Standard Regions), aws-cn
+(China Regions), aws-us-gov  (AWS GovCloud (US)), and aws-eusc  (European Sovereign Cloud). 
+When you create a general purpose bucket, you can choose to create a bucket in the shared global 
+namespace or you can choose to create a bucket in your account regional namespace. Your account 
+regional namespace is a subdivision of the global namespace that only your account can create 
+buckets in. New general purpose buckets created in your account regional namespace are unique 
+Buckets API Version 2006-03-01 6
+
+to your account and can never be re-created by another account. For more information on bucket 
+namespaces, see Namespaces for general purpose buckets.
+Note
+By default, all general purpose buckets are private. However, you can grant public access to 
+general purpose buckets. You can control access to general purpose buckets at the bucket, 
+preﬁx (folder), or object tag level. For more information, see Access control in Amazon S3.
+Directory buckets – Recommended for low-latency use cases and data-residency use cases. By 
+default, you can create up to 100 directory buckets in your AWS account, with no limit on the 
+number of objects that you can store in a directory bucket. Directory buckets organize objects into 
+hierarchical directories (preﬁxes) instead of the ﬂat storage structure of general purpose buckets. 
+This bucket type has no preﬁx limits and individual directories can scale horizontally. For more 
+information, see Working with directory buckets.
+•For low-latency use cases, you can create a directory bucket in a single AWS Availability 
+Zone to store data. Directory buckets in Availability Zones support the S3 Express One Zone 
+storage class. With S3 Express One Zone, your data is redundantly stored on multiple devices 
+within a single Availability Zone. The S3 Express One Zone storage class is recommended if 
+your application is performance sensitive and beneﬁts from single-digit millisecond PUT and
+GET latencies. To learn more about creating directory buckets in Availability Zones, see High 
+performance workloads.
+•For data-residency use cases, you can create a directory bucket in a single AWS Dedicated Local 
+Zone (DLZ) to store data. In Dedicated Local Zones, you can create S3 directory buckets to store 
+data in a speciﬁc data perimeter, which helps support your data residency and isolation use 
+cases. Directory buckets in Local Zones support the S3 One Zone-Infrequent Access (S3 One 
+Zone-IA; Z-IA) storage class. To learn more about creating directory buckets in Local Zones, see
+Data residency workloads.
+Note
+Directory buckets have all public access disabled by default. This behavior can't be changed. 
+You can't grant access to objects stored in directory buckets. You can grant access only to 
+your directory buckets. For more information, see Authenticating and authorizing requests.
+Buckets API Version 2006-03-01 7
+
+Table buckets – Recommended for storing tabular data, such as daily purchase transactions, 
+streaming sensor data, or ad impressions. Tabular data represents data in columns and rows, like 
+in a database table. Table buckets provide S3 storage that's optimized for analytics and machine 
+learning workloads, with features designed to continuously improve query performance and reduce 
+storage costs for tables. S3 Tables are purpose-built for storing tabular data in the Apache Iceberg 
+format. You can query tabular data in S3 Tables with popular query engines, including Amazon 
+Athena, Amazon Redshift, and Apache Spark. By default, you can create up to 10 table buckets per 
+AWS account per AWS Region and up to 10,000 tables per table bucket. For more information, see
+Working with S3 Tables and table buckets.
+Note
+All table buckets and tables are private and can't be made public. These resources can only 
+be accessed by users who are explicitly granted access. To grant access, you can use IAM 
+resource-based policies for table buckets and tables, and IAM identity-based policies for 
+users and roles. For more information, see Security for S3 Tables.
+Vector buckets – S3 vector buckets are a type of Amazon S3 bucket that are purpose-built to 
+store and query vectors. Vector buckets use dedicated API operations to write and query vector 
+data eﬃciently. With S3 vector buckets, you can store vector embeddings for machine learning 
+models, perform similarity searches, and integrate with services like Amazon Bedrock and Amazon 
+OpenSearch.
+S3 vector buckets organize data using vector indexes, which are resources within a bucket that 
+store and organize vector data for eﬃcient similarity search. Each vector index can be conﬁgured 
+with speciﬁc dimensions, distance metrics (like cosine similarity), and metadata conﬁgurations to 
+optimize for your speciﬁc use case. For more information, see Working with S3 Vectors and vector 
+buckets.
+Additional information about all bucket types
+When you create a bucket, you enter a bucket name and choose the AWS Region where the bucket 
+will reside. After you create a bucket, you cannot change the name of the bucket or its Region. 
+Bucket names must follow the following bucket naming rules:
+•General purpose bucket naming rules
+•Directory bucket naming rules
+Buckets API Version 2006-03-01 8
+
+•Table bucket naming rules
+Buckets also:
+•Organize the Amazon S3 namespace at the highest level. For general purpose buckets, this 
+namespace is S3. For directory buckets, this namespace is s3express . For table buckets, this 
+namespace is s3tables .
+•Identify the account responsible for storage and data transfer charges.
+•Serve as the unit of aggregation for usage reporting.
+Objects
+Objects are the fundamental entities stored in Amazon S3. Objects consist of object data and 
+metadata. The metadata is a set of name-value pairs that describe the object. These pairs include 
+some default metadata, such as the date last modiﬁed, and standard HTTP metadata, such as
+Content-Type . You can also specify custom metadata at the time that the object is stored.
+Every object is contained in a bucket. For example, if the object named photos/puppy.jpg
+is stored in the amzn-s3-demo-bucket  general purpose bucket in the US West (Oregon) 
+Region, then it is addressable by using the URL https://amzn-s3-demo-bucket.s3.us-
+west-2.amazonaws.com/photos/puppy.jpg . For more information, see Accessing a Bucket.
+An object is uniquely identiﬁed within a bucket by a key (name) and a version ID (if S3 Versioning is 
+enabled on the bucket). For more information about objects, see Amazon S3 objects overview.
+Keys
+An object key  (or key name ) is the unique identiﬁer for an object within a bucket. Every object in a 
+bucket has exactly one key. The combination of a bucket, object key, and optionally, version ID (if 
+S3 Versioning is enabled for the bucket) uniquely identify each object. So you can think of Amazon 
+S3 as a basic data map between "bucket + key + version" and the object itself.
+Every object in Amazon S3 can be uniquely addressed through the combination of the web service 
+endpoint, bucket name, key, and optionally, a version. For example, in the URL https:// amzn-
+s3-demo-bucket .s3.us-west-2.amazonaws.com/photos/puppy.jpg , amzn-s3-demo-
+bucket is the name of the bucket and photos/puppy.jpg  is the key.
+For more information about object keys, see Naming Amazon S3 objects.
+Objects API Version 2006-03-01 9
+
+S3 Versioning
+You can use S3 Versioning to keep multiple variants of an object in the same bucket. With S3 
+Versioning, you can preserve, retrieve, and restore every version of every object stored in your 
+buckets. You can easily recover from both unintended user actions and application failures.
+For more information, see Retaining multiple versions of objects with S3 Versioning.
+Version ID
+When you enable S3 Versioning in a bucket, Amazon S3 generates a unique version ID for each 
+object added to the bucket. Objects that already existed in the bucket at the time that you 
+enable versioning have a version ID of null. If you modify these (or any other) objects with other 
+operations, such as CopyObject and PutObject, the new objects get a unique version ID.
+For more information, see Retaining multiple versions of objects with S3 Versioning.
+Bucket policy
+A bucket policy is a resource-based AWS Identity and Access Management (IAM) policy that you 
+can use to grant access permissions to your bucket and the objects in it. Only the bucket owner can 
+associate a policy with a bucket. The permissions attached to the bucket apply to all of the objects 
+in the bucket that are owned by the bucket owner. Bucket policies are limited to 20 KB in size.
+Bucket policies use JSON-based access policy language that is standard across AWS. You can use 
+bucket policies to add or deny permissions for the objects in a bucket. Bucket policies allow or deny 
+requests based on the elements in the policy, including the requester, S3 actions, resources, and 
+aspects or conditions of the request (for example, the IP address used to make the request). For 
+example, you can create a bucket policy that grants cross-account permissions to upload objects 
+to an S3 bucket while ensuring that the bucket owner has full control of the uploaded objects. For 
+more information, see Examples of Amazon S3 bucket policies.
+In your bucket policy, you can use wildcard characters on Amazon Resource Names (ARNs) and 
+other values to grant permissions to a subset of objects. For example, you can control access to 
+groups of objects that begin with a common preﬁx or end with a given extension, such as .html .
+S3 access points
+Amazon S3 access points are named network endpoints with dedicated access policies that 
+describe how data can be accessed using that endpoint. Access points are attached to an 
+S3 Versioning API Version 2006-03-01 10
+
+underlying data source, such as a general purpose bucket, directory bucket, or a FSx for OpenZFS 
+volume, that you can use to perform S3 object operations, such as GetObject  and PutObject . 
+Access points simplify managing data access at scale for shared datasets in Amazon S3.
+Each access point has its own access point policy. You can conﬁgure Block Public Access settings for 
+each access point attached to a bucket. To restrict Amazon S3 data access to a private network, you 
+can also conﬁgure any access point to accept requests only from a virtual private cloud (VPC).
+For more information about access points for general purpose buckets, see Managing access to 
+shared datasets with access points. For more information about access points for directory buckets, 
+see Managing access to shared datasets in directory buckets with access points.
+Access control lists (ACLs)
+You can use ACLs to grant read and write permissions to authorized users for individual general 
+purpose buckets and objects. Each general purpose bucket and object has an ACL attached to it as 
+a subresource. The ACL deﬁnes which AWS accounts or groups are granted access and the type of 
+access. ACLs are an access control mechanism that predates IAM. For more information about ACLs, 
+see Access control list (ACL) overview.
+S3 Object Ownership is an Amazon S3 bucket-level setting that you can use to both control 
+ownership of the objects that are uploaded to your bucket and to disable or enable ACLs. By 
+default, Object Ownership is set to the Bucket owner enforced setting, and all ACLs are disabled. 
+When ACLs are disabled, the bucket owner owns all the objects in the bucket and manages access 
+to them exclusively by using access-management policies.
+A majority of modern use cases in Amazon S3 no longer require the use of ACLs. We recommend 
+that you keep ACLs disabled, except in circumstances where you need to control access for each 
+object individually. With ACLs disabled, you can use policies to control access to all objects in 
+your bucket, regardless of who uploaded the objects to your bucket. For more information, see
+Controlling ownership of objects and disabling ACLs for your bucket.
+Regions
+You can choose the geographical AWS Region where Amazon S3 stores the buckets that you 
+create. You might choose a Region to optimize latency, minimize costs, or address regulatory 
+requirements. Objects stored in an AWS Region never leave the Region unless you explicitly 
+transfer or replicate them to another Region. For example, objects stored in the Europe (Ireland) 
+Region never leave it.
+Access control lists (ACLs) API Version 2006-03-01 11
+
+Note
+You can access Amazon S3 and its features only in the AWS Regions that are enabled for 
+your account. For more information about enabling a Region to create and manage AWS 
+resources, see Managing AWS Regions in the AWS General Reference.
+For a list of Amazon S3 Regions and endpoints, see Regions and endpoints in the AWS General 
+Reference.
+Amazon S3 data consistency model
+Amazon S3 provides strong read-after-write consistency for PUT and DELETE requests of objects 
+in your Amazon S3 bucket in all AWS Regions. This behavior applies to both writes to new objects 
+as well as PUT requests that overwrite existing objects and DELETE requests. In addition, read 
+operations on Amazon S3 Select, Amazon S3 access controls lists (ACLs), Amazon S3 Object Tags, 
+and object metadata (for example, the HEAD object) are strongly consistent.
+Updates to a single key are atomic. For example, if you make a PUT request to an existing key from 
+one thread and perform a GET request on the same key from a second thread concurrently, you will 
+get either the old data or the new data, but never partial or corrupt data.
+Amazon S3 achieves high availability by replicating data across multiple servers within AWS data 
+centers. If a PUT request is successful, your data is safely stored. Any read (GET or LIST request) 
+that is initiated following the receipt of a successful PUT response will return the data written by 
+the PUT request. Here are examples of this behavior:
+•A process writes a new object to Amazon S3 and immediately lists keys within its bucket. The 
+new object appears in the list.
+•A process replaces an existing object and immediately tries to read it. Amazon S3 returns the 
+new data.
+•A process deletes an existing object and immediately tries to read it. Amazon S3 does not return 
+any data because the object has been deleted.
+•A process deletes an existing object and immediately lists keys within its bucket. The object does 
+not appear in the listing.
+Amazon S3 data consistency model API Version 2006-03-01 12
+
+Note
+•Amazon S3 does not support object locking for concurrent writers. If two PUT requests 
+are simultaneously made to the same key, the request with the latest timestamp wins. If 
+this is an issue, you must build an object-locking mechanism into your application.
+•Updates are key-based. There is no way to make atomic updates across keys. For 
+example, you cannot make the update of one key dependent on the update of another 
+key unless you design this functionality into your application.
+Bucket conﬁgurations have an eventual consistency model. Speciﬁcally, this means that:
+•If you delete a bucket and immediately list all buckets, the deleted bucket might still appear in 
+the list.
+•If you enable versioning on a bucket for the ﬁrst time, it might take a short amount of time for 
+the change to be fully propagated. We recommend that you wait for 15 minutes after enabling 
+versioning before issuing write operations (PUT or DELETE requests) on objects in the bucket.
+Concurrent applications
+This section provides examples of behavior to be expected from Amazon S3 when multiple clients 
+are writing to the same items.
+In this example, both W1 (write 1) and W2 (write 2) ﬁnish before the start of R1 (read 1) and R2 
+(read 2). Because S3 is strongly consistent, R1 and R2 both return color = ruby .
+Concurrent applications API Version 2006-03-01 13
+
+In the next example, W2 does not ﬁnish before the start of R1. Therefore, R1 might return color 
+= ruby  or color = garnet . However, because W1 and W2 ﬁnish before the start of R2, R2 
+returns color = garnet .
+In the last example, W2 begins before W1 has received an acknowledgment. Therefore, these 
+writes are considered concurrent. Amazon S3 internally uses last-writer-wins semantics to 
+determine which write takes precedence. However, the order in which Amazon S3 receives the 
+requests and the order in which applications receive acknowledgments cannot be predicted 
+because of various factors, such as network latency. For example, W2 might be initiated by an 
+Amazon EC2 instance in the same Region, while W1 might be initiated by a host that is farther 
+away. The best way to determine the ﬁnal value is to perform a read after both writes have been 
+acknowledged.
+Related services
+After you load your data into Amazon S3, you can use it with other AWS services. The following are 
+the services that you might use most frequently:
+Related services API Version 2006-03-01 14
+
+•Amazon Elastic Compute Cloud (Amazon EC2) – Provides secure and scalable computing 
+capacity in the AWS Cloud. Using Amazon EC2 eliminates your need to invest in hardware 
+upfront, so you can develop and deploy applications faster. You can use Amazon EC2 to launch 
+as many or as few virtual servers as you need, conﬁgure security and networking, and manage 
+storage.
+•Amazon EMR – Helps businesses, researchers, data analysts, and developers easily and cost-
+eﬀectively process vast amounts of data. Amazon EMR uses a hosted Hadoop framework running 
+on the web-scale infrastructure of Amazon EC2 and Amazon S3.
+•AWS Transfer Family – Provides fully managed support for ﬁle transfers directly into and out of 
+Amazon S3 or Amazon Elastic File System (Amazon EFS) using Secure Shell (SSH) File Transfer 
+Protocol (SFTP), File Transfer Protocol over SSL (FTPS), and File Transfer Protocol (FTP).
+Accessing Amazon S3
+You can work with Amazon S3 in any of the following ways:
+AWS Management Console
+The console is a web-based user interface for managing Amazon S3 and AWS resources. If you've 
+signed up for an AWS account, you can access the Amazon S3 console by signing into the AWS 
+Management Console and choosing S3 from the AWS Management Console home page.
+AWS Command Line Interface
+You can use the AWS command line tools to issue commands or build scripts at your system's 
+command line to perform AWS (including S3) tasks.
+The AWS Command Line Interface (AWS CLI) provides commands for a broad set of AWS services. 
+The AWS CLI is supported on Windows, macOS, and Linux. To get started, see the AWS Command 
+Line Interface User Guide. For more information about the commands for Amazon S3, see s3api  and
+s3control in the AWS CLI Command Reference.
+AWS SDKs
+AWS provides SDKs (software development kits) that consist of libraries and sample code for 
+various programming languages and platforms (Java, Python, Ruby, .NET, iOS, Android, and so on). 
+The AWS SDKs provide a convenient way to create programmatic access to S3 and AWS. Amazon 
+S3 is a REST service. You can send requests to Amazon S3 using the AWS SDK libraries, which wrap 
+Accessing Amazon S3 API Version 2006-03-01 15
+
+the underlying Amazon S3 REST API and simplify your programming tasks. For example, the SDKs 
+take care of tasks such as calculating signatures, cryptographically signing requests, managing 
+errors, and retrying requests automatically. For information about the AWS SDKs, including how to 
+download and install them, see Tools for AWS.
+Every interaction with Amazon S3 is either authenticated or anonymous. If you are using the AWS 
+SDKs, the libraries compute the signature for authentication from the keys that you provide. For 
+more information about how to make requests to Amazon S3, see Making requests .
+Amazon S3 REST API
+The architecture of Amazon S3 is designed to be programming language-neutral, using AWS-
+supported interfaces to store and retrieve objects. You can access S3 and AWS programmatically 
+by using the Amazon S3 REST API. The REST API is an HTTP interface to Amazon S3. With the REST 
+API, you use standard HTTP requests to create, fetch, and delete buckets and objects.
+To use the REST API, you can use any toolkit that supports HTTP. You can even use a browser to 
+fetch objects, as long as they are anonymously readable.
+The REST API uses standard HTTP headers and status codes, so that standard browsers and 
+toolkits work as expected. In some areas, we have added functionality to HTTP (for example, we 
+added headers to support access control). In these cases, we have done our best to add the new 
+functionality in a way that matches the style of standard HTTP usage.
+If you make direct REST API calls in your application, you must write the code to compute the 
+signature and add it to the request. For more information about how to make requests to Amazon 
+S3, see Making requests  in the Amazon S3 API Reference.
+Note
+SOAP API support over HTTP is deprecated, but it is still available over HTTPS. Newer 
+Amazon S3 features are not supported for SOAP. We recommend that you use either the 
+REST API or the AWS SDKs.
+Paying for Amazon S3
+Pricing for Amazon S3 is designed so that you don't have to plan for the storage requirements 
+of your application. Most storage providers require you to purchase a predetermined amount of 
+Amazon S3 REST API API Version 2006-03-01 16
+
+storage and network transfer capacity. In this scenario, if you exceed that capacity, your service 
+is shut oﬀ or you are charged high overage fees. If you do not exceed that capacity, you pay as 
+though you used it all.
+Amazon S3 charges you only for what you actually use, with no hidden fees and no overage 
+charges. This model gives you a variable-cost service that can grow with your business while giving 
+you the cost advantages of the AWS infrastructure. For more information, see Amazon S3 Pricing.
+When you sign up for AWS, your AWS account is automatically signed up for all services in AWS, 
+including Amazon S3. However, you are charged only for the services that you use. If you are a new 
+Amazon S3 customer, you can get started with Amazon S3 for free. For more information, see AWS 
+free tier.
+To see your bill, go to the Billing and Cost Management Dashboard in the AWS Billing and Cost 
+Management console. To learn more about AWS account billing, see the AWS Billing User Guide. If 
+you have questions concerning AWS billing and AWS accounts, contact AWS Support.
+PCI DSS compliance
+Amazon S3 supports the processing, storage, and transmission of credit card data by a merchant or 
+service provider, and has been validated as being compliant with Payment Card Industry (PCI) Data 
+Security Standard (DSS). For more information about PCI DSS, including how to request a copy of 
+the AWS PCI Compliance Package, see PCI DSS Level 1.
+PCI DSS compliance API Version 2006-03-01 17
+
+Amazon S3 Object Lambda availability change
+After careful consideration, S3 Object Lambda as of November 7th, 2025 is available only to 
+existing customers that are currently using the service as well as to select AWS Partner Network 
+(APN) partners. Existing customers of S3 Object Lambda, as well as customers using or deploying 
+APN partner solutions, can continue to use the service as usual. AWS will prioritize security and 
+availability improvements for S3 Object Lambda, but we do not plan to introduce new capabilities
+There are several alternative services and designs that allow you to modify and process data 
+accessed from S3 to meet the needs of various client applications or users who are accessing the 
+data. Those alternatives include the AWS Solution Dynamic Image Transformation for Amazon 
+CloudFront, invoking AWS Lambda by other means (through CloudFront, API Gateway, or function 
+URLs), or processing data in the client application. All of these alternatives continue to use Amazon 
+S3 for the underlying storage, so no data migration is necessary.
+In this post, we discuss how to choose the best option for your use case.
+Dynamic Image Transformation for Amazon CloudFront
+This AWS solution enables real-time image processing through the global content delivery 
+network (CDN) of Amazon CloudFront using API Gateway and Lambda. It supports a variety of 
+transformations such as format changes, dimensions, ﬁt methods, rotations, and ﬁlters. If you 
+are using S3 Object Lambda today for image transformation, this can be a good alternative. The
+solution overview has more details on capabilities and how to get started using it. Be sure to 
+modify the Enable S3 Object Lambda template parameter to "No" when deploying the solution to 
+your account.
+For more information, see Dynamic Image Transformation for Amazon CloudFront.
+Data processing in AWS Lambda
+You can continue to use AWS Lambda for your data processing, but invoke it directly or through 
+other AWS services. Your data processing logic can remain the same, but your Lambda function will 
+need to be updated based on how you choose to invoke it. This option is best for use cases such 
+as sensitive data redaction, format changes, or situations where the application that invokes S3 
+Object Lambda relies on receiving processed data. This option also minimizes the changes required 
+if you choose to migrate oﬀ S3 Object Lambda.
+API Version 2006-03-01 18
+
+If you are using an S3 Object Lambda access point as the origin of a CloudFront distribution, you 
+can create a new origin using either Lambda Function URLs or API Gateway. This blog  details how 
+you can setup a Lambda Function URL to act as an origin for your CloudFront distribution.
+If you directly invoke S3 Object Lambda from your client code today, you can use Lambda Function 
+URLs to directly invoke your Lambda function or you can use API Gateway. If you're not sure which 
+is the best method for your use case, see Select a method to invoke your Lambda function using 
+an HTTP request in the AWS Lambda Developer Guide. After you have decided which method for 
+invoking Lambda is best for your use case and have setup your Lambda function accordingly, 
+you will also need to update your calling application to invoke your Lambda function rather than 
+calling S3 Object Lambda.
+Data processing in the client application
+You also have the option of moving your data processing logic from S3 Object Lambda into your 
+client application. This works best if you are using S3 Object Lambda as part of an application 
+that already performs further processing or analysis of the data returned by S3 Object Lambda. 
+For example, if your S3 Object Lambda access point was responsible for redirecting to particular 
+objects or object versions, that redirect logic can be moved into the calling application which would 
+then directly access data in the S3 bucket.
+If you need assistance or have feedback, contact AWS Support.
+API Version 2006-03-01 19
+
+Getting started with Amazon S3
+You can get started with Amazon S3 by working with buckets and objects. A bucket  is a container 
+for objects. An object  is a ﬁle and any metadata that describes that ﬁle.
+To store an object in Amazon S3, you create a bucket and then upload the object to the bucket. 
+When the object is in the bucket, you can open it, download it, and move it. When you no longer 
+need an object or a bucket, you can clean up your resources.
+With Amazon S3, you pay only for what you use. For more information about Amazon S3 features 
+and pricing, see Amazon S3. If you are a new Amazon S3 customer, you can get started with 
+Amazon S3 for free. For more information, see AWS Free Tier.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Video: Getting started with Amazon S3
+Watch this
+Prerequisites
+Before you begin, conﬁrm that you've completed the steps in Setting up Amazon S3.
+Setting up Amazon S3
+When you sign up for AWS, your AWS account is automatically signed up for all services in AWS, 
+including Amazon S3. You are charged only for the services that you use.
+With Amazon S3, you pay only for what you use. For more information about Amazon S3 features 
+and pricing, see Amazon S3. If you are a new Amazon S3 customer, you can get started with 
+Amazon S3 for free. For more information, see AWS Free Tier.
+To set up Amazon S3, use the steps in the following sections.
+Setting up API Version 2006-03-01 20
+
+When you sign up for AWS and set up Amazon S3, you can optionally change the display language 
+in the AWS Management Console. For more information, see Changing the language of the AWS 
+Management Console  in the AWS Management Console Getting Started Guide.
+Topics
+•Sign up for an AWS account
+Sign up for an AWS account
+To get started with AWS, you need an AWS account. For information about creating an AWS 
+account, see Getting started with an AWS account in the AWS Account Management Reference 
+Guide .
+Step 1: Create your ﬁrst S3 bucket
+After you sign up for AWS, you're ready to create a bucket in Amazon S3 using the AWS 
+Management Console. Every object in Amazon S3 is stored in a bucket . Before you can store data in 
+Amazon S3, you must create a bucket.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Note
+You are not charged for creating a bucket. You are charged only for storing objects in 
+the bucket and for transferring objects in and out of the bucket. The charges that you 
+incur through following the examples in this guide are minimal (less than $1). For more 
+information about storage charges, see Amazon S3 pricing.
+1. Sign in to the AWS Management Console and open the Amazon S3 console at https:// 
+console.aws.amazon.com/s3/.
+2. In the navigation bar, choose the name of the currently displayed AWS Region. Next, choose 
+the Region in which you want to create a bucket.
+Sign up for an AWS account API Version 2006-03-01 21
+
+Note
+•After you create a bucket, you can't change its Region.
+•To minimize latency and costs and address regulatory requirements, choose a Region 
+close to you. Objects stored in a Region never leave that Region unless you explicitly 
+transfer them to another Region. For a list of Amazon S3 AWS Regions, see AWS 
+service endpoints in the Amazon Web Services General Reference.
+3. In the left navigation pane, choose General purpose buckets.
+4. Choose Create bucket. The Create bucket page opens.
+5. For Bucket name, enter a name for your bucket.
+The bucket name must:
+•Be unique within a partition. A partition is a grouping of Regions. AWS currently has three 
+partitions: aws (commercial Regions), aws-cn (China Regions), and aws-us-gov  (AWS 
+GovCloud (US) Regions).
+•Be between 3 and 63 characters long.
+•Consist only of lowercase letters, numbers, periods (.), and hyphens (-). For best 
+compatibility, we recommend that you avoid using periods (.) in bucket names, except for 
+buckets that are used only for static website hosting.
+•Begin and end with a letter or number.
+•For a complete list of bucket-naming rules, see General purpose bucket naming rules.
+Important
+•After you create the bucket, you can't change its name.
+•Don't include sensitive information in the bucket name. The bucket name is visible in 
+the URLs that point to the objects in the bucket.
+6. (Optional) Under General conﬁguration, you can choose to copy an existing bucket's settings 
+to your new bucket. If you don't want to copy the settings of an existing bucket, skip to the 
+next step.
+Step 1: Create a bucket API Version 2006-03-01 22
+
+Note
+This option:
+•Isn't available in the AWS CLI and is only available in the Amazon S3 console
+•Doesn't copy the bucket policy from the existing bucket to the new bucket
+To copy an existing bucket's settings, under Copy settings from existing bucket, select Choose 
+bucket. The Choose bucket window opens. Find the bucket with the settings that you want 
+to copy, and select Choose bucket. The Choose bucket window closes, and the Create bucket
+window reopens.
+Under Copy settings from existing bucket, you now see the name of the bucket that you 
+selected. The settings of your new bucket now match the settings of the bucket that you 
+selected. If you want to remove the copied settings, choose Restore defaults. Review the 
+remaining bucket settings on the Create bucket page. If you don't want to make any changes, 
+you can skip to the ﬁnal step.
+7. Under Object Ownership, to disable or enable ACLs and control ownership of objects 
+uploaded in your bucket, choose one of the following settings:
+ACLs disabled
+•Bucket owner enforced (default) – ACLs are disabled, and the bucket owner automatically 
+owns and has full control over every object in the general purpose bucket. ACLs no longer 
+aﬀect access permissions to data in the S3 general purpose bucket. The bucket uses policies 
+exclusively to deﬁne access control.
+By default, ACLs are disabled. A majority of modern use cases in Amazon S3 no 
+longer require the use of ACLs. We recommend that you keep ACLs disabled, except 
+in circumstances where you must control access for each object individually. For more 
+information, see Controlling ownership of objects and disabling ACLs for your bucket.
+ACLs enabled
+•Bucket owner preferred – The bucket owner owns and has full control over new objects that 
+other accounts write to the bucket with the bucket-owner-full-control  canned ACL.
+Step 1: Create a bucket API Version 2006-03-01 23
+
+If you apply the Bucket owner preferred setting, to require all Amazon S3 uploads to 
+include the bucket-owner-full-control  canned ACL, you can add a bucket policy that 
+allows only object uploads that use this ACL.
+•Object writer – The AWS account that uploads an object owns the object, has full control 
+over it, and can grant other users access to it through ACLs.
+Note
+The default setting is Bucket owner enforced. To apply the default setting and keep 
+ACLs disabled, only the s3:CreateBucket  permission is needed. To enable ACLs, you 
+must have the s3:PutBucketOwnershipControls  permission.
+8. Under Block Public Access settings for this bucket, choose the Block Public Access settings 
+that you want to apply to the bucket.
+By default, all four Block Public Access settings are enabled. We recommend that you keep 
+all settings enabled, unless you know that you need to turn oﬀ one or more of them for your 
+speciﬁc use case. For more information about blocking public access, see Blocking public 
+access to your Amazon S3 storage.
+Note
+To enable all Block Public Access settings, only the s3:CreateBucket  permission 
+is required. To turn oﬀ any Block Public Access settings, you must have the
+s3:PutBucketPublicAccessBlock  permission.
+9. (Optional) By default, Bucket Versioning is disabled. Versioning is a means of keeping multiple 
+variants of an object in the same bucket. You can use versioning to preserve, retrieve, and 
+restore every version of every object stored in your bucket. With versioning, you can recover 
+more easily from both unintended user actions and application failures. For more information 
+about versioning, see Retaining multiple versions of objects with S3 Versioning.
+To enable versioning on your bucket, choose Enable.
+10. (Optional) Under Tags, you can choose to add tags to your bucket. With AWS cost allocation, 
+you can use bucket tags to annotate billing for your use of a bucket. A tag is a key-value pair 
+Step 1: Create a bucket API Version 2006-03-01 24
+
+that represents a label that you assign to a bucket. For more information, see the section 
+called “Using cost allocation tags”.
+To add a bucket tag, enter a Key and optionally a Value and choose Add Tag.
+11. To conﬁgure Default encryption, under Encryption type, choose one of the following:
+•Server-side encryption with Amazon S3 managed keys (SSE-S3)
+•Server-side encryption with AWS Key Management Service keys (SSE-KMS)
+•Dual-layer server-side encryption with AWS Key Management Service (AWS KMS) keys 
+(DSSE-KMS)
+Important
+If you use the SSE-KMS or DSSE-KMS option for your default encryption 
+conﬁguration, you are subject to the requests per second (RPS) quota of AWS KMS. 
+For more information about AWS KMS quotas and how to request a quota increase, 
+see Quotas  in the AWS Key Management Service Developer Guide.
+Buckets and new objects are encrypted by using server-side encryption with Amazon S3 
+managed keys (SSE-S3) as the base level of encryption conﬁguration. For more information 
+about default encryption, see Setting default server-side encryption behavior for Amazon S3 
+buckets. For more information about SSE-S3, see Using server-side encryption with Amazon S3 
+managed keys (SSE-S3).
+For more information about using server-side encryption to encrypt your data, see the section 
+called “Data encryption”.
+12. If you chose Server-side encryption with AWS Key Management Service keys (SSE-KMS)
+or Dual-layer server-side encryption with AWS Key Management Service (AWS KMS) keys 
+(DSSE-KMS), do the following:
+a. Under AWS KMS key, specify your KMS key in one of the following ways:
+•To choose from a list of available KMS keys, choose Choose from your AWS KMS keys, 
+and choose your KMS key from the list of available keys.
+Step 1: Create a bucket API Version 2006-03-01 25
+
+Both the AWS managed key (aws/s3) and your customer managed keys appear in this 
+list. For more information about customer managed keys, see Customer keys and AWS 
+keys in the AWS Key Management Service Developer Guide.
+•To enter the KMS key ARN, choose Enter AWS KMS key ARN, and enter your KMS key 
+ARN in the ﬁeld that appears.
+•To create a new customer managed key in the AWS KMS console, choose Create a KMS 
+key.
+For more information about creating an AWS KMS key, see Creating keys in the AWS Key 
+Management Service Developer Guide.
+Important
+You can use only KMS keys that are available in the same AWS Region as the 
+bucket. The Amazon S3 console lists only the ﬁrst 100 KMS keys in the same 
+Region as the bucket. To use a KMS key that isn't listed, you must enter your 
+KMS key ARN. If you want to use a KMS key that's owned by a diﬀerent account, 
+you must ﬁrst have permission to use the key, and then you must enter the KMS 
+key ARN. For more information about cross account permissions for KMS keys, 
+see Creating KMS keys that other accounts can use in the AWS Key Management 
+Service Developer Guide. For more information about SSE-KMS, see Specifying 
+server-side encryption with AWS KMS (SSE-KMS). For more information about 
+DSSE-KMS, see the section called “Dual-layer server-side encryption (DSSE-KMS)”.
+When you use an AWS KMS key for server-side encryption in Amazon S3, you must 
+choose a symmetric encryption KMS key. Amazon S3 supports only symmetric 
+encryption KMS keys and not asymmetric KMS keys. For more information, see
+Identifying symmetric and asymmetric KMS keys in the AWS Key Management 
+Service Developer Guide.
+b. When you conﬁgure your bucket to use default encryption with SSE-KMS, you can also use 
+S3 Bucket Keys. S3 Bucket Keys lower the cost of encryption by decreasing request traﬃc 
+from Amazon S3 to AWS KMS. For more information, see Reducing the cost of SSE-KMS 
+with Amazon S3 Bucket Keys. S3 Bucket Keys aren't supported for DSSE-KMS.
+Step 1: Create a bucket API Version 2006-03-01 26
+
+By default, S3 Bucket Keys are enabled in the Amazon S3 console. We recommend leaving 
+S3 Bucket Keys enabled to lower your costs. To disable S3 Bucket Keys for your bucket, 
+under Bucket Key, choose Disable.
+13. (Optional) S3 Object Lock helps protect new objects from being deleted or overwritten. For 
+more information, see Locking objects with Object Lock. If you want to enable S3 Object Lock, 
+do the following:
+a. Choose Advanced settings.
+Important
+Enabling Object Lock automatically enables versioning for the bucket. After you've 
+enabled and successfully created the bucket, you must also conﬁgure the Object 
+Lock default retention and legal hold settings on the bucket's Properties tab.
+b. If you want to enable Object Lock, choose Enable, read the warning that appears, and 
+acknowledge it.
+Note
+To create an Object Lock enabled bucket, you must have the following 
+permissions: s3:CreateBucket , s3:PutBucketVersioning , and
+s3:PutBucketObjectLockConfiguration .
+14. Choose Create bucket.
+You've created a bucket in Amazon S3.
+Next step
+To add an object to your bucket, see Step 2: Upload an object to your bucket.
+Step 2: Upload an object to your bucket
+After creating a bucket in Amazon S3, you're ready to upload an object to the bucket. An object can 
+be any kind of ﬁle: a text ﬁle, a photo, a video, and so on.
+Step 2: Upload an object API Version 2006-03-01 27
+
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+To upload an object to a bucket
+1. Open the Amazon S3 console at https://console.aws.amazon.com/s3/.
+2. In the Buckets list, choose the name of the bucket that you want to upload your object to.
+3. On the Objects tab for your bucket, choose Upload.
+4. Under Files and folders, choose Add ﬁles.
+5. Choose a ﬁle to upload, and then choose Open.
+6. Choose Upload.
+You've successfully uploaded an object to your bucket.
+Next step
+To view your object, see Step 3: Download an object.
+Step 3: Download an object
+After you upload an object to a bucket, you can view information about your object and download 
+the object to your local computer.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Using the S3 console
+This section explains how to use the Amazon S3 console to download an object from an S3 bucket.
+Step 3: Download an object API Version 2006-03-01 28
+
+Note
+•You can download only one object at a time.
+•If you use the Amazon S3 console to download an object whose key name ends with a 
+period (.), the period is removed from the key name of the downloaded object. To retain 
+the period at the end of the name of the downloaded object, you must use the AWS 
+Command Line Interface (AWS CLI), AWS SDKs, or Amazon S3 REST API.
+To download an object from an S3 bucket
+1. Sign in to the AWS Management Console and open the Amazon S3 console at https:// 
+console.aws.amazon.com/s3/.
+2. In the left navigation pane, choose General purpose buckets or Directory buckets.
+3. In the buckets list, choose the name of the bucket that you want to download an object from.
+4. You can download an object from an S3 bucket in any of the following ways:
+•Select the check box next to the object, and choose Download. If you want to download the 
+object to a speciﬁc folder, on the Actions menu, choose Download as.
+•If you want to download a speciﬁc version of the object, turn on Show versions (located 
+next to the search box). Select the check box next to the version of the object that you 
+want, and choose Download. If you want to download the object to a speciﬁc folder, on the
+Actions menu, choose Download as.
+You've successfully downloaded your object.
+Next step
+To copy and paste your object within Amazon S3, see Step 4: Copy your object to a folder.
+Step 4: Copy your object to a folder
+You've already added an object to a bucket and downloaded the object. Now, you create a folder 
+and copy the object and paste it into the folder.
+Step 4: Copy an object API Version 2006-03-01 29
+
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+To copy an object to a folder
+1. In the Buckets list, choose your bucket name.
+2. Choose Create folder and conﬁgure a new folder:
+a. Enter a folder name (for example, favorite-pics ).
+b. For the folder encryption setting, choose Disable.
+c. Choose Save.
+3. Navigate to the Amazon S3 bucket or folder that contains the objects that you want to copy.
+4. Select the check box to the left of the names of the objects that you want to copy.
+5. Choose Actions and choose Copy from the list of options that appears.
+Alternatively, choose Copy from the options that appear.
+6. Choose the destination folder:
+a. Choose Browse S3.
+b. Choose the option button to the left of the folder name.
+To navigate into a folder and choose a subfolder as your destination, choose the folder 
+name.
+c. Choose Choose destination .
+The path to your destination folder appears in the Destination  box. In Destination , you can 
+alternately enter your destination path, for example, s3://bucket-name /folder-name /.
+7. Choose Copy.
+Amazon S3 copies your objects to the destination folder.
+Next step
+Step 4: Copy an object API Version 2006-03-01 30
+
+To delete an object and a bucket in Amazon S3, see Step 5: Delete your objects and bucket.
+Step 5: Delete your objects and bucket
+When you no longer need an object or a bucket, we recommend that you delete them to prevent 
+further charges. If you completed this getting started walkthrough as a learning exercise, and you 
+don't plan to use your bucket or objects, we recommend that you delete your bucket and objects so 
+that charges no longer accrue.
+Before you delete your bucket, empty the bucket or delete the objects in the bucket. After you 
+delete your objects and bucket, they are no longer available.
+If you want to continue to use the same bucket name, we recommend that you delete the objects 
+or empty the bucket, but don't delete the bucket. After you delete a bucket, the name becomes 
+available to reuse. However, another AWS account might create a bucket with the same name 
+before you have a chance to reuse it.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Topics
+•Deleting an object
+•Emptying your bucket
+•Deleting your bucket
+Deleting an object
+If you want to choose which objects you delete without emptying all the objects from your bucket, 
+you can delete an object.
+1. In the Buckets list, choose the name of the bucket that you want to delete an object from.
+2. Select the object that you want to delete.
+3. Choose Delete from the options that appear.
+Step 5: Delete the objects and bucket API Version 2006-03-01 31
+
+4. On the Delete objects page, type delete to conﬁrm deletion of your objects.
+5. Choose Delete objects.
+Emptying your bucket
+If you plan to delete your bucket, you must ﬁrst empty your bucket, which deletes all the objects in 
+the bucket.
+To empty a bucket
+1. In the Buckets list, select the bucket that you want to empty, and then choose Empty.
+2. To conﬁrm that you want to empty the bucket and delete all the objects in it, in Empty bucket, 
+type permanently delete .
+Important
+Emptying the bucket cannot be undone. Objects added to the bucket while the empty 
+bucket action is in progress will be deleted.
+3. To empty the bucket and delete all the objects in it, and choose Empty.
+An Empty bucket: Status page opens that you can use to review a summary of failed and 
+successful object deletions.
+4. To return to your bucket list, choose Exit.
+Deleting your bucket
+After you empty your bucket or delete all the objects from your bucket, you can delete your bucket.
+1. To delete a bucket, in the Buckets list, select the bucket.
+2. Choose Delete.
+3. To conﬁrm deletion, in Delete bucket, type the name of the bucket.
+Emptying your bucket API Version 2006-03-01 32
+
+Important
+Deleting a bucket cannot be undone. Bucket names are unique. If you delete your 
+bucket, another AWS user can use the name. If you want to continue to use the same 
+bucket name, don't delete your bucket. Instead, empty and keep the bucket.
+4. To delete your bucket, choose Delete bucket.
+Next steps
+In the preceding examples, you learned how to perform some basic Amazon S3 tasks.
+The following topics explain the learning paths that you can use to gain a deeper understanding of 
+Amazon S3 so that you can implement it in your applications.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Topics
+•Understand common use cases
+•Control access to your buckets and objects
+•Protect and monitor your storage
+•Develop with Amazon S3
+•Learn from tutorials
+•Explore training and support
+Understand common use cases
+You can use Amazon S3 to support your speciﬁc use case. The AWS Solutions Library and AWS Blog
+provide use-case speciﬁc information and tutorials. The following are some common use cases for 
+Amazon S3:
+Next steps API Version 2006-03-01 33
+
+•Backup and storage  – Use Amazon S3 storage management features to manage costs, meet 
+regulatory requirements, reduce latency, and save multiple distinct copies of your data for 
+compliance requirements.
+•Application hosting  – Deploy, install, and manage web applications that are reliable, highly 
+scalable, and low-cost. For example, you can conﬁgure your Amazon S3 bucket to host a static 
+website. For more information, see Hosting a static website using Amazon S3.
+•Media hosting  – Build a highly available infrastructure that hosts video, photo, or music uploads 
+and downloads.
+•Software delivery – Host your software applications for customers to download.
+Control access to your buckets and objects
+Amazon S3 provides a variety of security features and tools. For an overview, see Access control in 
+Amazon S3.
+By default, S3 buckets and the objects in them are private. You have access only to the S3 resources 
+that you create. You can use the following features to grant granular resource permissions that 
+support your speciﬁc use case or to audit the permissions of your Amazon S3 resources.
+•S3 Block Public Access – Block public access to S3 buckets and objects. By default, Block Public 
+Access settings are turned on at the bucket level.
+•AWS Identity and Access Management (IAM) identities – Use IAM or AWS IAM Identity Center to 
+create IAM identities in your AWS account to manage access to your Amazon S3 resources. For 
+example, you can use IAM with Amazon S3 to control the type of access that a user or group of 
+users has to an Amazon S3 bucket that your AWS account owns. For more information about IAM 
+identities and best practices, see IAM identities (users, user groups, and roles) in the IAM User 
+Guide .
+•Bucket policies – Use IAM-based policy language to conﬁgure resource-based permissions for 
+your S3 buckets and the objects in them.
+•Access control lists (ACLs) – Grant read and write permissions for individual buckets and objects 
+to authorized users. As a general rule, we recommend using S3 resource-based policies (bucket 
+policies and access point policies) or IAM user policies for access control instead of ACLs. Policies 
+are a simpliﬁed and more ﬂexible access-control option. With bucket policies and access point 
+policies, you can deﬁne rules that apply broadly across all requests to your Amazon S3 resources. 
+For more information about the speciﬁc cases when you'd use ACLs instead of resource-based 
+policies or IAM user policies, see Identity and Access Management for Amazon S3.
+Control access to your buckets and objects API Version 2006-03-01 34
+
+•S3 Object Ownership – Take ownership of every object in your bucket, simplifying access 
+management for data stored in Amazon S3. S3 Object Ownership is an Amazon S3 bucket-
+level setting that you can use to disable or enable ACLs. By default, ACLs are disabled. With 
+ACLs disabled, the bucket owner owns all the objects in the bucket and manages access to data 
+exclusively by using access-management policies.
+•IAM Access Analyzer for S3 – Evaluate and monitor your S3 bucket access policies, ensuring that 
+the policies provide only the intended access to your S3 resources.
+Protect and monitor your storage
+•Protecting your storage – After you create buckets and upload objects in Amazon S3, you can 
+protect your object storage. For example, you can use S3 Versioning, S3 Replication, and Multi-
+Region Access Point failover controls for disaster recovery, AWS Backup to back up your data, and 
+S3 Object Lock to set retention periods, prevent deletions and overwrites, and meet compliance 
+requirements.
+•Monitoring your storage – Monitoring is an important part of maintaining the reliability, 
+availability, and performance of Amazon S3 and your AWS solutions. You can monitor storage 
+activity and costs. Also, we recommend that you collect monitoring data from all the parts of 
+your AWS solution so that you can more easily debug a multipoint failure if one occurs.
+You can also use analytics and insights in Amazon S3 to understand, analyze, and optimize 
+your storage usage. For example, use Amazon S3 Storage Lens to understand, analyze, and 
+optimize your storage. S3 Storage Lens provides 29+ usage and activity metrics and interactive 
+dashboards to aggregate data for your entire organization, speciﬁc accounts, Regions, buckets, 
+or preﬁxes. Use Storage Class Analysis  to analyze storage access patterns to decide when it's time 
+to move your data to a more cost-eﬀective storage class. To manage your costs, you can use S3 
+Lifecycle.
+Develop with Amazon S3
+Amazon S3 is a REST service. You can send requests to Amazon S3 using the REST API or the AWS 
+SDK libraries, which wrap the underlying Amazon S3 REST API, simplifying your programming 
+tasks. You can also use the AWS Command Line Interface (AWS CLI) to make Amazon S3 API calls. 
+For more information, see Making requests  in the Amazon S3 API Reference.
+Protect and monitor your storage API Version 2006-03-01 35
+
+The Amazon S3 REST API is an HTTP interface to Amazon S3. With the REST API, you use standard 
+HTTP requests to create, fetch, and delete buckets and objects. To use the REST API, you can use 
+any toolkit that supports HTTP. You can even use a browser to fetch objects, as long as they are 
+anonymously readable. For more information, see Developing with Amazon S3 in the Amazon S3 
+API Reference.
+To help you build applications using the language of your choice, we provide the following 
+resources.
+AWS CLI
+You can access the features of Amazon S3 using the AWS CLI. To download and conﬁgure the AWS 
+CLI, see Developing with Amazon S3 using the AWS CLI  in the Amazon S3 API Reference.
+The AWS CLI provides two tiers of commands for accessing Amazon S3: High-level (s3) commands 
+and API-level (s3api  and s3control  commands. The high-level S3 commands simplify performing 
+common tasks, such as creating, manipulating, and deleting objects and buckets. The s3api and 
+s3control commands expose direct access to all Amazon S3 API operations, which you can use to 
+carry out advanced operations that might not be possible with the high-level commands alone.
+For a list of Amazon S3 AWS CLI commands, see s3, s3api , and s3control.
+AWS SDKs and Explorers
+You can use the AWS SDKs when developing applications with Amazon S3. The AWS SDKs simplify 
+your programming tasks by wrapping the underlying REST API. The AWS Mobile SDKs and the 
+Amplify JavaScript library are also available for building connected mobile and web applications 
+using AWS.
+In addition to the AWS SDKs, AWS Explorers are available for Visual Studio and Eclipse for Java IDE. 
+In this case, the SDKs and the explorers are bundled together as AWS Toolkits.
+For more information, see Developing with Amazon S3 using the AWS SDKs  in the Amazon S3 API 
+Reference.
+Sample Code and Libraries
+The AWS Developer Center and AWS Code Sample Catalog have sample code and libraries written 
+especially for Amazon S3. You can use these code samples to understand how to implement the 
+Amazon S3 API. You can also view the Amazon Simple Storage Service API Reference to understand 
+the Amazon S3 API operations in detail.
+Develop with Amazon S3 API Version 2006-03-01 36
+
+Learn from tutorials
+You can get started with step-by-step tutorials to learn more about Amazon S3. These tutorials 
+are intended for a lab-type environment, and they use ﬁctitious company names, user names, 
+and so on. Their purpose is to provide general guidance. They are not intended for direct use in a 
+production environment without careful review and adaptation to meet the unique needs of your 
+organization's environment.
+Getting started
+•Tutorial: Storing and retrieving a ﬁle with Amazon S3
+•Tutorial: Getting started using S3 Intelligent-Tiering
+•Tutorial: Getting started using the S3 Glacier storage classes
+Optimizing storage costs
+•Tutorial: Getting started using S3 Intelligent-Tiering
+•Tutorial: Getting started using the S3 Glacier; storage classes
+•Tutorial: Optimizing costs and gaining visibility into usage with S3 Storage Lens
+Managing storage
+•Tutorial: Getting started with Amazon S3 Multi-Region Access Points
+•Tutorial: Replicating existing objects in your Amazon S3 buckets with S3 Batch Replication
+Hosting videos and websites
+•Tutorial: Hosting on-demand streaming video with Amazon S3, Amazon CloudFront, and Amazon 
+Route 53
+•Tutorial: Conﬁguring a static website on Amazon S3
+•Tutorial: Conﬁguring a static website using a custom domain registered with Route 53
+Processing data
+•Tutorial: Transforming data for your application with S3 Object Lambda
+Learn from tutorials API Version 2006-03-01 37
+
+•Tutorial: Detecting and redacting PII data with S3 Object Lambda and Amazon Comprehend
+•Tutorial: Using S3 Object Lambda to dynamically watermark images as they are retrieved
+•Tutorial: Batch-transcoding videos with S3 Batch Operations
+Protecting data
+•Tutorial: Checking the integrity of data in Amazon S3 with additional checksums
+•Tutorial: Replicating data within and between AWS Regions using S3 Replication
+•Tutorial: Protecting data on Amazon S3 against accidental deletion or application bugs using S3 
+Versioning, S3 Object Lock, and S3 Replication
+•Tutorial: Replicating existing objects in your Amazon S3 buckets with S3 Batch Replication
+Explore training and support
+You can learn from AWS experts to advance your skills and get expert assistance achieving your 
+objectives.
+•Training – Training resources provide a hands-on approach to learning Amazon S3. For more 
+information, see AWS training and certiﬁcation and AWS online tech talks.
+•Discussion Forums – On the forum, you can review posts to understand what you can and can't 
+do with Amazon S3. You can also post your questions. For more information, see Discussion 
+Forums.
+•Technical Support – If you have further questions, you can contact Technical Support.
+Getting started with Amazon S3 using the AWS CLI
+You can get started with Amazon S3 by using the AWS Command Line Interface (AWS CLI) to work 
+with general purpose buckets and objects. A bucket is a container for objects. An object is a ﬁle and 
+any metadata that describes that ﬁle.
+To store an object in Amazon S3, you create a bucket and then upload the object to the bucket. 
+When the object is in the bucket, you can open it, download it, and move it. When you no longer 
+need an object or a bucket, you can clean up your resources.
+Explore training and support API Version 2006-03-01 38
+
+With Amazon S3, you pay only for what you use. For more information about Amazon S3 features 
+and pricing, see Amazon S3. If you are a new Amazon S3 customer, you can get started with 
+Amazon S3 for free. For more information, see AWS Free Tier.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see Tutorial: Getting started with S3 Express One Zone and Working with 
+directory buckets.
+Setting up
+Before you begin using the AWS CLI with Amazon S3, make sure that you have:
+•Signed up for an AWS account. For instructions, see Setting up Amazon S3.
+•Created a user with s3:* permissions. For instructions, see Setting up Amazon S3.
+•Installed and conﬁgured the AWS CLI. For instructions, see Installing or updating the latest 
+version of the AWS CLI in the AWS Command Line Interface User Guide.
+To verify that the AWS CLI is properly conﬁgured, run the following command:
+aws sts get-caller-identity
+For more information, see get-caller-identity in the AWS CLI Command Reference.
+This command displays a list of available Amazon S3 commands if the AWS CLI is properly installed 
+and conﬁgured.
+Step 1: Create your ﬁrst Amazon S3 bucket
+After you set up the AWS CLI, you're ready to create a bucket in Amazon S3. Every object in 
+Amazon S3 is stored in a bucket. Before you can store data in Amazon S3, you must create a 
+bucket.
+Note
+You are not charged for creating a bucket. You are charged only for storing objects in 
+the bucket and for transferring objects in and out of the bucket. The charges that you 
+Setting up API Version 2006-03-01 39
+
+incur through following the examples in this guide are minimal (less than $1). For more 
+information about storage charges, see Amazon S3 pricing.
+To create a bucket
+1. Create a bucket using the s3api create-bucket  command. Replace amzn-s3-demo-
+bucket with a unique bucket name and us-east-1  with your desired Region:
+aws s3api create-bucket --bucket amzn-s3-demo-bucket  --region us-east-1
+For Regions other than us-east-1, you need to specify the location constraint:
+aws s3api create-bucket --bucket amzn-s3-demo-bucket  --region us-west-2  --create-
+bucket-configuration LocationConstraint= us-west-2
+Note
+•After you create a bucket, you can't change its Region.
+•To minimize latency and costs and address regulatory requirements, choose a Region 
+close to you. Objects stored in a Region never leave that Region unless you explicitly 
+transfer them to another Region. For a list of Amazon S3 AWS Regions, see AWS 
+service endpoints in the Amazon Web Services General Reference.
+•The bucket name must:
+•Be unique within a partition. A partition is a grouping of Regions. AWS currently 
+has three partitions: aws (commercial Regions), aws-cn (China Regions), and aws-
+us-gov (AWS GovCloud (US) Regions).
+•Be between 3 and 63 characters long.
+•Consist only of lowercase letters, numbers, periods (.), and hyphens (-). For best 
+compatibility, we recommend that you avoid using periods (.) in bucket names, 
+except for buckets that are used only for static website hosting.
+•Begin and end with a letter or number.
+•After you create the bucket, you can't change its name.
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 40
+
+•Don't include sensitive information in the bucket name. The bucket name is visible in 
+the URLs that point to the objects in the bucket.
+2. Verify that your bucket was created by listing all buckets:
+aws s3 ls
+3. For Object Ownership, you can disable or enable ACLs and control ownership of objects 
+uploaded to your bucket.
+ACLs disabled
+To set Bucket owner enforced (default) – ACLs are disabled, and the bucket owner 
+automatically owns and has full control over every object in the general purpose bucket:
+aws s3api put-bucket-ownership-controls --bucket amzn-s3-demo-bucket  --ownership-
+controls="Rules=[{ObjectOwnership=BucketOwnerEnforced}]"
+Note
+By default, ACLs are disabled. A majority of modern use cases in Amazon S3 no 
+longer require the use of ACLs. We recommend that you keep ACLs disabled, except 
+in circumstances where you must control access for each object individually. For more 
+information, see Controlling ownership of objects and disabling ACLs for your bucket.
+ACLs enabled
+•To set Bucket owner preferred – The bucket owner owns and has full control over new 
+objects that other accounts write to the bucket with the bucket-owner-full-control
+canned ACL:
+aws s3api put-bucket-ownership-controls --bucket amzn-s3-demo-bucket  --ownership-
+controls="Rules=[{ObjectOwnership=BucketOwnerPreferred}]"
+If you apply the Bucket owner preferred setting and want to require all Amazon S3 uploads 
+to include the bucket-owner-full-control  canned ACL, you can Requiring the bucket-
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 41
+
+owner-full-control canned ACL for Amazon S3 PUT operations (bucket owner preferred) that 
+allows only object uploads that use this ACL.
+•To set Object writer – The AWS account that uploads an object owns the object, has full 
+control over it, and can grant other users access to it through ACLs:
+aws s3api put-bucket-ownership-controls --bucket amzn-s3-demo-bucket  --ownership-
+controls="Rules=[{ObjectOwnership=ObjectWriter}]"
+Note
+The default setting is Bucket owner enforced. To apply the default setting and keep 
+ACLs disabled, only the s3:CreateBucket  permission is needed. To enable ACLs, you 
+must have the s3:PutBucketOwnershipControls  permission.
+To check the current Object Ownership setting for your bucket:
+aws s3api get-bucket-ownership-controls --bucket amzn-s3-demo-bucket
+4. To verify that Block Public Access is enabled (it's enabled by default for new buckets):
+aws s3api get-public-access-block --bucket amzn-s3-demo-bucket
+By default, all four Block Public Access settings are enabled for new buckets. We recommend 
+that you keep all settings enabled, unless you know that you need to turn oﬀ one or more 
+of them for your speciﬁc use case. For more information about blocking public access, see
+Blocking public access to your Amazon S3 storage.
+If you need to enable Block Public Access, use the following command:
+aws s3api put-public-access-block --bucket amzn-s3-demo-bucket  --public-access-
+block-configuration 
+ "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 42
+
+Note
+To enable all Block Public Access settings, only the s3:CreateBucket  permission 
+is required. To turn oﬀ any Block Public Access settings, you must have the
+s3:PutBucketPublicAccessBlock  permission.
+5. To enable versioning for your bucket:
+aws s3api put-bucket-versioning --bucket amzn-s3-demo-bucket  --versioning-
+configuration Status=Enabled
+By default, Bucket Versioning is disabled. Versioning is a means of keeping multiple variants 
+of an object in the same bucket. You can use versioning to preserve, retrieve, and restore 
+every version of every object stored in your bucket. With versioning, you can recover more 
+easily from both unintended user actions and application failures. For more information about 
+versioning, see Retaining multiple versions of objects with S3 Versioning.
+6. Amazon S3 Object Lock helps protect new objects from being deleted or overwritten. For more 
+information, see Locking objects with Object Lock. To enable Locking objects with Object Lock
+(requires bucket versioning):
+For a new bucket:
+aws s3api create-bucket --bucket amzn-s3-demo-bucket  --region us-east-1  --object-
+lock-enabled-for-bucket
+For an existing bucket:
+aws s3api put-object-lock-configuration --bucket amzn-s3-demo-bucket  --object-lock-
+configuration '{"ObjectLockEnabled": "Enabled"}'
+If you want to set a default Locking objects with Object Lock along with enabling Object Lock, 
+you can use:
+aws s3api put-object-lock-configuration --bucket amzn-s3-demo-bucket  --object-
+lock-configuration '{"ObjectLockEnabled":"Enabled","Rule":{"DefaultRetention":
+{"Mode":"COMPLIANCE","Days":30}}}'
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 43
+
+You can replace "COMPLIANCE"  with "GOVERNANCE"  for a less restrictive mode, and adjust 
+the number of days as needed.
+Note
+To create an Object Lock enabled bucket, you must have the following 
+permissions: s3:CreateBucket , s3:PutBucketVersioning , and
+s3:PutBucketObjectLockConfiguration .
+7. You can add tags to your bucket. With AWS cost allocation, you can use bucket tags to 
+annotate billing for your use of a bucket. A tag is a key-value pair that represents a label that 
+you assign to a bucket. For more information, see Using cost allocation S3 bucket tags.
+To add tags to your bucket:
+aws s3api put-bucket-tagging --bucket amzn-s3-demo-bucket  --tagging 
+ 'TagSet=[{Key=Purpose,Value=Testing},{Key=Environment,Value=Development}]'
+8. Buckets and new objects are encrypted by using server-side encryption with Amazon S3 
+managed keys (SSE-S3) as the base level of encryption conﬁguration. To verify the default 
+encryption of your bucket, use the following command:
+aws s3api get-bucket-encryption --bucket amzn-s3-demo-bucket
+You can also conﬁgure server-side encryption with AWS KMS keys (SSE-KMS ) and dual-
+layer server-side encryption with AWS KMS keys (DSSE-KMS ) for your bucket. Both the AWS 
+managed key (aws/s3) and your customer managed keys can be used as your AWS KMS key 
+for SSE-KMS  and DSSE-KMS  encryption conﬁguration. For more information about customer 
+managed keys, see Customer keys and AWS keys in the AWS Key Management Service Developer 
+Guide . For more information about creating an AWS KMS key, see Creating keys in the AWS Key 
+Management Service Developer Guide.
+Important
+The AWS KMS key must be in the same AWS Region as your Amazon S3 bucket. Cross-
+region KMS keys aren't supported for Amazon S3 bucket encryption.
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 44
+
+When you conﬁgure your bucket to use default encryption with SSE-KMS, you can also use 
+Amazon S3 Bucket Keys. Amazon S3 Bucket Keys lower the cost of encryption by decreasing 
+request traﬃc from Amazon S3 to AWS KMS. For more information, see Reducing the cost of 
+SSE-KMS with Amazon S3 Bucket Keys. Amazon S3 Bucket Keys aren't supported for DSSE-
+KMS. In the AWS CLI, Amazon S3 Bucket Keys are NOT enabled by default when creating a new 
+bucket. This is diﬀerent from the console behavior where they are enabled by default.
+To conﬁgure SSE-KMS and enable Amazon S3 Bucket Keys:
+aws s3api put-bucket-encryption --bucket amzn-s3-demo-bucket  --server-side-
+encryption-configuration "{\"Rules\":[{\"ApplyServerSideEncryptionByDefault
+\":{\"SSEAlgorithm\":\"aws:kms\",\"KMSMasterKeyID\":\"YOUR-KMS-KEY-ARN\"},
+\"BucketKeyEnabled\":true}]}"
+To check whether Amazon S3 Bucket Keys are enabled for a bucket:
+aws s3api get-bucket-encryption --bucket amzn-s3-demo-bucket
+The output will include a BucketKeyEnabled  ﬁeld set to either true  or false .
+To conﬁgure DSSE-KMS , use the following command:
+aws s3api put-bucket-encryption --bucket amzn-s3-demo-bucket  --server-side-
+encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":
+{"SSEAlgorithm":"aws:kms:dsse","KMSMasterKeyID":" YOUR-KMS-KEY-ARN "}}]}'
+For more information about default encryption, see Setting default server-side encryption 
+behavior for Amazon S3 buckets. For more information about SSE-S3, see Using server-side 
+encryption with Amazon S3 managed keys (SSE-S3).
+Important
+If you use the SSE-KMS or DSSE-KMS option for your default encryption conﬁguration, 
+you are subject to the requests per second (RPS) quota of AWS KMS. You can reduce 
+KMS API calls by enabling Amazon S3 Bucket Keys, which decreases the number of 
+requests sent to AWS KMS. For more information about AWS KMS quotas and how to 
+Step 1: Create your ﬁrst Amazon S3 bucket API Version 2006-03-01 45
+
+request a quota increase, see Quotas  in the AWS Key Management Service Developer 
+Guide .
+You've created a bucket in Amazon S3. Next step is to upload an object to your bucket.
+Step 2: Upload an object to your bucket
+After creating a bucket in Amazon S3, you're ready to upload an object to the bucket. An object can 
+be any kind of ﬁle: a text ﬁle, a photo, a video, and so on.
+To upload an object to a bucket
+1. Create a simple text ﬁle to upload. You can use any text editor or run the following command:
+echo 'Hello, Amazon S3!' > example.txt
+2. Upload the ﬁle to your bucket using the s3 cp command:
+aws s3 cp example.txt s3:// amzn-s3-demo-bucket /
+If the upload is successful, you'll see output similar to:
+upload: ./example.txt to s3:// amzn-s3-demo-bucket /example.txt
+3. Verify that the object was uploaded by listing the contents of your bucket:
+aws s3 ls s3:// amzn-s3-demo-bucket /
+You've successfully uploaded an object to your bucket. Next step is to download an object.
+Step 3: Download an object
+After you upload an object to a bucket, you can view information about your object and download 
+the object to your local computer.
+To download an object from an Amazon S3 bucket
+1. To get information about your object:
+Step 2: Upload an object to your bucket API Version 2006-03-01 46
+
+aws s3api head-object --bucket amzn-s3-demo-bucket  --key example.txt
+This command returns metadata about the object, including its content type, content length, 
+and last modiﬁed date.
+2. Download the object to your local computer:
+aws s3 cp s3:// amzn-s3-demo-bucket /example.txt downloaded-example.txt
+If the download is successful, you'll see output similar to:
+download: s3:// amzn-s3-demo-bucket /example.txt to ./downloaded-example.txt
+3. Verify the contents of the downloaded ﬁle:
+cat downloaded-example.txt
+Note
+•Unlike the console, the AWS CLI can download multiple objects at once using wildcards 
+or the --recursive  ﬂag.
+•When downloading objects with the AWS CLI, periods (.) at the end of object key names 
+are preserved, unlike in the console where they are removed. This is important if your 
+object keys end with periods.
+Example of downloading multiple objects:
+To download multiple objects from an Amazon S3 bucket with speciﬁc ﬁle extensions, use the 
+recursive copy command with exclude  and include ﬁlters as shown in the example.
+aws s3 cp s3:// amzn-s3-demo-bucket / . --recursive --exclude "*" --include "*.txt"
+You've successfully downloaded your object. Next step is to copy your object to a folder.
+Step 3: Download an object API Version 2006-03-01 47
+
+Step 4: Copy your object to a folder
+You've already added an object to a bucket and downloaded the object. Now, you create a folder 
+and copy the object to the folder.
+To copy an object to a folder
+1. In Amazon S3, folders are represented by preﬁxes in object keys. Create a "folder" by copying 
+an object with a preﬁx:
+aws s3 cp s3:// amzn-s3-demo-source-bucket /example.txt s3:// amzn-s3-demo-
+destination-bucket /favorite-files/example.txt
+If the copy is successful, you'll see output similar to:
+copy: s3:// amzn-s3-demo-source-bucket /example.txt to s3:// amzn-s3-demo-destination-
+bucket/favorite-files/example.txt
+2. Verify that the object was copied by listing the contents of the folder:
+aws s3 ls s3:// amzn-s3-demo-destination-bucket /favorite-files/
+You've successfully copied your object to a folder. Next step is to delete your objects and bucket.
+Step 5: Delete your objects and bucket
+When you no longer need an object or a bucket, we recommend that you delete them to prevent 
+further charges. If you completed this getting started walkthrough as a learning exercise, and you 
+don't plan to use your bucket or objects, we recommend that you delete your bucket and objects so 
+that charges no longer accrue.
+Before you delete your bucket, empty the bucket or delete the objects in the bucket. After you 
+delete your objects and bucket, they are no longer available.
+If you want to continue to use the same bucket name, we recommend that you delete the objects 
+or empty the bucket, but don't delete the bucket. After you delete a bucket, the name becomes 
+available to reuse. However, another AWS account might create a bucket with the same name 
+before you have a chance to reuse it.
+Step 4: Copy your object to a folder API Version 2006-03-01 48
+
+Deleting an object
+If you want to choose which objects you delete without emptying all the objects from your bucket, 
+you can delete an object.
+Delete a speciﬁc object:
+aws s3 rm s3:// amzn-s3-demo-bucket /example.txt
+If the deletion is successful, you'll see output similar to:
+delete: s3:// amzn-s3-demo-bucket /example.txt
+Emptying your bucket
+If you plan to delete your bucket, you must ﬁrst empty your bucket, which deletes all the objects, 
+versions, and delete markers in the bucket.
+To empty a bucket
+Important
+Emptying the bucket cannot be undone. Objects added to the bucket while the empty 
+bucket action is in progress will be deleted.
+1. Option 1:  For smaller buckets, use the rm command with the --recursive  ﬂag to delete all 
+objects in the bucket:
+aws s3 rm s3:// amzn-s3-demo-bucket  --recursive
+This command deletes all objects in the bucket, including objects in folders.
+Note
+If your bucket contains many objects or large objects, this command might time out. 
+For buckets with large amounts of data, use the Amazon S3 Lifecycle rule to expire 
+objects in the buckets.
+Step 5: Delete your objects and bucket API Version 2006-03-01 49
+
+Option 2:  Use Amazon S3 Lifecycle rules (recommended for large buckets)
+For buckets with many objects or large objects, use an Amazon S3 Lifecycle rule to 
+automatically expire and delete all objects. Wait for the lifecycle rule to process (this may take 
+up to 24 hours). For more information about using lifecycle rules to empty buckets, see How 
+do I empty an Amazon S3 bucket using a lifecycle conﬁguration rule?.
+2. Verify that the bucket is empty:
+aws s3 ls s3:// amzn-s3-demo-bucket
+3. If your bucket has versioning enabled, use the following commands to delete versioned objects 
+and delete markers.
+Remove versioned objects:
+aws s3api delete-objects --bucket amzn-s3-demo-bucket  --delete "$(aws s3api list-
+object-versions --bucket amzn-s3-demo-bucket  --output json --query='{Objects: 
+ Versions[].{Key:Key,VersionId:VersionId}}')"
+Remove delete markers:
+aws s3api delete-objects --bucket amzn-s3-demo-bucket  --delete "$(aws s3api list-
+object-versions --bucket amzn-s3-demo-bucket  --output json --query='{Objects: 
+ DeleteMarkers[].{Key:Key,VersionId:VersionId}}')"
+4. Verify that the bucket is empty of all object versions and delete markers:
+aws s3api list-object-versions --bucket amzn-s3-demo-bucket
+The output should show no versions or delete markers remaining.
+Deleting your bucket
+After you empty your bucket or delete all the objects from your bucket, you can delete your bucket.
+Step 5: Delete your objects and bucket API Version 2006-03-01 50
+
+Important
+Deleting a bucket can't be undone. Bucket names are unique. If you delete your bucket, 
+another AWS user can use the name. If you want to continue to use the same bucket name, 
+don't delete your bucket. Instead, empty and keep the bucket.
+To delete your bucket
+1. Delete your bucket:
+aws s3api delete-bucket --bucket amzn-s3-demo-bucket
+2. Verify that the bucket was deleted by listing all your buckets:
+aws s3 ls
+Next steps
+In the preceding examples, you learned how to perform some basic Amazon S3 tasks using the 
+AWS CLI.
+The following topics explain the learning paths that you can use to gain a deeper understanding of 
+Amazon S3 so that you can implement it in your applications.
+•Understand common use cases
+•Control access to your buckets and objects
+•Protect and monitor your storage
+•Develop with Amazon S3
+•Understand common use cases
+•Explore training and support
+The following list shows common AWS CLI commands for Amazon S3:
+•cp – Copies ﬁles or objects between your local ﬁle system and Amazon S3, or between Amazon 
+S3 locations
+Next steps API Version 2006-03-01 51
+
+•ls – Lists Amazon S3 objects and common preﬁxes under a speciﬁed bucket and preﬁx
+•mb – Creates an Amazon S3 bucket
+•mv – Moves ﬁles or objects between your local ﬁle system and Amazon S3, or between Amazon 
+S3 locations
+•presign – Generates a pre-signed URL for an Amazon S3 object that allows temporary access 
+without AWS credentials
+•rb – Removes an empty Amazon S3 bucket. You can use the --force  ﬂag to automatically 
+empty and delete a bucket with contents in a single command. This action can't be undone.
+•rm – Deletes objects from Amazon S3
+•sync  – Syncs directories and Amazon S3 preﬁxes by recursively copying new and updated ﬁles 
+from the source directory to the destination.
+•website – Conﬁgures a bucket as a static website
+For more information about the AWS CLI commands for Amazon S3, see the following resources:
+•s3 – High-level Amazon S3 commands that simplify common operations
+•s3api  – Direct access to all Amazon S3 API operations
+•s3control – Direct access to all Amazon S3 Control API operations
+Next steps API Version 2006-03-01 52
+
+Creating, conﬁguring, and working with Amazon S3 
+general purpose buckets
+To store your data in Amazon S3, you work with resources known as buckets and objects. A bucket
+is a container for objects. An object  is a ﬁle and any metadata that describes that ﬁle.
+To store an object in Amazon S3, you create a bucket and then upload the object to a bucket. When 
+the object is in the bucket, you can open it, download it, and move it. When you no longer need an 
+object or a bucket, you can clean up your resources.
+The topics in this section provide an overview of working with general purpose buckets in Amazon 
+S3. They include information about naming, creating, accessing, and deleting general purpose 
+buckets. For more information about viewing or listing objects in a bucket, see Organizing, listing, 
+and working with your objects.
+There are several types of Amazon S3 buckets. Before creating a bucket, make sure that you 
+choose the bucket type that best ﬁts your application and performance requirements. For more 
+information about the various bucket types and the appropriate use cases for each, see Buckets.
+Note
+For more information about using the Amazon S3 Express One Zone storage class with 
+directory buckets, see S3 Express One Zone and Working with directory buckets.
+Note
+With Amazon S3, you pay only for what you use. For more information about Amazon S3 
+features and pricing, see Amazon S3. If you are a new Amazon S3 customer, you can get 
+started with Amazon S3 for free. For more information, see AWS Free Tier.
+Topics
+•General purpose buckets overview
+•Namespaces for general purpose buckets
+•Common general purpose bucket patterns for building applications on Amazon S3
+API Version 2006-03-01 53
+
+•General purpose bucket naming rules
+•General purpose bucket quotas, limitations, and restrictions
+•Accessing an Amazon S3 general purpose bucket
+•Creating a general purpose bucket
+•Viewing the properties for an S3 general purpose bucket
+•Listing Amazon S3 general purpose buckets
+•Emptying a general purpose bucket
+•Deleting a general purpose bucket
+•Mount an Amazon S3 bucket as a local ﬁle system
+•Working with Storage Browser for Amazon S3
+•Conﬁguring fast, secure ﬁle transfers using Amazon S3 Transfer Acceleration
+•Using Requester Pays general purpose buckets for storage transfers and usage
+General purpose buckets overview
+To upload your data (photos, videos, documents, etc.) to Amazon S3, you must ﬁrst create an S3 
+bucket in one of the AWS Regions.
+There are several types of Amazon S3 buckets. Before creating a bucket, make sure that you 
+choose the bucket type that best ﬁts your application and performance requirements. For more 
+information about the various bucket types and the appropriate use cases for each, see Buckets.
+The following sections provide more information about general purpose buckets, including bucket 
+naming rules, quotas, and bucket conﬁguration details. For a list of restriction and limitations 
+related to Amazon S3 buckets see, General purpose bucket quotas, limitations, and restrictions.
+Topics
+•General purpose buckets overview
+•Common general purpose bucket patterns
+•Permissions
+•Managing public access to general purpose buckets
+•Managing tags for general purpose buckets
+•General purpose buckets conﬁguration options
+General purpose buckets overview API Version 2006-03-01 54
+
+•General purpose buckets operations
+•General purpose buckets performance monitoring
+General purpose buckets overview
+Every object is contained in a bucket. For example, if the object named photos/puppy.jpg
+is stored in the amzn-s3-demo-bucket  general purpose bucket in the US West (Oregon) 
+Region, then it is addressable by using the URL https://amzn-s3-demo-bucket.s3.us-
+west-2.amazonaws.com/photos/puppy.jpg . For more information, see Accessing a Bucket.
+•General purpose bucket quotas for commercial Regions can only be viewed and managed from 
+US East (N. Virginia).
+•General purpose bucket quotas for AWS GovCloud (US) can only be viewed and managed from 
+AWS GovCloud (US-West).
+In terms of implementation, buckets and objects are AWS resources, and Amazon S3 provides 
+APIs for you to manage them. For example, you can create a bucket and upload objects using the 
+Amazon S3 API. You can also use the Amazon S3 console to perform these operations. The console 
+uses the Amazon S3 APIs to send requests to Amazon S3.
+This section describes how to work with general purpose buckets. For information about working 
+with objects, see Amazon S3 objects overview.
+By default, general purpose buckets exist in a global namespace, which means that each bucket 
+name must be unique across all AWS accounts in all the AWS Regions within a partition. A partition 
+is a grouping of Regions. AWS currently has four partitions: aws (Standard Regions), aws-cn (China 
+Regions), aws-us-gov  (AWS GovCloud (US)), and aws-eusc  (European Sovereign Cloud). After 
+creating a general purpose bucket in the shared global namespace, that bucket name is unavailable 
+for anyone else to create within partition. When a bucket owner deletes their bucket, the bucket 
+name becomes available again in the global namespace for anyone to re-create.
+Alternatively, you can create buckets in your reserved account regional namespace to easily create 
+predictable bucket names with assurance that the names you want will always be available for you 
+to use. Your account regional namespace is a subdivision of the global namespace that only your 
+account can use. By creating new buckets in your account regional namespace, you have assurance 
+that your desired bucket names will always be available for you to use. For more information on 
+account regional namespaces, see Namespaces for general purpose buckets.
+General purpose buckets overview API Version 2006-03-01 55
+
+After a general purpose bucket is created, the name of that bucket cannot be used by another AWS 
+account in the same partition until the bucket is deleted. You should not depend on speciﬁc bucket 
+naming conventions for availability or security veriﬁcation purposes. For bucket naming guidelines, 
+see General purpose bucket naming rules.
+Amazon S3 creates buckets in a Region that you specify. To reduce latency, minimize costs, or 
+address regulatory requirements, choose any AWS Region that is geographically close to you. For 
+example, if you reside in Europe, you might ﬁnd it advantageous to create buckets in the Europe 
+(Ireland) or Europe (Frankfurt) Regions. For a list of Amazon S3 Regions, see Regions and Endpoints
+in the AWS General Reference.
+Note
+Objects that belong to a bucket that you create in a speciﬁc AWS Region never leave that 
+Region, unless you explicitly transfer them to another Region. For example, objects that are 
+stored in the Europe (Ireland) Region never leave it.
+Common general purpose bucket patterns
+When you build applications on Amazon S3, you can use unique general purpose buckets to 
+separate diﬀerent datasets or workloads. Depending on your use case, there are diﬀerent design 
+patterns and best practices for using general purpose buckets. For more information, see Common 
+general purpose bucket patterns for building applications on Amazon S3.
+Permissions
+You can use your AWS account root user credentials to create a general purpose bucket and 
+perform any other Amazon S3 operation. However, we recommend that you do not use the root 
+user credentials of your AWS account to make requests, such as to create a bucket. Instead, create 
+an AWS Identity and Access Management (IAM) user, and grant that user full access (users by 
+default have no permissions).
+These users are referred to as administrators . You can use the administrator user credentials, 
+instead of the root user credentials of your account, to interact with AWS and perform tasks, such 
+as create a bucket, create users, and grant them permissions.
+For more information, see AWS account root user credentials and IAM user credentials in the AWS 
+General Reference and Security best practices in IAM in the IAM User Guide .
+Common general purpose bucket patterns API Version 2006-03-01 56
+
+The AWS account that creates a resource owns that resource. For example, if you create an IAM 
+user in your AWS account and grant the user permission to create a bucket, the user can create a 
+bucket. But the user does not own the bucket; the AWS account that the user belongs to owns the 
+bucket. The user needs additional permission from the resource owner to perform any other bucket 
+operations. For more information about managing permissions for your Amazon S3 resources, see
+Identity and Access Management for Amazon S3.
+Managing public access to general purpose buckets
+Public access is granted to general purpose buckets and objects through bucket policies, access 
+control lists (ACLs), or both. To help you manage public access to Amazon S3 resources, Amazon S3 
+provides settings to block public access. Amazon S3 Block Public Access settings can override ACLs 
+and bucket policies so that you can enforce uniform limits on public access to these resources. You 
+can apply Block Public Access settings to individual buckets or to all buckets in your account.
+To ensure that all of your Amazon S3 general purpose buckets and objects have their public access 
+blocked, all four settings for Block Public Access are enabled by default when you create a new 
+bucket. We recommend that you turn on all four settings for Block Public Access for your account 
+too. These settings block all public access for all current and future buckets.
+Before applying these settings, verify that your applications will work correctly without public 
+access. If you require some level of public access to your buckets or objects—for example, to host 
+a static website, as described at Hosting a static website using Amazon S3—you can customize the 
+individual settings to suit your storage use cases. For more information, see Blocking public access 
+to your Amazon S3 storage.
+However, we highly recommend keeping Block Public Access enabled. If you want to keep all four 
+Block Public Access settings enabled and host a static website, you can use Amazon CloudFront 
+origin access control (OAC). Amazon CloudFront provides the capabilities required to set up a 
+secure static website. Amazon S3 static websites support only HTTP endpoints. Amazon CloudFront 
+uses the durable storage of Amazon S3 while providing additional security headers, such as HTTPS. 
+HTTPS adds security by encrypting a normal HTTP request and protecting against common 
+cyberattacks.
+For more information, see Getting started with a secure static website in the Amazon CloudFront 
+Developer Guide .
+Managing public access to general purpose buckets API Version 2006-03-01 57
+
+Note
+If you see an Error when you list your general purpose buckets and their public access 
+settings, you might not have the required permissions. Make sure that you have the 
+following permissions added to your user or role policy:
+s3:GetAccountPublicAccessBlock
+s3:GetBucketPublicAccessBlock
+s3:GetBucketPolicyStatus
+s3:GetBucketLocation
+s3:GetBucketAcl
+s3:ListAccessPoints
+s3:ListAllMyBuckets
+In some rare cases, requests can also fail because of an AWS Region outage.
+Managing tags for general purpose buckets
+You can add tags to your Amazon S3 buckets to categorize and track your AWS costs or for access 
+control. You can use tags as cost allocation tags to track storage costs in AWS Billing and Cost 
+Management. You can also use tags for attribute-based access control (ABAC), to scale access 
+permissions and grant access to S3 buckets based on their tags.
+For more information, see Using tags with S3 general purpose buckets
+General purpose buckets conﬁguration options
+Amazon S3 supports various options for you to conﬁgure your general purpose bucket. For 
+example, you can conﬁgure your bucket for website hosting, add a conﬁguration to manage the 
+lifecycle of objects in the bucket, and conﬁgure the bucket to log all access to the bucket. Amazon 
+S3 supports subresources for you to store and manage the bucket conﬁguration information. You 
+can use the Amazon S3 API to create and manage these subresources. However, you can also use 
+the console or the AWS SDKs.
+Note
+There are also object-level conﬁgurations. For example, you can conﬁgure object-level 
+permissions by conﬁguring an access control list (ACL) speciﬁc to that object.
+Managing tags for general purpose buckets API Version 2006-03-01 58
+
+These are referred to as subresources because they exist in the context of a speciﬁc bucket 
+or object. The following table lists subresources that enable you to manage bucket-speciﬁc 
+conﬁgurations.
+Subresource Description
+cors (cross-origin 
+resource sharing)You can conﬁgure your bucket to allow cross-origin  requests.
+For more information, see Using cross-origin resource sharing (CORS).
+event notiﬁcation You can enable your bucket to send you notiﬁcations of speciﬁed bucket 
+events.
+For more information, see Amazon S3 Event Notiﬁcations.
+lifecycle You can deﬁne lifecycle rules for objects in your bucket that  have a well-
+deﬁned lifecycle. For example, you can deﬁne a rule to  archive objects one 
+year after creation, or delete an object 10  years after creation.
+For more information, see Managing the lifecycle of objects.
+location When you create a bucket, you specify the AWS Region where you  want 
+Amazon S3 to create the bucket. Amazon S3 stores this information in the  
+ location subresource and provides an API for you to retrieve this  infor 
+mation.
+logging Logging enables you to track requests for access to your bucket.  Each 
+access log record provides details about a single access  request, such as 
+the requester, bucket name, request time, request  action, response status, 
+and error code, if any. Access log  information can be useful in security and 
+access audits. It can also  help you learn about your customer base and 
+understand your Amazon S3  bill.   
+For more information, see Logging requests with server access logging.
+object locking To use S3 Object Lock, you must enable it for a bucket. You can  also 
+optionally conﬁgure a default retention mode and period that  applies to 
+new objects that are placed in the bucket.
+General purpose buckets conﬁguration API Version 2006-03-01 59
+
+Subresource Description
+For more information, see Locking objects with Object Lock.
+policy and ACL
+(access  control 
+list)All your resources (such as buckets and objects) are private by  default 
+. Amazon S3 supports both bucket policy and access control list  (ACL) 
+options for you to grant and manage bucket-level permissions.  Amazon S3 
+stores the permission information in the   policy and acl subresources.
+For more information, see Identity and Access Management for Amazon S3.
+replication Replication is the automatic, asynchronous copying of objects  across 
+buckets in diﬀerent or the same AWS Regions. For more  information, see
+Replicating objects within and across Regions.
+requestPaymentBy default, the AWS account that creates the bucket (the bucket  own 
+er) pays for downloads from the bucket. Using this subresource,  the 
+bucket owner can specify that the person requesting the download  will be 
+charged for the download. Amazon S3 provides an API for you to  manage 
+this subresource.
+For more information, see Using Requester Pays general purpose buckets 
+for storage transfers and usage .
+tagging You can add tags to your Amazon S3 buckets to categorize and track your 
+AWS costs or for access control. You can use tags as cost allocation tags to 
+track storage costs in AWS Billing and Cost Management. You can also use 
+tags for attribute-based access control (ABAC), to scale access permissions 
+and grant access to S3 buckets based on their tags.
+For more information, see Using tags with S3 general purpose buckets.
+transfer accelerat 
+ionTransfer Acceleration enables fast, easy, and secure transfers of ﬁles  over 
+long distances between your client and an S3 bucket.  Transfer Accelerat 
+ion takes advantage of the globally distributed edge  locations of Amazon 
+CloudFront.
+For more information, see Conﬁguring fast, secure ﬁle transfers using 
+Amazon S3 Transfer Acceleration.
+General purpose buckets conﬁguration API Version 2006-03-01 60
+
+Subresource Description
+versioning Versioning helps you recover accidental overwrites and deletes.
+We recommend versioning as a best practice to recover objects from  being 
+deleted or overwritten by mistake.
+For more information, see Retaining multiple versions of objects with S3 
+Versioning.
+website You can conﬁgure your bucket for static website hosting. Amazon S3  stores 
+this conﬁguration by creating a website  subresource.
+For more information, see Hosting a static website using Amazon S3.
+General purpose buckets operations
+The high availability engineering of Amazon S3 is focused on get, put, list, and delete  operations. 
+Because general purpose bucket operations work against a centralized, global resource space, we 
+recommend that you don't create, delete, or conﬁgure buckets on the high availability code path 
+of your application. It's better to create, delete, or conﬁgure buckets in a separate initialization or 
+setup routine that you run less often.
+General purpose buckets performance monitoring
+When you have critical applications and business processes that rely on AWS resources, it’s 
+important to monitor and get alerts for your system. Monitoring your data can help maintain the 
+reliability, availability, and performance of Amazon S3 and your AWS solutions. There are several 
+AWS services that you can use to collect and aggregates metrics and logs for your S3 buckets.
+Depending on your use case, you can choose which AWS service best suits your organization’s 
+needs to debug issues, monitor your data, optimize storage costs, or troubleshoot multi-point 
+issues. For example:
+•To improve the performance of applications that use S3: Set up CloudWatch alarms to monitor 
+your storage data, replication metrics, or request metrics.
+•To plan for storage usage, optimize storage costs, or to ﬁnd out how much storage you have 
+across your entire organization: Use Amazon S3 Storage Lens. Alternatively, you can use S3 
+General purpose buckets operations API Version 2006-03-01 61
+
+Storage Lens to improve your data performance by enabling advanced metrics and using the 
+detailed status-code metrics to get counts for successful or failed requests.
+•For a uniﬁed view of your operational health: Publish S3 Storage Lens usage and activity 
+metrics  to a Amazon CloudWatch dashboard.
+Note
+The Amazon CloudWatch publishing option is available for S3 Storage Lens dashboards 
+upgraded to Advanced metrics and recommendations. You can enable the CloudWatch 
+publishing option for a new or existing dashboard conﬁguration in S3 Storage Lens.
+•To obtain a record of actions taken by a user, role, or an AWS service: Set up AWS CloudTrail 
+logs. You can also use AWS CloudTrail logs to review API calls for Amazon S3 as events.
+•To receive notiﬁcations about when a certain event happens in your S3 bucket: Set up 
+Amazon S3 event notiﬁcations.
+•To obtain detailed records for the requests that are made to an S3 bucket: Set up S3 access 
+logs.
+For a list of all the diﬀerent AWS services that you can use to monitor your data, see Logging and 
+monitoring in Amazon S3.
+Namespaces for general purpose buckets
+By default, general purpose buckets exist in a global namespace. This means that each bucket 
+name must be unique across all AWS accounts in all the AWS Regions within a partition. A partition 
+is a grouping of Regions. AWS currently has four partitions: aws (Standard Regions), aws-cn
+(China Regions), aws-us-gov  (AWS GovCloud (US)), and aws-eusc  (European Sovereign Cloud). 
+When you create a general purpose bucket, you can choose to create a bucket in the shared global 
+namespace. You can also choose to create a bucket in your account regional namespace. Your 
+account regional namespace is a subdivision of the global namespace that only your account can 
+create buckets in.
+Topics
+•Global general purpose buckets
+•Account regional namespace general purpose buckets
+•Restrictions and considerations
+Namespaces for general purpose buckets API Version 2006-03-01 62
+
+•AWS Region Code Format
+•Requiring the creation of buckets in your account regional namespace
+•Creating a bucket in your account regional namespace
+Global general purpose buckets
+By default, you create global general purpose buckets in the shared global namespace. After 
+creating a general purpose bucket in the shared global namespace, that bucket name is unavailable 
+for anyone else to create within the partition. When you delete a global general purpose bucket, 
+the bucket name becomes available again in the global namespace for anyone to re-create.
+When creating global general purpose buckets, you can request any name that adheres to 
+the bucket naming rules. These rules include specifying a name between 3 (minimum) and 63 
+(maximum) characters long. The name can only consist of lowercase letters, numbers, periods (.), 
+and hyphens (-). Bucket names must begin and end with a letter or number and cannot contain 
+two adjacent periods. For more information on bucket naming rules, see General purpose bucket 
+naming rules .
+When specifying a global general purpose bucket name, you must select a unique name that 
+is not already in use for the partition. If you attempt to create a bucket that already exists 
+and is owned by someone else, you will receive an HTTP 409 BucketAlreadyExists error. If you 
+attempt to create a bucket that already exists and is owned by you, you will receive an HTTP 409 
+BucketAlreadyOwnedByYou error.
+You can create global general purpose buckets to have the most ﬂexibility in selecting your 
+requested bucket names. Since it's a shared global namespace, other accounts can create similar 
+bucket names. Other accounts can also re-create bucket names that you previously deleted. You 
+should not depend on speciﬁc bucket naming conventions for availability or security veriﬁcation 
+purposes. Don't write code assuming your chosen bucket name is available unless you have already 
+created the bucket. One method for creating bucket names that aren't predictable is to append a 
+Globally Unique Identiﬁer (GUID) to your bucket name. For example, amzn-s3-demo-bucket-
+a1b2c3d4-5678-90ab-cdef-example11111 . For more information, see Creating a bucket that 
+uses a GUID in the bucket name.
+Account regional namespace general purpose buckets
+Although Amazon S3 general purpose buckets exist in a shared global namespace, you can 
+optionally create buckets in your account regional namespace. The account regional namespace 
+Global general purpose buckets API Version 2006-03-01 63
+
+is a reserved subdivision of the global bucket namespace. Only your account can create general 
+purpose buckets in this namespace. New general purpose buckets created in your account regional 
+namespace are unique to your account. These buckets can never be re-created by another account. 
+These buckets support all the S3 features and AWS services that general purpose buckets in the 
+shared global namespace already support. Your applications require no change to interact with 
+buckets in your account regional namespace.
+Note
+You can create buckets in your account regional namespace in all AWS Regions except 
+Middle East (Bahrain) and Middle East (UAE).
+Creating buckets in your account regional namespace is a security best practice. These bucket 
+names can only ever be used by your account. You can create buckets in your account regional 
+namespace to easily template general purpose bucket names across multiple AWS Regions. You 
+can have assurance that no other account can create bucket names in your namespace. If another 
+account attempts to create a bucket with your account regional suﬃx, the CreateBucket request 
+will be rejected.
+Account regional namespace naming convention
+General purpose buckets in your account regional namespace must follow a speciﬁc naming 
+convention. These buckets consist of a bucket name preﬁx that you create and a suﬃx that 
+contains your 12-digit AWS Account ID, the AWS Region code, and ends with -an.
+bucket-name-prefix -accountId-region-an
+For example, the following general purpose bucket exists in the account regional namespace for 
+AWS Account 111122223333 in the us-west-2 Region:
+amzn-s3-demo-bucket -111122223333-us-west-2-an
+To create a bucket in your account regional namespace, you make a CreateBucket request. Specify 
+the x-amz-bucket-namespace  request header with the value set to account-regional . Also 
+specify an account regional namespace formatted bucket name: <customer-chosen-name>-
+<AWS-Account-ID>-<AWS-Region>-an .
+Account regional namespace general purpose buckets API Version 2006-03-01 64
+
+Note
+When you create a general purpose bucket in your account regional namespace using the 
+console, a suﬃx is automatically added to the bucket name preﬁx that you provide. This 
+suﬃx includes your AWS Account ID and the AWS Region that you selected to create your 
+bucket in. When you create a general purpose bucket in your account regional namespace 
+using the CreateBucket API, you must provide the full suﬃx. This includes your AWS 
+Account ID and the AWS Region in your request. For a list of the AWS Region codes, see
+AWS Region Code Format.
+Integrating the account regional namespace to your CloudFormation templates
+You can update your infrastructure-as-code tools, like CloudFormation, to simplify creating 
+buckets in your account regional namespace. CloudFormation oﬀers the pseudo parameters
+AWS::AccountId  and AWS::Region . These parameters make it easy to build CloudFormation 
+templates that create account regional namespace buckets. For more information, see Get AWS 
+values using pseudo parameters .
+Example 1 using BucketName with Sub:
+BucketName: !Sub "amzn-s3-demo-bucket-${AWS::AccountId}-${AWS::Region}-an"
+BucketNamespace: "account-regional"
+Example 2 using BucketNamePreﬁx:
+BucketNamePrefix: 'amzn-s3-demo-bucket'
+BucketNamespace: "account-regional"
+Alternatively, you can also use the BucketNamePreﬁx property to update your CloudFormation 
+template. The BucketNamePreﬁx lets you simply provide the customer-deﬁned portion of the 
+bucket name. It then automatically adds the account regional namespace suﬃx based on the 
+requesting AWS Account and AWS Region speciﬁed.
+Using these options, you can build a custom CloudFormation template to easily create general 
+purpose buckets in your account regional namespace. For more information, see AWS::S3::Bucket in 
+the CloudFormation User Guide.
+Account regional namespace general purpose buckets API Version 2006-03-01 65
+
+Restrictions and considerations
+When creating buckets in the shared global namespace, the following considerations apply:
+•A bucket name in the shared global namespace can't be used by another AWS account in 
+the same partition until the bucket is deleted. After you delete a bucket in the shared global 
+namespace, be aware that another AWS account in the same partition can use the same bucket 
+name for a new bucket and can therefore potentially receive requests intended for the deleted 
+bucket.
+•When building applications that will create buckets in the shared global namespace, make sure 
+to consider that your desired bucket names may be already taken by another account and that 
+other accounts may have bucket names that are similar to yours.
+•Because Amazon S3 identiﬁes buckets based on their names, an application that uses an 
+incorrect bucket name in a request could inadvertently perform operations against a diﬀerent 
+bucket than expected. To help avoid unintentional bucket interactions in situations like this, you 
+can use bucket owner condition. For more information, see Verifying bucket ownership with 
+bucket owner condition.
+When creating buckets in your account regional namespace, the following restrictions and 
+considerations apply:
+•Any attempt to re-create an account regional namespace bucket that you already own in any 
+AWS Region will return an HTTP 409 BucketAlreadyOwnedByYou error.
+•You should use the S3 regional endpoints to create buckets in your account regional namespace. 
+For backwards compatibility, you can use the legacy global endpoint to create buckets in your 
+account regional namespace in the US East (N. Virginia) Region.
+•Your account regional suﬃx counts towards the maximum number of 63-characters allowed 
+in general purpose bucket names. So if your account regional suﬃx is -012345678910-us-
+east-1-an , then you have 37-characters available for your bucket name preﬁx.
+AWS Region Code Format
+To create a bucket in your account regional namespace, you must include the AWS Region in the 
+suﬃx where you want to create the general purpose bucket. You must specify the full AWS Region 
+code (for example, us-west-2 ) in the suﬃx. See AWS Regions for an entire list of the AWS Region 
+Restrictions and considerations API Version 2006-03-01 66
+
+codes. The following bucket names show two examples of the AWS Region code format that you 
+must use when creating buckets in your account regional namespace:
+•amzn-s3-demo-bucket-012345678910-ap-southeast-1-an
+•amzn-s3-demo-bucket-987654321012-eu-north-1-an
+Requiring the creation of buckets in your account regional namespace
+You can enforce that your IAM principals only create buckets in your account regional namespace. 
+Use the s3:x-amz-bucket-namespace  condition key. The following examples show how you 
+can enforce account regional bucket creation in an IAM policy, Resource Control Policy, or Service 
+Control Policy.
+IAM policy
+The following IAM policy denies the s3:CreateBucket permission to the IAM principal if the request 
+does not include the x-amz-bucket-namespace header set to account-regional.
+{ 
+  "Version": "2012-10-17",        
+  "Statement": [ 
+    { 
+      "Sid": "RequireAccountRegionalBucketCreation", 
+      "Effect": "Deny", 
+      "Action": "s3:CreateBucket", 
+      "Resource": "*", 
+      "Condition": { 
+        "StringNotEquals": { 
+          "s3:x-amz-bucket-namespace": "account-regional" 
+        } 
+      } 
+    } 
+  ]
+}
+Resource Control Policy
+The following Resource Control Policy denies the s3:CreateBucket permission to everyone if the 
+request does not include the x-amz-bucket-namespace header set to account-regional.
+Requiring the creation of buckets in your account regional namespace API Version 2006-03-01 67
+
+{ 
+    "Version": "2012-10-17",        
+    "Statement": [ 
+        { 
+            "Sid": "OnlyCreateBucketsInAccountRegionalNamespace", 
+            "Effect": "Deny", 
+            "Principal": "*", 
+            "Action": "s3:CreateBucket", 
+            "Resource": "*", 
+            "Condition": { 
+                "StringNotEquals": { 
+                    "s3:x-amz-bucket-namespace": "account-regional" 
+                } 
+            } 
+        } 
+    ]
+}
+Service Control Policy
+The following Service Control Policy denies the s3:CreateBucket permission to everyone if the 
+request does not include the x-amz-bucket-namespace header set to account-regional.
+{ 
+    "Version": "2012-10-17",        
+    "Statement": [ 
+        { 
+            "Sid": "RequireAccountRegionalBucketCreation", 
+            "Effect": "Deny", 
+            "Action": "s3:CreateBucket", 
+            "Resource": "*", 
+            "Condition": { 
+                "StringNotEquals": { 
+                    "s3:x-amz-bucket-namespace": "account-regional" 
+                } 
+            } 
+        } 
+    ]
+}
+Requiring the creation of buckets in your account regional namespace API Version 2006-03-01 68
+
+Creating a bucket in your account regional namespace
+The following examples show you how to create a general purpose bucket in your account regional 
+namespace.
+Using the AWS CLI
+The following AWS CLI example creates a general purpose bucket in the account regional 
+namespace for AWS Account 012345678910 in the US West (N. California) Region (us-west-1). To 
+use this example command, replace the user input placeholders  with your own information.
+aws s3api create-bucket \ 
+    --bucket amzn-s3-demo-bucket-012345678910-us-west-1-an  \ 
+    --bucket-namespace account-regional 
+    --region us-west-1  \ 
+    --create-bucket-configuration LocationConstraint= us-west-1
+Common general purpose bucket patterns for building 
+applications on Amazon S3
+When you build applications on Amazon S3, you can use unique general purpose buckets to 
+separate diﬀerent datasets or workloads. When you build applications that serve end users or 
+diﬀerent user groups, use our best practices design patterns to build applications that can best 
+take advantage of Amazon S3 features and scalability.
+Important
+We recommend that you create general purpose bucket names that are not predictable. 
+Do not write code assuming your chosen bucket name is available unless you have already 
+created the bucket. We recommend creating buckets in your account regional namespace 
+for assurance that only your account can ever own these bucket names, see Namespaces 
+for general purpose buckets. For more information about general purpose bucket naming 
+rules, see General purpose bucket naming rules.
+Topics
+•Multi-tenant general purpose bucket pattern
+•Bucket-per-use pattern
+Creating a bucket in your account regional namespace API Version 2006-03-01 69
+
+Multi-tenant general purpose bucket pattern
+With multi-tenant buckets, you create a single general purpose bucket for a team or workload. 
+You use unique S3 preﬁxes to organize the objects that you store in the bucket. A preﬁx is a string 
+of characters at the beginning of the object key name. A preﬁx can be any length, subject to 
+the maximum length of the object key name (1,024 bytes). You can think of preﬁxes as a way to 
+organize your data in a similar way to directories. However, preﬁxes are not directories.
+For example, to store information about cities, you might organize it by continent, then by country, 
+then by province or state. Because these names don't usually contain punctuation, you might use 
+slash (/) as the delimiter. The following examples shows preﬁxes being used to organize city names 
+by continent, country, and then province or state, using a slash (/) delimiter.
+•Europe/France/NouvelleA-Aquitaine/Bordeaux
+•North America/Canada/Quebec/Montreal
+•North America/USA/Washington/Bellevue
+•North America/USA/Washington/Seattle
+This pattern scales well when you have hundreds of unique datasets within a general purpose 
+bucket. With preﬁxes, you can easily organize and group these datasets.
+However, one potential drawback to the multi-tenant general purpose bucket pattern is that 
+many S3 bucket-level features like default bucket encryption, S3 Versioning, and S3 Requester 
+Pays are set at the bucket-level and not the preﬁx-level. If the diﬀerent datasets within the multi-
+tenant bucket have unique requirements, the fact that you can't conﬁgure many S3 bucket-level 
+features at the preﬁx-level can make it diﬃcult for you to specify the correct settings for each 
+dataset. Additionally, in a multi-tenant bucket, cost allocation can become complex as you work to 
+understand the storage, requests, and data transfer associated with speciﬁc preﬁxes.
+Bucket-per-use pattern
+With the bucket-per-use pattern, you create a general purpose bucket for each distinct dataset, 
+end user, or team. Because you can conﬁgure S3 bucket-level features for each of these buckets, 
+you can use this pattern to conﬁgure unique bucket-level settings. For example, you can conﬁgure 
+features like default bucket encryption, S3 Versioning, and S3 Requester Pays in a way that is 
+customized to the dataset in each bucket. Using one bucket for each distinct dataset, end user, or 
+team can also help you simplify both your access management and cost allocation strategies.
+Multi-tenant general purpose bucket pattern API Version 2006-03-01 70
+
+A potential drawback to this strategy is that you will need to manage potentially thousands of 
+buckets. All AWS accounts have a default quota of 10,000 general purpose buckets. You can 
+increase the bucket quota for an account by submitting a quota increase request. To request an 
+increase for general purpose buckets, visit the Service Quotas console.
+To manage your bucket-per-use pattern and simplify your infrastructure management, you can 
+use AWS CloudFormation. You can create a custom CloudFormation template for your pattern 
+that already deﬁnes all of your desired settings for your S3 general purpose buckets so that 
+you can easily deploy and track any changes to your infrastructure. For more information, see
+AWS::S3::Bucket in the AWS CloudFormation User Guide.
+When building a workload with a bucket-per-use pattern, we recommend that you create the 
+buckets in your account regional namespace. By creating buckets in your account regional 
+namespace, you avoid competing for bucket names against others and have assurance that only 
+your account can ever create buckets with your selected naming convention. For more information 
+on account regional namespaces, see Namespaces for general purpose buckets.
+General purpose bucket naming rules
+When you create a general purpose bucket, make sure that you consider the length, valid 
+characters, formatting, and uniqueness of bucket names. The following sections provide 
+information about general purpose bucket naming, including naming rules, best practices, and 
+an example for how you can create buckets in your account regional namespace. an example for 
+creating a general purpose bucket with a name that includes a globally unique identiﬁer (GUID).
+For information about object key names, see Creating object key names.
+To create a general purpose bucket, see the section called “Creating a general purpose bucket”.
+Naming rules API Version 2006-03-01 71
+
+Topics
+•General purpose buckets naming rules
+•Account regional namespace naming rules
+•Example general purpose bucket names
+•Best practices
+•Creating a bucket that uses a GUID in the bucket name
+•Creating a bucket in your account regional namespace
+General purpose buckets naming rules
+The following naming rules apply for general purpose buckets.
+•Bucket names must be between 3 (min) and 63 (max) characters long.
+•Bucket names can consist only of lowercase letters, numbers, periods (.), and hyphens (-).
+•Bucket names must begin and end with a letter or number.
+•Bucket names must not contain two adjacent periods.
+•Bucket names must not be formatted as an IP address (for example, 192.168.5.4 ).
+•Bucket names must not start with the preﬁx xn-- .
+•Bucket names must not start with the preﬁx sthree- .
+•Bucket names must not start with the preﬁx amzn-s3-demo- .
+•Bucket names must not end with the suﬃx -s3alias . This suﬃx is reserved for access point 
+alias names. For more information, see Access point aliases.
+•Bucket names must not end with the suﬃx --ol-s3. This suﬃx is reserved for Object Lambda 
+Access Point alias names. For more information, see How to use a bucket-style alias for your S3 
+bucket Object Lambda Access Point.
+•Bucket names must not end with the suﬃx .mrap. This suﬃx is reserved for Multi-Region Access 
+Point names. For more information, see Rules for naming Amazon S3 Multi-Region Access Points.
+•Bucket names must not end with the suﬃx --x-s3. This suﬃx is reserved for directory buckets. 
+For more information, see Directory bucket naming rules.
+•Bucket names must not end with the suﬃx --table-s3 . This suﬃx is reserved for S3 Tables 
+buckets. For more information, see Amazon S3 table bucket, table, and namespace naming rules.
+•Bucket names can only end with the suﬃx -an when you are creating buckets in your account 
+regional namespace. For more information, see Namespaces for general purpose buckets.
+General purpose buckets naming rules API Version 2006-03-01 72
+
+•Buckets used with Amazon S3 Transfer Acceleration can't have periods (.) in their names. For 
+more information about Transfer Acceleration, see Conﬁguring fast, secure ﬁle transfers using 
+Amazon S3 Transfer Acceleration.
+Important
+•General purpose buckets exist in a global namespace, which means that each bucket 
+name must be unique across all AWS accounts in all the AWS Regions within a partition. 
+A partition is a grouping of Regions. AWS currently has four partitions: aws (Standard 
+Regions), aws-cn (China Regions), aws-us-gov  (AWS GovCloud (US)), and aws-eusc
+(European Sovereign Cloud). After creating a general purpose bucket in the shared global 
+namespace, that bucket name is unavailable for anyone else to create within a partition. 
+When a bucket owner deletes their bucket, the bucket name might become available 
+again in the global namespace for anyone to re-create. However, the name might not 
+become available immediately, and in some cases might not become available again at 
+all.
+•A bucket name in the shared global namespace can't be used by another AWS account in 
+the same partition until the bucket is deleted. After you delete a bucket in the shared 
+global namespace, be aware that another AWS account in the same partition can 
+use the same bucket name for a new bucket and can therefore potentially receive 
+requests intended for the deleted bucket. If you want to prevent this, or if you want 
+to continue to use the same bucket name, don't delete the bucket. We recommend that 
+you empty the bucket and keep it, and instead, block any bucket requests as needed. For 
+buckets no longer in active use, we recommend emptying the bucket of all objects to 
+minimize costs while retaining the bucket itself.
+•We recommend creating buckets in your account regional namespace for assurance that 
+only your account can ever own these bucket names.
+•When you create a general purpose bucket, you choose its name and the AWS Region 
+to create it in. After you create a general purpose bucket, you can't change its name or 
+Region.
+•Don't include sensitive information in the bucket name. The bucket name is visible in the 
+URLs that point to the objects in the bucket.
+General purpose buckets naming rules API Version 2006-03-01 73
+
+Note
+Before March 1, 2018, buckets created in the US East (N. Virginia) Region could have names 
+that were up to 255 characters long and included uppercase letters and underscores. 
+Beginning March 1, 2018, new buckets in US East (N. Virginia) must conform to the same 
+rules applied in all other Regions.
+Account regional namespace naming rules
+Although Amazon S3 general purpose buckets exist in a shared global namespace, you can 
+optionally create buckets in your account regional namespace. The account regional namespace is 
+a reserved subdivision of the global bucket namespace where only your account can create general 
+purpose buckets. New general purpose buckets created in your account regional namespace are 
+unique to your account and can never be re-created by another account. These buckets support all 
+the S3 features and AWS services that general purpose buckets in the shared global namespace 
+already support, your applications require no change to interact with buckets in your account 
+regional namespace.
+General purpose buckets in your account regional namespace must follow a speciﬁc naming 
+convention. These buckets consist of a bucket name preﬁx that you create, and a suﬃx that 
+contains your 12-digit AWS account ID, the AWS Region code, and ends with -an.
+bucket-name-prefix -accountId-region-an
+For example, the following general purpose bucket exists in the account regional namespace for 
+AWS account 111122223333 in the us-west-2 Region:
+amzn-s3-demo-bucket -111122223333-us-west-2-an
+To create bucket in your account regional namespace, you make a CreateBucket  request and 
+specify the x-amz-bucket-namespace  request header with the value set to account-regional
+along with specifying an account regional namespace formatted bucket name: customer-
+chosen-name -AWS-Account-ID-AWS-Region-an . For example, you could specify to create a 
+bucket named: amzn-s3-demo-bucket -111122223333-us-east-1-an  where your account 
+regional suﬃx is -111122223333-us-east-1-an . For more information on account regional 
+namespaces, see Namespaces for general purpose buckets.
+Account regional namespace naming rules API Version 2006-03-01 74

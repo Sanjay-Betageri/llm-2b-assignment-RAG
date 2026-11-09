@@ -1,0 +1,2419 @@
+User Guide
+AWS Identity and Access Management
+Copyright © 2026 Amazon Web Services, Inc. and/or its aﬃliates. All rights reserved.
+
+Require human users to use federation with an identity provider to access AWS using 
+
+Use IAM Access Analyzer to validate your IAM policies for secure and functional 
+
+When I try to launch an instance, I don't see the role in the Amazon EC2 console IAM Role
+When I attempt to call the AddRoleToInstanceProfile , I get an AccessDenied
+Amazon EC2: When I try to launch an instance with a role, I get an AccessDenied  error4380
+
+I'm signed in as an AWS account root user. Why can't I access an Amazon S3 bucket under 
+Unable to set assertion encryption mode to Required because no private key is provided4388
+
+What is IAM?
+AWS Identity and Access Management (IAM) is a web service that helps you securely control access 
+to AWS resources. With IAM, you can manage permissions that control which AWS resources 
+users can access. You use IAM to control who is authenticated (signed in) and authorized (has 
+permissions) to use resources. IAM provides the infrastructure necessary to control authentication 
+and authorization for your AWS accounts.
+For instructions on setting up your AWS account and creating identities, see Getting started with 
+IAM.
+Identities
+When you create an AWS account, you begin with one sign-in identity called the AWS account root 
+user that has complete access to all AWS services and resources. We strongly recommend that you 
+don't use the root user for everyday tasks. For tasks that require root user credentials, see Tasks 
+that require root user credentials in the IAM User Guide .
+Use IAM to set up other identities in addition to your root user, such as administrators, analysts, 
+and developers, and grant them access to the resources they need to succeed in their tasks.
+Access management
+After a user is set up in IAM, they use their sign-in credentials to authenticate with AWS. 
+Authentication is provided by matching the sign-in credentials to a principal (an IAM user, AWS 
+STS federated principal, IAM role, or application) trusted by the AWS account. Next, a request is 
+made to grant the principal access to resources. Access is granted in response to an authorization 
+request if the user has been given permission to the resource. For example, when you ﬁrst sign in 
+to the console and are on the console Home page, you aren't accessing a speciﬁc service. When 
+you select a service, the request for authorization is sent to that service and it looks to see if your 
+identity is on the list of authorized users, what policies are being enforced to control the level of 
+access granted, and any other policies that might be in eﬀect. Authorization requests can be made 
+by principals within your AWS account or from another AWS account that you trust.
+Once authorized, the principal can take action or perform operations on resources in your AWS 
+account. For example, the principal could launch a new Amazon Elastic Compute Cloud instance, 
+modify IAM group membership, or delete Amazon Simple Storage Service buckets.
+
+Tip
+AWS Skill Builder provides a 10-minute video introduction to IAM:
+Introduction to AWS Identity and Access Management on the AWS Skill Builder website.
+Service availability
+IAM, like many other AWS services, is eventually consistent. IAM achieves high availability by 
+replicating data across multiple servers within Amazon's data centers around the world. If a request 
+to change some data is successful, the change is committed and safely stored. However, the 
+change must be replicated across IAM, which can take some time. Such changes include creating 
+or updating users, groups, roles, or policies. We recommend that you do not include such IAM 
+changes in the critical, high-availability code paths of your application. Instead, make IAM changes 
+in a separate initialization or setup routine that you run less frequently. Also, be sure to verify 
+that the changes have been propagated before production workﬂows depend on them. For more 
+information, see Changes that I make are not always immediately visible.
+Service cost information
+AWS Identity and Access Management (IAM), AWS IAM Identity Center and AWS Security Token 
+Service (AWS STS) are features of your AWS account oﬀered at no additional charge. You are 
+charged only when you access other AWS services using your IAM users or AWS STS temporary 
+security credentials.
+IAM Access Analyzer external access analysis is oﬀered at no additional charge. However, you will 
+incur charges for unused access analysis and customer policy checks. For a complete list of charges 
+and prices for IAM Access Analyzer, see IAM Access Analyzer pricing.
+For information about the pricing of other AWS products, see the Amazon Web Services pricing 
+page .
+Integration with other AWS services
+IAM is integrated with many AWS services. For a list of AWS services that work with IAM and the 
+IAM features the services support, see AWS services that work with IAM.
+
+Why should I use IAM?
+AWS Identity and Access Management is a powerful tool for securely managing access to your 
+AWS resources. One of the primary beneﬁts of using IAM is the ability to grant shared access to 
+your AWS account. Additionally, IAM allows you to assign granular permissions, enabling you 
+to control exactly what actions diﬀerent users can perform on speciﬁc resources. This level of 
+access control is crucial for maintaining the security of your AWS environment. IAM also provides 
+several other security features. You can add multi-factor authentication (MFA) for an extra layer 
+of protection, and leverage identity federation to seamlessly integrate users from your corporate 
+network or other identity providers. IAM also integrates with AWS CloudTrail, providing detailed 
+logging and identity information to support auditing and compliance requirements. By taking 
+advantage of these capabilities, you can help ensure that access to your critical AWS resources is 
+tightly controlled and secure.
+Shared access to your AWS account
+You can grant other people permission to administer and use resources in your AWS account 
+without having to share your password or access key.
+Granular permissions
+You can grant diﬀerent permissions to diﬀerent people for diﬀerent resources. For example, 
+you might allow some users complete access to Amazon Elastic Compute Cloud (Amazon EC2), 
+Amazon Simple Storage Service (Amazon S3), Amazon DynamoDB, Amazon Redshift, and other 
+AWS services. For other users, you can allow read-only access to just some Amazon S3 buckets, or 
+permission to administer just some Amazon EC2 instances, or to access your billing information but 
+nothing else.
+Secure access to AWS resources for applications that run on Amazon 
+EC2
+You can use IAM features to securely provide credentials for applications that run on EC2 instances. 
+These credentials provide permissions for your application to access other AWS resources. 
+Examples include S3 buckets and DynamoDB tables.
+Multi-factor authentication (MFA)
+You can add two-factor authentication to your account and to individual users for extra security. 
+With MFA you or your users must provide not only a password or access key to work with your 
+Why should I use IAM? 3
+
+account, but also a code from a specially conﬁgured device. If you already use a FIDO security key 
+with other services, and it has an AWS supported conﬁguration, you can use WebAuthn for MFA 
+security. For more information, see Supported conﬁgurations for using passkeys and security keys
+Identity federation
+You can allow users who already have passwords elsewhere—for example, in your corporate 
+network or with an internet identity provider—to access your AWS account. These users are 
+granted temporary credentials that comply with IAM best practice recommendations. Using 
+identity federation enhances the security of your AWS account.
+Identity information for assurance
+If you use AWS CloudTrail, you receive log records that include information about those who made 
+requests for resources in your account. That information is based on IAM identities.
+PCI DSS Compliance
+IAM supports the processing, storage, and transmission of credit card data by a merchant or 
+service provider, and has been validated as being compliant with Payment Card Industry (PCI) Data 
+Security Standard (DSS). For more information about PCI DSS, including how to request a copy of 
+the AWS PCI Compliance Package, see PCI DSS Level 1.
+When do I use IAM?
+AWS Identity and Access Management is a core infrastructure service that provides the foundation 
+for access control based on identities within AWS. You use IAM every time you access your AWS 
+account. The way you use IAM will depend on the speciﬁc responsibilities and job functions within 
+your organization. Users of AWS services use IAM to access the AWS resources required for their 
+day-to-day work, with administrators granting the appropriate permissions. IAM administrators, 
+on the other hand, are responsible for managing IAM identities and writing policies to control 
+access to resources. Regardless of your role, you interact with IAM whenever you authenticate 
+and authorize access to AWS resources. This could involve signing in as an IAM user, assuming 
+an IAM role, or leveraging identity federation for seamless access. Understanding the various 
+IAM capabilities and use cases is crucial for eﬀectively managing secure access to your AWS 
+environment. When it comes to creating policies and permissions, IAM provides a ﬂexible and 
+granular approach. You can deﬁne trust policies to control which principals can assume a role, 
+Identity federation 4
+
+in addition to identity-based policies that specify the actions and resources a user or role can 
+access. By conﬁguring these IAM policies, you can help ensure that users and applications have the 
+appropriate level of permissions to perform their required tasks.
+When you are performing diﬀerent job functions
+AWS Identity and Access Management is a core infrastructure service that provides the foundation 
+for access control based on identities within AWS. You use IAM every time you access your AWS 
+account.
+How you use IAM diﬀers, depending on the work that you do in AWS.
+•Service user – If you use an AWS service to do your job, then your administrator provides you 
+with the credentials and permissions that you need. As you use more advanced features to do 
+your work, you might need additional permissions. Understanding how access is managed can 
+help you request the right permissions from your administrator.
+•Service administrator – If you're in charge of an AWS resource at your company, you probably 
+have full access to IAM. It's your job to determine which IAM features and resources your service 
+users should access. You must then submit requests to your IAM administrator to change the 
+permissions of your service users. Review the information on this page to understand the basic 
+concepts of IAM.
+•IAM administrator – If you're an IAM administrator, you manage IAM identities and write policies 
+to manage access to IAM.
+When you are authorized to access AWS resources
+Authentication is how you sign in to AWS using your identity credentials. You must be 
+authenticated as the AWS account root user, an IAM user, or by assuming an IAM role.
+You can sign in as a federated identity using credentials from an identity source like AWS 
+IAM Identity Center (IAM Identity Center), single sign-on authentication, or Google/Facebook 
+credentials. For more information about signing in, see How to sign in to your AWS account in the
+AWS Sign-In User Guide.
+For programmatic access, AWS provides an SDK and CLI to cryptographically sign requests. For 
+more information, see AWS Signature Version 4 for API requests in the IAM User Guide .
+When you are performing diﬀerent job functions 5
+
+When you sign-in as an IAM user
+An IAM user  is an identity with speciﬁc permissions for a single person or application. We 
+recommend using temporary credentials instead of IAM users with long-term credentials. For more 
+information, see Require human users to use federation with an identity provider to access AWS 
+using temporary credentials in the IAM User Guide .
+An IAM group  speciﬁes a collection of IAM users and makes permissions easier to manage for large 
+sets of users. For more information, see Use cases for IAM users  in the IAM User Guide .
+When you assume an IAM role
+An IAM role  is an identity with speciﬁc permissions that provides temporary credentials. You can 
+assume a role by switching from a user to an IAM role (console) or by calling an AWS CLI or AWS 
+API operation. For more information, see Methods to assume a role in the IAM User Guide .
+IAM roles are useful for federated user access, temporary IAM user permissions, cross-account 
+access, cross-service access, and applications running on Amazon EC2. For more information, see
+Cross account resource access in IAM in the IAM User Guide .
+When you create policies and permissions
+You grant permissions to a user by creating a policy, which is a document that lists the actions that 
+a user can perform and the resources those actions can aﬀect. Any actions or resources that are not 
+explicitly allowed are denied by default. Policies can be created and attached to principals (users, 
+groups of users, roles assumed by users, and resources).
+You can use these policies with an IAM role:
+•Trust policy – Deﬁnes which principal  can assume the role, and under which conditions. A trust 
+policy is a speciﬁc type of resource-based policy for IAM roles. A role can have only one trust 
+policy.
+•Identity-based policies (inline and managed) – These policies deﬁne the permissions that the 
+user of the role is able to perform (or is denied from performing), and on which resources.
+Use the Example IAM identity-based policies to help you deﬁne permissions for your IAM identities. 
+After you ﬁnd the policy that you need, choose view the policy to view the JSON for the policy. You 
+can use the JSON policy document as a template for your own policies.
+When you sign-in as an IAM user 6
+
+Note
+If you are using IAM Identity Center to manage your users, you assign permission sets in 
+IAM Identity Center instead of attaching a permissions policy to a principal. When you 
+assign a permission set to a group or user in AWS IAM Identity Center, IAM Identity Center 
+creates corresponding IAM roles in each account, and attaches the policies speciﬁed in 
+the permission set to those roles. IAM Identity Center manages the role, and allows the 
+authorized users you’ve deﬁned to assume the role. If you modify the permission set, 
+IAM Identity Center ensures that the corresponding IAM policies and roles are updated 
+accordingly.
+You can also use account access manager — an IAM feature that lets you assign existing 
+IAM roles you create and manage to IAM Identity Center users and groups, giving you 
+access to the full IAM role feature set. You can use it alongside permission sets or on its 
+own.
+For more information about IAM Identity Center, see What is IAM Identity Center? in the
+AWS IAM Identity Center User Guide.
+How do I manage IAM?
+Managing AWS Identity and Access Management within an AWS environment involves leveraging 
+a variety of tools and interfaces. The most common method is through the AWS Management 
+Console, a web-based interface that allows you to perform a wide range of IAM administrative 
+tasks, from creating users and roles to conﬁguring permissions.
+For users more comfortable with command line interfaces, AWS provides two sets of command 
+line tools - the AWS Command Line Interface and the AWS Tools for Windows PowerShell. These 
+allow you to issue IAM-related commands directly from the terminal, often more eﬃciently than 
+navigating the console. Additionally, AWS CloudShell enables you to run CLI or SDK commands 
+directly from your web browser, using the permissions associated with your console sign-in.
+Beyond the console and command line, AWS oﬀers Software Development Kits (SDKs) for various 
+programming languages, enabling you to integrate IAM management functionality directly into 
+your applications. Alternatively, you can access IAM programmatically using the IAM Query API, 
+which allows you to issue HTTPS requests directly to the service. Leveraging these diﬀerent 
+management approaches provides you with the ﬂexibility to incorporate IAM into your existing 
+workﬂows and processes.
+How do I manage IAM? 7
+
+Use the AWS Management Console
+The AWS Management Console is a web application that comprises and refers to a broad collection 
+of service consoles for managing AWS resources. When you ﬁrst sign in, you see the console home 
+page. The home page provides access to each service console and oﬀers a single place to access the 
+information for performing your AWS related tasks. Which services and applications are available 
+to you after signing in to the console depend on which AWS resources you have permission to 
+access. You can be granted permissions to resources either through assuming a role, being a 
+member of a group that has been granted permissions, or being explicitly granted permission. For 
+a stand-alone AWS account, the root user or IAM administrator conﬁgures access to resources. For 
+AWS Organizations, the management account or delegated administrator conﬁgures access to 
+resources.
+If you plan to have people using the AWS Management Console to manage AWS resources, we 
+recommend conﬁguring users with temporary credentials as a security best practice. IAM users 
+that have assumed a role, federated principals, and users in IAM Identity Center have temporary 
+credentials, while the IAM user and root user have long-term credentials. Root user credentials 
+provide full access to the AWS account, while other users have credentials that provide access to 
+the resources granted them by IAM policies.
+The sign-in experience is diﬀerent for the diﬀerent types of AWS Management Console users.
+•IAM users and the root user sign-in from the main AWS sign-in URL (https://
+signin.aws.amazon.com). Once they sign in they have access to the resources in the account to 
+which they have been granted permission.
+To sign in as the root user you must have the root user email address and password.
+To sign in as an IAM user you must have the AWS account number or alias, the IAM user name, 
+and the IAM user password.
+We recommend that you restrict IAM users in your account to speciﬁc situations that require 
+long-term credentials, such as for emergency access, and that you use the root user only for
+tasks that require root user credentials.
+For convenience, the AWS sign-in page uses a browser cookie to remember the IAM user name 
+and account information. The next time the user goes to any page in the AWS Management 
+Console, the console uses the cookie to redirect the user to the account sign-in page.
+Sign out of the console when you ﬁnish your session to prevent reuse of your previous sign in.
+Use the AWS Management Console 8
+
+•IAM Identity Center users sign in using a speciﬁc AWS access portal that's unique to their 
+organization. Once they sign in they can choose which account or application to access. If 
+they choose to access an account, they choose which permission set they want to use for the 
+management session.
+•OIDC and SAML federated principals managed in an external identity provider linked to an AWS 
+account sign-in using a custom enterprise access portal. The AWS resources available to users are 
+dependent upon the policies selected by their organization.
+Note
+To provide an additional level of security, root user, IAM users, and users in IAM Identity 
+Center can have multi-factor authentication (MFA) veriﬁed by AWS before granting access 
+to AWS resources. When MFA is enabled, you must also have access to the MFA device to 
+sign in.
+To learn more about how diﬀerent users sign-in to the management console, see Sign in to the 
+AWS Management Console in the AWS Sign-In User Guide.
+AWS Command Line Tools
+You can use the AWS command line tools to issue commands at your system's command line to 
+perform IAM and AWS tasks. Using the command line can be faster and more convenient than the 
+console. The command line tools are also useful if you want to build scripts that perform AWS 
+tasks.
+AWS provides two sets of command line tools: the AWS Command Line Interface (AWS CLI) and the
+AWS Tools for Windows PowerShell. For information about installing and using the AWS CLI, see 
+the AWS Command Line Interface User Guide. For information about installing and using the Tools 
+for Windows PowerShell, see the AWS Tools for PowerShell User Guide.
+After signing in to the console, you can use AWS CloudShell from your browser to run CLI or SDK 
+commands. The permissions for accessing AWS resources are based on the credentials you used to 
+sign-in to the console. Depending on your experience, you may ﬁnd the CLI to be a more eﬃcient 
+method of managing your AWS account. For more information, see Use AWS CloudShell to work 
+with AWS Identity and Access Management
+AWS Command Line Tools 9
+
+AWS Command Line Interface (CLI) and Software Development Kits (SDKs)
+IAM Identity Center and IAM users use diﬀerent methods to authenticate their credentials when 
+they authenticate through the CLI or the application interfaces (APIs) in the associated SDKs.
+Credentials and conﬁguration settings are located in multiple places, such as the system or user 
+environment variables, local AWS conﬁguration ﬁles, or explicitly declared on the command line as 
+a parameter. Certain locations take precedence over others.
+Both IAM Identity Center and IAM provide access keys that can be used with the CLI or SDK. IAM 
+Identity Center access keys are temporary credentials that can be automatically refreshed and are 
+recommended over the long-term access keys associated with IAM users.
+To manage your AWS account using the CLI or SDK you can use AWS CloudShell from your browser. 
+If you use CloudShell to run CLI or SDK commands you must ﬁrst sign-in to the console. The 
+permissions for accessing AWS resources are based on the credentials you used to sign-in to the 
+console. Depending on your experience, you may ﬁnd the CLI to be a more eﬃcient method of 
+managing your AWS account.
+For application development, you can download the CLI or SDK to your computer and sign-in 
+from the command prompt or a Docker window. In this scenario, you conﬁgure authentication and 
+access credentials as part of the CLI script or SDK application. You can conﬁgure programmatic 
+access to resources in diﬀerent ways, depending on the environment and the access available to 
+you.
+•Recommended options for authenticating local code with AWS service are IAM Identity Center 
+and IAM Roles Anywhere
+•Recommended options for authenticating code running within an AWS environment are to use 
+IAM roles or use IAM Identity Center credentials.
+When signing in using the AWS access portal, you can get short-term credentials from the start 
+page where you choose your permission set. These credentials have a deﬁned duration and 
+don't automatically refresh. If you want to use these credentials, after signing in to the AWS 
+portal, choose the AWS account and then choose the permissions set. Select Command line or 
+programmatic access to view the options you can use to access AWS resources programmatically 
+or from the CLI. For more information about these methods, see Getting and refreshing temporary 
+credentials in the IAM Identity Center User Guide . These credentials are often used during 
+application development to quickly test code.
+AWS Command Line Tools 10
+
+We recommend using IAM Identity Center credentials that automatically refresh when automating 
+access to your AWS resources. If you have conﬁgured users and permission sets in IAM Identity 
+Center you use the aws configure sso  command to use a command-line wizard that will help 
+you identify the credentials available to you and store them in a proﬁle. For more information 
+about conﬁguring your proﬁle, see Conﬁgure your proﬁle with the aws configure sso  wizard in 
+the AWS Command Line Interface User Guide for Version 2.
+Note
+Many sample applications use long-term access keys associated with IAM users or root 
+user. You should only use long-term credentials within a sandbox environment as part of a 
+learning exercise. Review the alternatives to long-term access keys and plan to transition 
+your code to use alternative credentials, such as IAM Identity Center credentials or IAM 
+roles, as soon as possible. After transitioning your code, delete the access keys.
+To learn more about conﬁguring the CLI, see Install or update the latest version of the AWS 
+CLI in the AWS Command Line Interface User Guide for Version 2 and Authentication and access 
+credentials in the AWS Command Line Interface User Guide
+To learn more about conﬁguring the SDK, see IAM Identity Center authentication in the AWS SDKs 
+and Tools Reference Guide and IAM Roles Anywhere in the AWS SDKs and Tools Reference Guide.
+Use the AWS SDKs
+AWS provides SDKs (software development kits) that consist of libraries and sample code for 
+various programming languages and platforms (Java, Python, Ruby, .NET, iOS, Android, etc.). The 
+SDKs provide a convenient way to create programmatic access to IAM and AWS. For example, the 
+SDKs take care of tasks such as cryptographically signing requests, managing errors, and retrying 
+requests automatically. For information about the AWS SDKs, including how to download and 
+install them, see the Tools for Amazon Web Services page.
+Use the IAM Query API
+You can access IAM and AWS programmatically by using the IAM Query API, which lets you issue 
+HTTPS requests directly to the service. When you use the Query API, you must include code to 
+digitally sign requests using your credentials. For more information, see Calling the IAM API using 
+HTTP query requests and the IAM API Reference.
+Use the AWS SDKs 11
+
+How IAM works
+AWS Identity and Access Management provides the infrastructure necessary to control 
+authentication and authorization for your AWS account.
+First, a human user or an application uses their sign-in credentials to authenticate with AWS. IAM 
+matches the sign-in credentials to a principal (an IAM user, AWS STS federated user principal, IAM 
+role, or application) trusted by the AWS account and authenticates the principal to access AWS.
+Next, IAM makes a request to grant the principal access to resources. IAM grants or denies access 
+in response to an authorization request. For example, when you ﬁrst sign in to the console and are 
+on the console Home page, you aren't accessing a speciﬁc service. When you select a service, you 
+send an authorization request to IAM for that service. IAM veriﬁes that your identity is on the list 
+of authorized users, determines what policies control the level of access granted, and evaluates 
+any other policies that might be in eﬀect. Principals within your AWS account or from another AWS 
+account that you trust can make authorization requests.
+Once authorized, the principal can perform actions or operations on resources in your AWS 
+account. For example, the principal could launch a new Amazon Elastic Compute Cloud instance, 
+modify IAM group membership, or delete Amazon Simple Storage Service buckets. The following 
+diagram illustrates this process through the IAM infrastructure:
+How IAM works 12
+
+Components of a request
+When a principal tries to use the AWS Management Console, the AWS API, or the AWS CLI, that 
+principal sends a request  to AWS. The request includes the following information:
+•Actions or operations – The actions or operations that the principal wants to perform, such as 
+an action in the AWS Management Console, or an operation in the AWS CLI or AWS API.
+•Resources – The AWS resource object upon which the principal requests to perform an action or 
+operation.
+•Principal  – The person or application that used an entity (user or role) to send the request. 
+Information about the principal includes the permission policies.
+Components of a request 13
+
+•Environment data – Information about the IP address, user agent, SSL enabled status, and the 
+timestamp.
+•Resource data – Data related to the resource requested, such as a DynamoDB table name or a 
+tag on an Amazon EC2 instance.
+AWS gathers the request information into a request context, which IAM evaluates to authorize the 
+request.
+How principals are authenticated
+A principal signs in to AWS using their credentials which IAM authenticates to permit the principal 
+to send a request to AWS. Some services, such as Amazon S3 and AWS STS, allow speciﬁc requests 
+from anonymous users. However, they're the exception to the rule. Each type of user goes through 
+authentication.
+•Root user – Your sign in credentials used for authentication are the email address you used to 
+create the AWS account and the password you speciﬁed at that time.
+•Federated principal – Your identity provider authenticates you and passes your credentials 
+to AWS, you don't have to sign-in directly to AWS. Both IAM Identity Center and IAM support 
+identity federation.
+•Users in AWS IAM Identity Center directory(not federated) – Users created directly in the IAM 
+Identity Center default directory sign in using the AWS access portal and provide your username 
+and password.
+•IAM user  – You sign-in by providing your account ID or alias, your username, and password. To 
+authenticate workloads from the API or AWS CLI, you might use temporary credentials through 
+assuming a role or you might use long-term credentials by providing your access key and secret 
+key.
+To learn more about the IAM entities, see IAM users  and IAM roles.
+AWS recommends that you use multi-factor authentication (MFA) with all users to increase the 
+security of your account. To learn more about MFA, see AWS Multi-factor authentication in IAM.
+Authorization and permission policy basics
+Authorization refers to the principal having the required permissions to complete their request. 
+During authorization, IAM identiﬁes the policies that apply to the request using values from the 
+How principals are authenticated 14
+
+request context. It then uses the policies to determine whether to allow or deny the request. IAM 
+stores most permission policies as JSON documents that specify the permissions for principal 
+entities.
+There are several types of policies that can aﬀect an authorization request. To provide your users 
+with permissions to access the AWS resources in your account, you can use identity-based policies. 
+Resource-based policies can grant cross-account access. To make a request in a diﬀerent account, a 
+policy in the other account must allow you to access the resource and the IAM entity that you use 
+to make the request must have an identity-based policy that allows the request.
+IAM checks each policy that applies to the context of your request. IAM policy evaluation uses an
+explicit deny, which means that if a single permissions policy includes a denied action, IAM denies 
+the entire request and stops evaluating. Because requests are denied by default , the applicable 
+permissions policies must allow every part of your request for IAM to authorize your request. The 
+evaluation logic for a request within a single account follows these basic rules:
+•By default, all requests are denied. (In general, requests made using the AWS account root user 
+credentials for resources in the account are always allowed.)
+•An explicit allow in any permissions policy (identity-based or resource-based) overrides this 
+default.
+•The existence of an AWS Organizations service control policy (SCP) or resource control policy 
+(RCP), IAM permissions boundary, or a session policy overrides the allow. If one or more of these 
+policy types exists, they must all allow the request. Otherwise, it's implicitly denied. For more 
+information on SCPs and RCPs, see Authorization policies in AWS Organizations in the AWS 
+Organizations User Guide .
+•An explicit deny in any policy overrides any allows in any policy.
+To learn more, see Policy evaluation logic.
+After IAM authenticates and authorizes the principal, IAM approves the actions or operations in 
+their request by evaluating the permission policy that applies to the principal. Each AWS service 
+deﬁnes the actions (operations) they support, and include things that you can do to a resource, 
+such as viewing, creating, editing, and deleting that resource. The permission policy that applies to 
+the principal must include the necessary actions to perform an operation. To learn more about how 
+IAM evaluates permission policies, see the section called “Policy evaluation logic”.
+The service deﬁnes a set of actions that a principal can perform on each resource. When creating 
+permission policies, make sure to include the actions that you want the user to be able to perform. 
+Authorization and permission policy basics 15
+
+For example, IAM supports over 40 actions for a user resource, including the following basic 
+actions:
+•CreateUser
+•DeleteUser
+•GetUser
+•UpdateUser
+In addition, you can specify conditions in your permission policy that provide access to resources 
+when the request meets the speciﬁed conditions. For example, you might want a policy statement 
+to take eﬀect after a speciﬁc date or to control access when a speciﬁc value appears in an API. To 
+specify conditions, you use the Condition  element of a policy statement.
+After IAM approves the operations in a request, the principal can work with the related resources 
+in your account. A resource is an object that exists within a service. Examples include an Amazon 
+EC2 instance, an IAM user, and an Amazon S3 bucket. If the principal creates a request to perform 
+an action on a resource that isn't included in the permission policy, the service denies the request. 
+For example, if you have permission to delete an IAM role but request to delete an IAM group, 
+the request fails if you don't have permission to delete IAM groups. To learn more about which 
+actions, resources, and condition keys the diﬀerent AWS services support, see Actions, Resources, 
+and Condition Keys for AWS Services.
+Compare IAM identities and credentials
+The identities managed in AWS Identity and Access Management are IAM users, IAM roles, and IAM 
+groups. These identities are in addition to your root user that AWS created along with your AWS 
+account.
+We strongly recommend that you do not use the root user for your everyday tasks, even the 
+administrative ones. Instead, provision additional users and grant them the permissions required 
+to perform the necessary tasks. You can add users either by adding people to your IAM Identity 
+Center directory, federating an external identity provider with either IAM Identity Center or IAM or 
+creating least privilege IAM users.
+For additional security, we recommend centralizing root access to help you centrally secure the root 
+user credentials of your AWS accounts managed using AWS Organizations. Centrally manage root 
+access for member accounts lets you centrally remove and prevent long-term root user credential 
+Compare IAM identities and credentials 16
+
+recovery, preventing unintended root access at scale. After you enable centralized root access, you 
+can assume a privileged session to perform actions on member accounts.
+After you have set up your users, you can give access to your AWS account to speciﬁc people and 
+provide them permissions to access resources.
+As a best practice, AWS recommends that you require human users to assume an IAM role to access 
+AWS so that they're using temporary credentials. If you are managing identities in the IAM Identity 
+Center directory or using federation with an identity provider you are following best practices.
+Terms
+These terms are commonly used when working with IAM identities:
+IAM Resource
+The IAM service stores these resources. You can add, edit, and remove them from the Console.
+•IAM user
+•IAM group
+•IAM role
+•Permission policy
+•Identity-provider object
+IAM Entity
+IAM resources that AWS uses for authentication. Specify the entity as a Principal in a resource-
+based policy.
+•IAM user
+•IAM role
+IAM Identity
+The IAM resource that's authorized in policies to perform actions and to access resources. 
+Identities include IAM users, IAM groups, and IAM roles.
+Terms 17
+
+Principals
+An AWS account root user, IAM user or an IAM role that can make a request for an action 
+or operation on an AWS resource. Principals include human users, workloads, federated 
+principals, and assumed roles. After authentication, IAM grants the principal either permanent 
+or temporary credentials to make requests to AWS, depending on the principal type.
+Human users  are also known as human identities , such as the people, administrators, 
+developers, operators, and consumers of your applications.
+Workloads are a collection of resources and code that delivers business value, such as an 
+application, process, operational tools, and other components.
+Federated principals are users whose identity and credentials are managed by another identity 
+provider, such as Active Directory, Okta, or Microsoft Entra.
+IAM roles  are an IAM identity that you can create in your account that has speciﬁc permissions 
+that determine what the identity can and can't do. However, instead of being uniquely 
+associated with one person, a role is intended to be assumable by anyone who needs it.
+IAM grants IAM users and the root user long-term credentials and IAM roles temporary 
+credentials. users in AWS IAM Identity Center, OIDC and SAML federated principals assume IAM 
+Terms 18
+
+roles when they sign-in to AWS, which grants them temporary credentials. As a best practice, 
+we recommend that you require human users and workloads to access AWS resources using 
+temporary credentials.
+Diﬀerence between IAM users and users in IAM Identity Center
+IAM users  aren't separate accounts; they're individual users within your account. Each user has their 
+own password for access to the AWS Management Console. You can also create an individual access 
+key for each user so that the user can make programmatic requests to work with resources in your 
+account.
+IAM users and their access keys have long-term credentials to your AWS resources. The primary 
+use for IAM users is to give workloads that can't use IAM roles the ability to make programmatic 
+requests to AWS services using the API or CLI.
+Note
+For scenarios in which you need IAM users with programmatic access and long-term 
+credentials, we recommend that you update access keys when needed. For more 
+information, see Update access keys.
+Workforce identities (people) are users in AWS IAM Identity Center that have diﬀerent permission 
+needs depending on the role they're performing and can work in various AWS accounts across an 
+organization. If you have use cases that require access keys, you can support those use cases with 
+users in AWS IAM Identity Center. People who sign-in through the AWS access portal can obtain 
+access keys with short-term credentials to your AWS resources. For centralized access management, 
+we recommend that you use AWS IAM Identity Center (IAM Identity Center) to manage access 
+to your accounts and permissions within those accounts. IAM Identity Center is automatically 
+conﬁgured with an Identity Center directory as your default identity source where you can add 
+people and groups, and assign their level of access to your AWS resources. For more information, 
+see What is AWS IAM Identity Center in the AWS IAM Identity Center User Guide.
+The main diﬀerence between these two types of users is that users in IAM Identity Center 
+automatically assume an IAM role when they sign-in to AWS before they access the management 
+console or AWS resources. IAM roles grant temporary credentials each time the user signs-in to 
+AWS. For IAM users to sign in using an IAM role they must have permission to assume and switch 
+Diﬀerence between IAM users and users in IAM Identity Center 19
+
+roles and they must explicitly choose to switch to the role they want to assume after accessing the 
+AWS account.
+Federate users from an existing identity source
+If the users in your organization are already authenticated when they sign in to your corporate 
+network, you don't have to create separate IAM users or users in IAM Identity Center for them. 
+Instead, you can federate  those user identities into AWS using either IAM or AWS IAM Identity 
+Center. OIDC and SAML federated principals assume an IAM role that gives them permissions to 
+access speciﬁc resources. For more information about roles, see Roles terms and concepts.
+Federation is useful in these cases:
+•Your users already exist in a corporate directory.
+If your corporate directory is compatible with Security Assertion Markup Language 2.0 (SAML 
+2.0), you can conﬁgure your corporate directory to provide single-sign on (SSO) access to the 
+AWS Management Console for your users. For more information, see Common scenarios for 
+temporary credentials.
+If your corporate directory isn't compatible with SAML 2.0, you can create an identity broker 
+application to provide single-sign on (SSO) access to the AWS Management Console for your 
+users. For more information, see Enable custom identity broker access to the AWS console.
+If your corporate directory is Microsoft Active Directory, you can use AWS IAM Identity Center to 
+connect a self-managed directory in Active Directory or a directory in AWS Directory Service to 
+establish trust between your corporate directory and your AWS account.
+Federate users from an existing identity source 20
+
+If you are using an external identity provider (IdP) such as Okta or Microsoft Entra to manage 
+users, you can use AWS IAM Identity Center to establish trust between your IdP and your AWS 
+account. For more information, see Connect to an external identity provider in the AWS IAM 
+Identity Center User Guide .
+•Your users already have Internet identities.
+If you are creating a mobile app or web-based app that can let users identify themselves through 
+an Internet identity provider like Login with Amazon, Facebook, Google, or any OpenID Connect 
+(OIDC) compatible identity provider, the app can use federation to access AWS. For more 
+information, see OIDC federation .
+Tip
+To use identity federation with Internet identity providers, we recommend you use
+Amazon Cognito.
+Diﬀerent methods to provide user access
+Here are the ways you can provide access to your AWS resources.
+Type of user 
+accessWhen is it used? Where is more information?
+Single sign-
+on access 
+for people, 
+such as your 
+workforce 
+users, to AWS 
+resources 
+using IAM 
+Identity 
+CenterIAM Identity Center provides 
+a central place that brings 
+together administration of 
+users and their access to AWS 
+accounts and cloud applicati 
+ons.
+You can set up an identity 
+store within IAM Identity 
+Center or you can conﬁgure 
+federation with an existing 
+identity provider (IdP). 
+Security best practices For more information about setting up IAM 
+Identity Center, see Getting Started in the
+AWS IAM Identity Center User Guide
+For more information about using MFA in IAM 
+Identity Center, see Multi-factor authentic 
+ation  in the AWS IAM Identity Center User 
+Guide
+Diﬀerent methods to provide user access 21
+
+Type of user 
+accessWhen is it used? Where is more information?
+recommend granting 
+your human users limited 
+credentials to AWS resources.
+People have an easier sign-
+in experience and you 
+maintain control over their 
+access to resources from a 
+single system. IAM Identity 
+Center supports multi-fac 
+tor authentication (MFA) for 
+additional account security.
+Federated 
+access for 
+human users, 
+such as your 
+workforce 
+users, to 
+AWS services 
+using IAM 
+identity 
+providers 
+(IdPs)IAM supports IdPs that are 
+compatible with OpenID 
+Connect (OIDC) or SAML 
+2.0 (Security Assertion 
+Markup Language 2.0). After 
+you create an IAM identity 
+provider, create one or 
+more IAM roles that can be 
+dynamically assigned to a 
+federated principal.For more information about IAM identity 
+providers and federation, see Identity 
+providers and federation into AWS.
+Diﬀerent methods to provide user access 22
+
+Type of user 
+accessWhen is it used? Where is more information?
+Cross-acc 
+ount access 
+between 
+AWS 
+accountsYou want to share access to 
+certain AWS resources with 
+users in other AWS accounts.
+Roles are the primary way to 
+grant cross-account access. 
+However, some AWS services 
+support resource-based 
+policies that allow you to 
+attach a policy directly to a 
+resource (instead of using a 
+role as a proxy).For more information about IAM roles, see IAM 
+roles.
+For more information about service-linked 
+roles, see Create a service-linked role.
+For information about which services support 
+using service-linked roles, see AWS services 
+that work with IAM. Find the services that 
+have Yes in the Service-Linked Role column. 
+To view the service-linked role documentation 
+for that service select the link associated with 
+the Yes in that column.
+Diﬀerent methods to provide user access 23
+
+Type of user 
+accessWhen is it used? Where is more information?
+Long-term 
+credentials 
+for designate 
+d IAM users 
+in your AWS 
+accountYou might have speciﬁc use 
+cases that require long-term 
+credentials with IAM users 
+in AWS. You can use IAM to 
+create these IAM users in your 
+AWS account, and use IAM 
+to manage their permissions. 
+Some use cases include the 
+following:
+•Workloads that can't use 
+IAM roles
+•Third-party AWS clients 
+that require programmatic 
+access through access keys
+•Service-speciﬁc credentia 
+ls for AWS CodeCommit or 
+Amazon Keyspaces
+•AWS IAM Identity Center 
+isn't available for your 
+account and you have no 
+other identity provider
+As a best practice in scenarios 
+in which you need IAM users 
+with programmatic access 
+and long-term credentials, we 
+recommend that you update 
+access keys when needed. For 
+more information, see Update 
+access keys.For more information about setting up an 
+IAM user, see Create an IAM user in your AWS 
+account.
+For more information about IAM user access 
+keys, see Manage access keys for IAM users.
+For more information about service-speciﬁc 
+credentials for AWS CodeCommit or Amazon 
+Keyspaces, see IAM credentials for CodeCommi 
+t: Git credentials, SSH keys, and AWS access 
+keys and Use IAM with Amazon Keyspaces (for 
+Apache Cassandra) .
+Diﬀerent methods to provide user access 24
+
+Support programmatic user access
+Users need programmatic access if they want to interact with AWS outside of the AWS 
+Management Console. The way to grant programmatic access depends on the type of user that's 
+accessing AWS:
+•If you manage identities in IAM Identity Center, the AWS APIs require a proﬁle, and the AWS 
+Command Line Interface requires a proﬁle or an environment variable.
+•If you have IAM users, the AWS APIs and the AWS Command Line Interface require access keys. 
+Whenever possible, create temporary credentials that consist of an access key ID, a secret access 
+key, and a security token that indicates when the credentials expire.
+To grant users programmatic access, choose one of the following options.
+Which user needs 
+programmatic access?Option More information
+Workforce identities
+(People and users managed in 
+IAM Identity Center)Use short-term credentials to 
+sign programmatic requests 
+to the AWS CLI or AWS APIs 
+(directly or by using the AWS 
+SDKs).For the AWS CLI, follow 
+the instructions in Getting 
+IAM role credentials for CLI 
+access in the AWS IAM Identity 
+Center User Guide .
+For the AWS APIs, follow the 
+instructions in SSO credentia 
+ls in the AWS SDKs and Tools 
+Reference Guide.
+IAM users Use short-term credentials to 
+sign programmatic requests 
+to the AWS CLI or AWS APIs 
+(directly or by using the AWS 
+SDKs).Follow the instructions in
+Using temporary credentials 
+with AWS resources.
+IAM users Use long-term credentials to 
+sign programmatic requests 
+to the AWS CLI or AWS APIs Follow the instructions in
+Managing access keys for IAM 
+users .
+Support programmatic user access 25
+
+Which user needs 
+programmatic access?Option More information
+(directly or by using the AWS 
+SDKs).
+(Not recommended)
+Federated principalsUse an AWS STS API 
+operation to create a new 
+session with temporary 
+security credentials that 
+include an access key pair and 
+a session token.For explanations of the API 
+operations, see the section 
+called “Request temporary 
+security credentials”
+How permissions and policies provide access management
+The access management portion of AWS Identity and Access Management (IAM) helps you 
+deﬁne what a principal entity can do in an account. A principal entity is a person or application 
+authenticated using an IAM entity (IAM user or IAM role). Access management is often referred 
+to as authorization . You manage access in AWS by creating policies and attaching them to IAM 
+identities (IAM users, IAM groups, or IAM roles) or AWS resources. A policy is an object in AWS 
+that, when associated with an identity or resource, deﬁnes their permissions. AWS evaluates these 
+policies when a principal uses an IAM entity (IAM user or IAM role) to make a request. Permissions 
+in the policies determine whether the request is allowed or denied. Most policies are stored in 
+AWS as JSON documents. For more information about policy types and uses, see Policies and 
+permissions in AWS Identity and Access Management.
+Policies and accounts
+If you manage a single account in AWS, then you deﬁne the permissions within that account 
+using policies. If you manage permissions across multiple accounts, it's more diﬃcult to manage 
+permissions for your IAM users. You can use IAM roles, resource-based policies, or access control 
+lists (ACLs) for cross-account permissions. However, if you own multiple accounts, we instead 
+recommend using the AWS Organizations service to help you manage those permissions. For more 
+information, see What is AWS Organizations? in the AWS Organizations User Guide.
+How permissions and policies provide access management 26
+
+Policies and users
+IAM users are identities in the AWS account. When you create an IAM user, they can't access 
+anything in your account until you give them permission. You give permissions to an IAM user 
+by creating an identity-based policy, which is a policy attached to the IAM user or an IAM group 
+to which the IAM user belongs. The following example shows a JSON policy that permits the 
+IAM user to perform all Amazon DynamoDB actions (dynamodb:* ) on the Books  table in the
+123456789012  account within the us-east-2  Region.
+JSON
+{ 
+  "Version":"2012-10-17",        
+  "Statement": { 
+    "Effect": "Allow", 
+    "Action": "dynamodb:*", 
+    "Resource": "arn:aws:dynamodb:us-east-2:123456789012:table/Books" 
+  }
+}
+After you attach this policy to your IAM user, the user has permission to perform all actions in the
+Books table of your DynamoDB instance. Most IAM users have multiple policies that combine to 
+represent their total granted permissions.
+Actions or resources that aren't explicitly allowed by a policy are denied by default. For example, if 
+the preceding policy is the single policy attached to a user, then that user can perform DynamoDB 
+actions on the Books table, but can't perform actions on other tables. Similarly, the user isn't 
+allowed to perform any actions in Amazon EC2, Amazon S3, or in any other AWS service because 
+permissions to work with those services aren't included in the policy.
+Policies and IAM groups
+You can organize IAM users into IAM groups  and attach a policy to the IAM group. In that case, 
+individual IAM users still have their own credentials, but all the IAM users in the IAM group have the 
+permissions attached to the IAM group. Use IAM groups for easier permissions management.
+Policies and users 27
+
+IAM users or IAM groups can have multiple policies attached to them that grant diﬀerent 
+permissions. In that case, the combination of policies determines the eﬀective permissions for the 
+principal. If the principal doesn't have explicit Allow permission for both an action and a resource, 
+the principal doesn't have those permissions.
+Federated user sessions and roles
+Federated principals don't have permanent identities in your AWS account the way that IAM users 
+do. To assign permissions to federated principals, you can create an entity referred to as a role and 
+deﬁne permissions for the role. When a SAML or OIDC federated principal signs in to AWS, the user 
+is associated with the role and is granted the permissions that are deﬁned in the role. For more 
+information, see Create a role for a third-party identity provider.
+Identity-based and resource-based policies
+Identity-based policies are permissions policies that you attach to an IAM identity, such as an IAM 
+user, group, or role. Resource-based policies are permissions policies that you attach to a resource 
+such as an Amazon S3 bucket or an IAM role trust policy.
+Identity-based policies control what actions the identity can perform, on which resources, and 
+under what conditions. Identity-based policies can be further categorized:
+•Managed policies  – Standalone identity-based policies that you can attach to multiple users, 
+groups, and roles in your AWS account. You can use two types of managed policies:
+•AWS managed policies – Managed policies that are created and managed by AWS. If you are 
+new to using policies, we recommend that you start by using AWS managed policies.
+Federated user sessions and roles 28
+
+•Customer managed policies  – Managed policies that you create and manage in your AWS 
+account. Customer managed policies provide more precise control over your policies than AWS 
+managed policies. You can create, edit, and validate an IAM policy in the visual editor or by 
+creating the JSON policy document directly. For more information, see Deﬁne custom IAM 
+permissions with customer managed policies  and Edit IAM policies.
+•Inline policies  – Policies that you create and manage and that are embedded directly into a 
+single user, group, or role. In most cases, we don't recommend using inline policies.
+Resource-based policies control what actions a speciﬁed principal can perform on that resource 
+and under what conditions. Resource-based policies are inline policies, and there are no managed 
+resource-based policies. To enable cross-account access, you can specify an entire account or IAM 
+entities in another account as the principal in a resource-based policy.
+The IAM service supports one type of resource-based policy called a role trust policy, which 
+you attach to an IAM role. Because an IAM role is both an identity and a resource that supports 
+resource-based policies, you have to attach both a trust policy and an identity-based policy to 
+an IAM role. Trust policies deﬁne which principal entities (accounts, users, roles, and AWS STS 
+federated user principals) can assume the role. To learn how IAM roles are diﬀerent from other 
+resource-based policies, see Cross account resource access in IAM.
+To see which services support resource-based policies, see AWS services that work with IAM. To 
+learn more about resource-based policies, see Identity-based policies and resource-based policies.
+Deﬁne permissions based on attributes with ABAC 
+authorization
+Attribute-based access control (ABAC) is an authorization strategy that deﬁnes permissions based 
+on attributes. AWS calls these attributes tags. You can attach tags to IAM resources, including IAM 
+entities (IAM users or IAM roles) and to AWS resources. You can create a single ABAC policy or small 
+set of policies for your IAM principals. You can design ABAC policies that allow operations when 
+the principal's tag matches the resource tag. ABAC's attribute system that provides both high user 
+context and granular access control. Because ABAC is attribute-based, it can perform dynamic 
+authorization for data or applications that grants or revokes access in real time. ABAC is helpful in 
+environments that are scaling and in situations where identity or resource policy management has 
+become complex.
+Deﬁne permissions with ABAC authorization 29
+
+For example, you can create three IAM roles with the access-project  tag key. Set the tag value 
+of the ﬁrst IAM role to Heart, the second to Star, and the third to Lightning . You can then 
+use a single policy that allows access when the IAM role and the AWS resource have the tag value
+access-project . For a detailed tutorial that demonstrates how to use ABAC in AWS, see IAM 
+tutorial: Deﬁne permissions to access AWS resources based on tags. To learn about services that 
+support ABAC, see AWS services that work with IAM.
+This diagram illustrates that the tags applied to a principal must match the tags applied to a 
+resource for the user to be granted permissions to the resource. Tags be applied to IAM groups, 
+resource groups, individual users and individual resources.
+Comparison of ABAC to the traditional RBAC model
+The traditional authorization model used in IAM is role-based access control (RBAC). RBAC deﬁnes 
+permissions based on a person's job function, or role, which is distinct from an IAM role. IAM does 
+include managed policies for job functions that align permissions to a job function in an RBAC 
+model.
+In IAM, you implement RBAC by creating diﬀerent policies for diﬀerent job functions. You then 
+attach the policies to identities (IAM users, IAM groups, or IAM roles). As a best practice, you grant 
+the minimum permissions necessary for the job function. This results in least privilege  access. 
+Each job function policy lists the speciﬁc resources that identities assigned that policy can access. 
+The disadvantage to using the traditional RBAC model is that when you or your users add new 
+resources to your environment, you have to update the policies to allow access to those resources.
+For example, assume that you have three projects, named Heart , Star , and Lightning , on which 
+your employees work. You create an IAM role for each project. You then attach policies to each 
+IAM role to deﬁne the resources that anyone allowed to assume the IAM role can access. If an 
+employee changes jobs within your company, you assign them to a diﬀerent IAM role. You can 
+assign people or programs to more than one IAM role. However, the Star project might require 
+additional resources, such as a new Amazon EC2 container. In that case, you have to update the 
+policy attached to the Star IAM role to specify the new container resource. Otherwise, Star
+project members aren't allowed to access the new container.
+This diagram illustrates that role-based access control requires that each identity be assigned a 
+speciﬁc job-function based policy to access diﬀerent resources.
+ABAC provides the following advantages over the traditional RBAC model:
+•ABAC permissions scale with innovation. It's no longer necessary for an administrator to update 
+existing policies to allow access to new resources. For example, assume that you designed 
+Comparison of ABAC to the traditional RBAC model 30
+
+your ABAC strategy with the access-project  tag. A developer uses the IAM role with the
+access-project  = Heart  tag. When people on the Heart project need additional Amazon EC2 
+resources, the developer can create new Amazon EC2 instances with the access-project  =
+Heart tag. Then anyone on the Heart project can start and stop those instances because their 
+tag values match.
+•ABAC requires fewer policies. Because you don't have to create diﬀerent policies for diﬀerent 
+job functions, you create fewer policies. Those policies are easier to manage.
+•Using ABAC, teams can dynamically respond to change and growth. Because permissions 
+for new resources are automatically granted based on attributes you don't have to manually 
+assign policies to identities. For example, if your company already supports the Heart  and Star
+projects using ABAC, it's easy to add a new Lightning  project. An IAM administrator creates 
+a new IAM role with the access-project  = Lightning  tag. It's not necessary to change the 
+policy to support a new project. Anyone that has permissions to assume the IAM role can create 
+and view instances tagged with access-project  = Lightning . Another scenario is when 
+a team member moves from the Heart project to the Lightning  project. To provide team 
+member access to the Lightning  project , the IAM administrator assigns them to a diﬀerent 
+IAM role. It's not necessary to change the permissions policies.
+•Granular permissions are possible using ABAC. When you create policies, it's a best practice 
+to grant least privilege . Using traditional RBAC, you write a policy that allows access to speciﬁc 
+resources. However, when you use ABAC, you can allow actions on all resources if the resource's 
+tag matches the principal's tag.
+•Use employee attributes from your corporate directory with ABAC. You can conﬁgure your 
+SAML or OIDC provider to pass session tags to IAM. When your employees federate into AWS, 
+IAM applies their attributes to their resulting principal. You can then use ABAC to allow or deny 
+permissions based on those attributes.
+For a detailed tutorial that demonstrates how to use ABAC in AWS, see IAM tutorial: Deﬁne 
+permissions to access AWS resources based on tags.
+Comparison of ABAC to the traditional RBAC model 31
+
+Getting started with IAM
+AWS Identity and Access Management (IAM) helps you securely control access to Amazon Web 
+Services (AWS) and your account resources. IAM can also keep your sign-in credentials private. You 
+don't speciﬁcally sign up to use IAM. There is no charge to use IAM.
+How you use IAM depends on your job function. See When do I use IAM?  for role-speciﬁc guidance.
+Use IAM to give identities, such as users and roles, access to resources in your account. For example, 
+you can use IAM with existing users in your corporate directory that you manage external to AWS 
+or you can create users in AWS using AWS IAM Identity Center. Federated identities assume deﬁned 
+IAM roles to access the resources they need. For more information about IAM Identity Center, see
+What is IAM Identity Center? in the AWS IAM Identity Center User Guide.
+Note
+IAM is integrated with several AWS products. For a list of services that support IAM, see
+AWS services that work with IAM.
+To learn about getting started with AWS, creating an administrative user, an AWS Organizations, 
+and using multiple services to solve a problem such as building and launching your ﬁrst project, see 
+the Getting Started Resource Center.
+For hands-on practice with common IAM tasks, see IAM tutorials . Tasks include creating roles for 
+cross-account access and using tags for attribute-based access control.
+After you set up your account, plan how people and workloads access it. For more information, see
+Plan access to your AWS account.
+Then use Prepare for least-privilege permissions to follow the principle of least privilege.
+Setting up your AWS account
+Before you start working with IAM, make sure you have completed the initial set up of your AWS 
+environment.
+Setting up your AWS account 32
+
+AWS sends you a conﬁrmation email after the sign-up process is complete. At any time, you can 
+view your current account activity and manage your account by going to https://aws.amazon.com/
+and choosing My Account.
+When you signed up for the service, you created an AWS account using an email address and a 
+password. Those are your AWS root user credentials. As a best practice, you don't use your root 
+user credentials to access AWS for daily tasks. Only use your root user credentials to perform tasks 
+that require root user credentials. Also, do not share your credentials with anyone else. Instead, add 
+people to your directory and give them access to your AWS account.
+To secure your AWS account root user
+1. Sign in to the AWS Management Console as the account owner by choosing Root user and 
+entering your AWS account email address. On the next page, enter your password.
+For help signing in by using root user, see Signing in as the root user in the AWS Sign-In User 
+Guide .
+2. Turn on multi-factor authentication (MFA) for your root user.
+For instructions, see Enable a virtual MFA device for your AWS account root user (console) in 
+the IAM User Guide .
+Grant access to the billing console
+IAM users and roles in an AWS account can't access the Billing and Cost Management console by 
+default. This is true even if they have IAM policies that grant access to certain Billing features. To 
+grant access, the AWS account root user must ﬁrst activate IAM access.
+Note
+As a security best practice, we recommend that you provide access to your resources 
+through identity federation with AWS IAM Identity Center. When you enable IAM Identity 
+Center in conjunction with AWS Organizations, the Billing and Cost Management console is 
+enabled by default with consolidated billing for all AWS accounts in your organization. For 
+more information, see Consolidating billing for AWS Organizations in the Billing and Cost 
+Management User Guide .
+Setting up your AWS account 33
+
+1. Sign in to the AWS Management Console with your root user credentials (speciﬁcally, the email 
+address and password that you used to create your AWS account).
+2. On the navigation bar, select your account name, and then select Account.
+3. Scroll down the page until you ﬁnd the section IAM User and Role Access to Billing 
+Information , then select Edit.
+4. Select the Activate IAM Access check box to activate access to the Billing and Cost 
+Management console pages.
+5. Choose Update .
+The page displays the message IAM user/role access to billing information is activated.
+Important
+Activating IAM access alone doesn't grant any permissions for users or roles to view 
+the Billing and Cost Management console pages. You must also attach the required 
+identity-based policies to IAM roles to grant access to the billing console. Roles provide 
+temporary credentials that users can assume when needed.
+6. Use the AWS Management Console to create a role that a user can assume to access the billing 
+console.
+7. On the Add permissions  page for the role, add permissions to list and view details about the 
+Billing resources in your AWS account.
+The AWS managed policy Billing  grants users permission to view and edit the Billing and Cost 
+Management console. This includes viewing account usage, modifying budgets and payment 
+methods. For more policy examples that you can attach to IAM roles to control access to 
+your account’s billing information, see AWS Billing policy examples in the Billing and Cost 
+Management User Guide .
+Viewing your AWS account ID
+If you are signed into the console, you can view the account ID for your AWS account using the 
+following methods.
+Viewing your AWS account ID 34
+
+To view your AWS account ID
+Console
+The AWS account ID is displayed when you go to the IAM Dashboard  in the AWS account 
+section. You can also view your account ID in the navigation bar at the upper right. Choose your 
+user name, and the account ID is displayed above your user name.
+AWS CLI
+Use the following command to view your user ID, account ID, and your user ARN:
+•aws sts get-caller-identity
+To view your AWS account ID 35
+
+API
+Use the following API to view your user ID, account ID, and your user ARN:
+•GetCallerIdentity
+Using an alias for your AWS account ID
+Your account ID is a 12-digit number that uniquely identiﬁes your account. By default, IAM users in 
+the account sign in using a web URL that includes the account ID. If they don't have the URL, they 
+can provide the account ID on the AWS sign-in page when they sign-in.
+Your sign-in page URL has the following format, by default.
+https:// Your_Account_ID .signin.aws.amazon.com/console/
+Many people ﬁnd words to be easier to remember than numbers, so creating an alias for your 
+account ID can help your IAM users sign-in easier.
+If you create an AWS account alias for your AWS account ID, your sign-in page URL looks like the 
+following example.
+https:// Your_Account_Alias .signin.aws.amazon.com/console/
+Considerations before creating an account alias
+•Your AWS account can have only one alias. If you create a new alias for your AWS account, the 
+new alias overwrites the previous alias, and the URL containing the previous alias stops working.
+•The account alias must contain only digits, lowercase letters, and hyphens. For more information 
+on limitations on AWS account entities, see IAM and AWS STS quotas.
+•The account alias must be unique across all Amazon Web Services products within a given 
+network partition.
+A partition is a group of AWS Regions. Each AWS account is scoped to one partition.
+The following are the supported partitions:
+•aws - AWS Regions
+•aws-cn - China Regions
+Using an alias for your AWS account ID 36
+
+•aws-us-gov  - AWS GovCloud (US) Regions
+Note
+Account aliases are not secrets, and they will appear in your public-facing sign-in page URL. 
+Do not include any sensitive information in your account alias.
+The original URL containing your AWS account ID remains active and can be used after you 
+create your AWS account alias.
+For instructions on setting up or removing an alias, see Creating an account alias and Deleting an 
+account alias.
+Creating an account alias
+To perform the following steps, you must have at least the following IAM permissions:
+•iam:ListAccountAliases
+•iam:CreateAccountAlias
+To create an AWS account alias
+Console
+1.Sign in to the AWS Management Console and open the IAM console at https:// 
+console.aws.amazon.com/iam/.
+2.In the navigation pane, choose Dashboard .
+3.In the AWS Account section, next to Account Alias, choose Create . If an alias already exists, 
+then choose Edit.
+4.In the dialog box, enter the name you want to use for your alias, then choose Save changes.
+AWS CLI
+Run the following command:
+•aws iam create-account-alias
+Creating an account alias 37
+
+API
+To create an alias for your AWS Management Console sign-in page URL, call the following 
+operation:
+•CreateAccountAlias
+Deleting an account alias
+To perform the following steps, you must have at least the following IAM permissions:
+•iam:ListAccountAliases
+•iam:DeleteAccountAlias
+To delete an account alias
+Console
+1.Sign in to the AWS Management Console and open the IAM console at https:// 
+console.aws.amazon.com/iam/.
+2.In the navigation pane, choose Dashboard .
+3.In the AWS Account section, next to Account Alias, choose Delete.
+AWS CLI
+To delete an AWS account ID alias, run the following command:
+•aws iam delete-account-alias
+To conﬁrm that the account alias is deleted, attempt to display your AWS account ID alias, by 
+running the following command:
+•aws iam list-account-aliases
+API
+To delete an AWS account ID alias, call the following operation:
+Deleting an account alias 38
+
+•DeleteAccountAlias
+To conﬁrm that the account alias is deleted attempt to display your AWS account ID alias, by 
+calling the following operation:
+•ListAccountAliases
+Note
+After deleting your account alias, the only sign-in URL for your account is based oﬀ your 
+account ID. Any attempts to connect to the alias URL will fail and are not redirected.
+Plan access to your AWS account
+When setting up AWS, plan how you intend people to access your AWS account and resources. A 
+well-designed identity management solution keeps your account secure.
+Identity sources
+According to IAM best practices, we recommend that human users and workloads use temporary 
+credentials to access your AWS resources. You grant temporary credentials through IAM roles. Both 
+users federated into IAM and user in IAM Identity Center (either federated or created in the IAM 
+Identity Center directory) use IAM roles to access resources.
+Before you start using AWS, plan how to set up your identities by using one of the following 
+approaches:
+•Enabling IAM Identity Center with AWS Organizations and adding users in IAM Identity Center 
+directly to the organizational directory.
+For instructions on adding users directly to the IAM Identity Center organizational directory, see
+Add users
+•Federating your existing external identity provider with either IAM Identity Center or IAM.
+For instructions on federating an external identity provider to the IAM Identity Center 
+organizational directory, see the appropriate Getting started tutorial.
+Plan access to your AWS account 39
+
+Access management
+Identify the AWS resources and services that your users need. Then deﬁne the access permissions 
+and policies for each user, group, or role.
+•If you use IAM Identity Center, an IAM identity provider, IAM roles, and permissions policies are 
+created in each AWS account in your organization. These roles and permissions match what you 
+specify when you assign people or groups to applications or AWS accounts.
+For more information, see Assign user access and Set up single sign-on access to your 
+applications .
+•You can use account access manager — an IAM feature that lets you assign existing IAM roles you 
+create and manage to IAM Identity Center users and groups. Account access manager gives you 
+access to the full IAM role feature set. You can use it alongside permission sets or on its own.
+•If you federate your identity provider directly with IAM in your AWS account, you must create a 
+role for your users to assume. The role needs a trust policy and a permissions policy. The trust 
+policy states who can assume the role. The permissions policy states which AWS actions and 
+resources the role is allowed or denied access to.
+For more information, see Identity providers and federation into AWS
+For instructions on adding an extra layer of security for sign-in, see Use multi-factor authentication 
+with your identities.
+Use cases for IAM users
+IAM users that you create in your AWS account have long-term credentials that you manage 
+directly.
+When it comes to managing access in AWS, IAM users are generally not the best choice. There are a 
+few key reasons why you should avoid relying on IAM users for most of your use cases.
+First, IAM users are designed for individual accounts, so they don't scale well as your organization 
+grows. Managing permissions and security for a large number of IAM users can quickly become a 
+challenge.
+IAM users also lack the centralized visibility and auditing capabilities that you get with other 
+AWS identity management solutions. This can make it more challenging to maintain security and 
+regulatory compliance.
+Access management 40
+
+Finally, implementing security best practices like multi-factor authentication, password policies, 
+and role separation is much easier with more scalable identity management approaches.
+Instead of relying on IAM users, we recommend using more robust solutions like IAM Identity 
+Center with AWS Organizations, or federated identities from external providers. These options will 
+give you better control, security, and operational eﬃciency as your AWS environment grows.
+As a result, we recommend that you only use IAM users for use cases not supported by federated 
+users .
+The following list identiﬁes the speciﬁc use cases that require long-term credentials with IAM users 
+in AWS. You can use IAM to create these IAM users under the umbrella of your AWS account, and 
+use IAM to manage their permissions.
+•Emergency access to your AWS account
+•Workloads that can't use IAM roles
+•AWS CodeCommit access
+•Amazon Keyspaces (for Apache Cassandra) access
+•Third-party AWS clients
+•AWS IAM Identity Center isn't available for your account and you have no other identity provider
+Create an IAM user for emergency access
+An IAM user  is an identity within your AWS account that has speciﬁc permissions for a single person 
+or application.
+Having an IAM user for emergency access is one of the recommended reasons to create an IAM user 
+so that you can access your AWS account if your identity provider isn't accessible.
+Note
+As a security best practice, we recommend that you provide access to your resources 
+through identity federation instead of creating IAM users. For information about speciﬁc 
+situations where an IAM user is required, see When to create an IAM user (instead of a role).
+Use cases for IAM users 41
+
+To create an IAM user for emergency access
+Minimum permissions
+To perform the following steps, you must have at least the following IAM permissions:
+•access-analyzer:ValidatePolicy
+•iam:AddUserToGroup
+•iam:AttachGroupPolicy
+•iam:CreateGroup
+•iam:CreateLoginProfile
+•iam:CreateUser
+•iam:GetAccountPasswordPolicy
+•iam:GetLoginProfile
+•iam:GetUser
+•iam:ListAttachedGroupPolicies
+•iam:ListAttachedUserPolicies
+•iam:ListGroupPolicies
+•iam:ListGroups
+•iam:ListGroupsForUser
+•iam:ListPolicies
+•iam:ListUserPolicies
+•iam:ListUsers
+Console
+1. Follow the sign-in procedure appropriate to your user type as described in the topic How to 
+sign in to AWS in the AWS Sign-In User Guide.
+2. On the IAM Console Home page, in the left navigation pane, enter your query in the
+Search IAM  text box.
+3. In the navigation pane, select Users  and then select Create user .
+Use cases for IAM users 42
+
+Note
+If you have IAM Identity Center enabled, the AWS Management Console displays 
+a reminder that it's best to manage users' access in IAM Identity Center. In this 
+procedure, the IAM user you create is speciﬁcally for use only when your identity 
+provider is unavailable.
+4. On the Specify user details page, under User details , in User name , enter the name for the 
+new user. This is their sign-in name for AWS. For this example, enter EmergencyAccess .
+Note
+User names can be a combination of up to 64 letters, digits, and these characters: 
+plus (+), equal (=), comma (,), period (.), at sign (@), underscore (_), and hyphen (-). 
+Names must be unique within an account. They are not distinguished by case. For 
+example, you cannot create two users named TESTUSER and testuser. When a user 
+name is used in a policy or as part of an ARN, the name is case sensitive. When a 
+user name appears to customers in the console, such as during the sign-in process, 
+the user name is case insensitive.
+5. Choose the checkbox next to Provide user access to the AWS Management Console–
+optional  and then choose I want to create an IAM user .
+6. Under Console password, select Autogenerated password.
+7. Clear the checkbox next to User must create a new password at next sign-in 
+(recommended). Because this IAM user is for emergency access, a trusted administrator 
+retains the password and only provides it when needed.
+8. On the Set permissions  page, under Permissions options, select Add user to group . Then, 
+under User groups , select Create group .
+9. On the Create user group  page, in User group name , enter EmergencyAccessGroup . 
+Then, under Permissions policies, select AdministratorAccess.
+10. Choose Create user group  to return to the Set permissions  page.
+11. Under User groups , select the name of the EmergencyAccessGroup  you created 
+previously.
+12. Choose Next to proceed to the Review and create page.
+Use cases for IAM users 43
+
+13. On the Review and create page, review the list of user group memberships to be added to 
+the new user. When you are ready to proceed, select Create user .
+14. On the Retrieve password page, select Download .csv ﬁle to save a .csv ﬁle with the user 
+credential information (Connection URL, username, and password).
+15. Save this ﬁle to use if you need to sign-in to IAM and don't have access to your identity 
+provider.
+The new IAM user is displayed in the Users  list. Select the User name  link to view the user 
+details.
+AWS CLI
+1. Create a user named EmergencyAccess .
+•aws iam create-user
+aws iam create-user \ 
+   --user-name EmergencyAccess
+2. (Optional) Give the user access to the AWS Management Console. This requires a password. 
+To create a password for an IAM user you can use the --cli-input-json  parameter to 
+pass a JSON ﬁle that contains the password.You must also give the user the URL of your 
+account's sign-in page.
+•aws iam create-login-proﬁle
+aws iam create-login-profile \ 
+   --generate-cli-skeleton > create-login-profile.json
+•Open the create-login-profile.json  ﬁle in a text editor and enter a password that 
+complies with your password policy, then save the ﬁle. For example:
+{ 
+ "UserName": "EmergencyAccess", 
+ "Password": "Ex@3dRA0djs", 
+ "PasswordResetRequired": false
+Use cases for IAM users 44
+
+} 
+•Use the aws iam create-login-profile  command again, passing the --cli-
+input-json  parameter to specify your JSON ﬁle.
+aws iam create-login-profile \ 
+   --cli-input-json file://create-login-profile.json
+Note
+If the password you provided in the JSON ﬁle violates your account's password 
+policy, you will receive a PasswordPolicyViolation  error. If this happens, 
+review the password policy for your account and update the password in the JSON 
+ﬁle to comply with the requirements.
+3. Create the EmergencyAccessGroup , attach the AWS managed policy
+AdministratorAccess  to the group, and add the EmergencyAccess  user to the group.
+Note
+An AWS managed policy is a standalone policy that is created and administered by 
+AWS. Each policy has its own Amazon Resource Name (ARN) that includes the policy 
+name. For example, arn:aws:iam::aws:policy/IAMReadOnlyAccess  is an 
+AWS managed policy. For more information about ARNs, see IAM ARNs . For a list of 
+AWS managed policies for AWS services, see AWS managed policies.
+•aws iam create-group
+aws iam create-group \ 
+   --group-name EmergencyAccessGroup
+•aws iam attach-group-policy
+Use cases for IAM users 45
+
+aws iam attach-group-policy \ 
+   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess \ 
+   --group-name >EmergencyAccessGroup
+•aws iam add-user-to-group
+aws iam add-user-to-group \ 
+   --user-name EmergencyAccess  \ 
+   --group-name EmergencyAccessGroup
+•Run the aws iam get-group command to list theEmergencyAccessGroup  and its 
+members.
+aws iam get-group \ 
+   --group-name EmergencyAccessGroup
+Create an IAM user for workloads that can't use IAM roles
+Important
+As a best practice, we recommend you require your human users to use temporary 
+credentials when accessing AWS.
+Alternatively, you can manage your user identities, including your administrative user, with
+AWS IAM Identity Center. We recommend you use IAM Identity Center to manage access to 
+your accounts and permissions within those accounts. If you are using an external identity 
+provider, you can also conﬁgure the access permissions for user identities in IAM Identity 
+Center.
+If your use case requires IAM users with programmatic access and long-term credentials, we 
+recommend that you establish procedures to update access keys when needed. For more 
+information, see Update access keys.
+Use cases for IAM users 46
+
+To perform some account and service management tasks, you must sign in using root user 
+credentials. To view the tasks that require you to sign in as the root user, see Tasks that require root 
+user credentials.
+To create an IAM user for workloads that can't use IAM roles
+Minimum permissions
+To perform the following steps, you must have at least the following IAM permissions:
+•iam:AddUserToGroup
+•iam:AttachGroupPolicy
+•iam:CreateAccessKey
+•iam:CreateGroup
+•iam:CreateServiceSpecificCredential
+•iam:CreateUser
+•iam:GetAccessKeyLastUsed
+•iam:GetAccountPasswordPolicy
+•iam:GetAccountSummary
+•iam:GetGroup
+•iam:GetLoginProfile
+•iam:GetPolicy
+•iam:GetRole
+•iam:GetUser
+•iam:ListAccessKeys
+•iam:ListAttachedGroupPolicies
+•iam:ListAttachedUserPolicies
+•iam:ListGroupPolicies
+•iam:ListGroups
+•iam:ListGroupsForUser
+•iam:ListInstanceProfilesForRole
+•iam:ListMFADevices
+•iam:ListPoliciesUse cases for IAM users 47
+
+•iam:ListRoles
+•iam:ListRoleTags
+•iam:ListSSHPublicKeys
+•iam:ListServiceSpecificCredentials
+•iam:ListSigningCertificates
+•iam:ListUserPolicies
+•iam:ListUserTags
+•iam:ListUsers
+•iam:UploadSSHPublicKey
+•iam:UploadSigningCertificate
+Console
+1. Follow the sign-in procedure appropriate to your user type as described in the topic How to 
+sign in to AWS in the AWS Sign-In User Guide.
+2. On the IAM Console Home page, in the left navigation pane, enter your query in the
+Search IAM  text box.
+3. In the navigation pane, choose Users  and then choose Create user .
+4. On the Specify user details page, do the following:
+a. For User name , type WorkloadName . Replace WorkloadName  with the name of the 
+workload that will be using the account.
+b. Choose Next.
+5. (Optional) On the Set Permissions page, do the following:
+a. Choose Add user to group .
+b. Choose Create group .
+c. In the Create user group  dialog box, for User group name  type a name that represents 
+the use of the workloads in the group. For this example, use the name Automation .
+d. Under Permissions policies select the checkbox for the PowerUserAccess managed 
+policy.
+Use cases for IAM users 48
+
+Tip
+Enter Power into the Permissions policies search box to quickly ﬁnd the 
+managed policy.
+e. Choose Create user group .
+f.Back on the page with the list of IAM groups, select the checkbox for your new user 
+group. Choose Refresh if you don't see the new user group in the list.
+g. Choose Next.
+6. (Optional) In the Tags section, add metadata to the user by attaching tags as key-value 
+pairs. For more information, see Tags for AWS Identity and Access Management resources.
+7. Verify the user group memberships for the new user. When you are ready to proceed, 
+choose Create user .
+8. A status notiﬁcation appears informing you that the user was created successfully. Select
+View user  to go to the user details page
+9. Select the Security credentials tab. Then create the credentials needed for the workload.
+•Access keys–Select Create access key to generate and download access keys for the user.
+Important
+This is your only opportunity to view or download the secret access keys, and you 
+must provide this information to your users before they can use the AWS API. 
+Save the user's new access key ID and secret access key in a safe and secure place.
+You will not have access to the secret keys again after this step.
+•SSH public keys for AWS CodeCommit–Select Upload SSH public key to upload an SSH 
+public key so that the user can communicate with CodeCommit repositories over SSH.
+•HTTPS Git credentials for AWS CodeCommit–Select Generate credentials  to generate a 
+unique set of user credentials to use with Git repositories. Select Download credentials
+to save the user name and password to a .csv ﬁle. This is the only time that information is 
+available. If you forget or lose the password you will need to reset it.
+•Credentials for Amazon Keyspaces (for Apache Cassandra)–Select Generate credentials
+to generate a service-speciﬁc user credentials to use with Amazon Keyspaces. Select
+Download credentials to save the user name and password to a .csv ﬁle. This is the only 
+Use cases for IAM users 49
+
+time that information is available. If you forget or lose the password you will need to 
+reset it.
+Important
+Service-speciﬁc credentials are long-term credentials associated with a speciﬁc 
+IAM user and can only be used for the service they were created for. To give IAM 
+roles or federated identities permissions to access all your AWS resources using 
+temporary credentials, use AWS authentication with the SigV4 authentication 
+plugin for Amazon Keyspaces. For more information see, Using temporary 
+credentials to connect to Amazon Keyspaces (for Apache Cassandra) using an 
+IAM role and the SigV4 plugin in the Amazon Keyspaces (for Apache Cassandra) 
+Developer Guide .
+•X.509 Signing certiﬁcates–Select Create X.509 Certiﬁcate if you need to make secure 
+SOAP-protocol requests and are in a Region that's not supported by AWS Certiﬁcate 
+Manager. ACM is the preferred tool to provision, manage, and deploy your server 
+certiﬁcates. For more information about using ACM, see the AWS Certiﬁcate Manager User 
+Guide .
+You have created a user with programmatic access and conﬁgured it with the PowerUserAccess
+job function. This user's permissions policy grants full access to every service except for IAM and 
+AWS Organizations.
+You can use this same process to give additional workloads programmatic access to your AWS 
+account resources, if the workloads are unable to assume IAM roles. This procedure used the
+PowerUserAccess managed policy to assign permissions. To follow the best practice of least 
+privilege, consider using a more restrictive policy or creating a custom policy that restricts 
+access to only resources required by the program. To learn about using policies that restrict user 
+permissions to speciﬁc AWS resources, see Access management for AWS resources and Example 
+IAM identity-based policies. To add additional users to the user group after it's created, see Edit 
+users in IAM groups.
+AWS CLI
+1. Create a user named Automation .
+•aws iam create-user
+Use cases for IAM users 50
+
+              aws iam create-user \ 
+                  --user-name Automation
+2. Create an IAM user group named AutomationGroup , attach the AWS managed policy
+PowerUserAccess  to the group, and then add the Automation  user to the group.
+Note
+An AWS managed policy is a standalone policy that is created and administered by 
+AWS. Each policy has its own Amazon Resource Name (ARN) that includes the policy 
+name. For example, arn:aws:iam::aws:policy/IAMReadOnlyAccess  is an 
+AWS managed policy. For more information about ARNs, see IAM ARNs . For a list of 
+AWS managed policies for AWS services, see AWS managed policies.
+•aws iam create-group
+                  aws iam create-group \ 
+                      --group-name AutomationGroup
+•aws iam attach-group-policy
+                  aws iam attach-group-policy \ 
+                      --policy-arn arn:aws:iam::aws:policy/PowerUserAccess \ 
+                      --group-name AutomationGroup
+•aws iam add-user-to-group
+                 aws iam add-user-to-group \ 
+                     --user-name Automation  \ 
+                     --group-name AutomationGroup
+•Run the aws iam get-group command to list the AutomationGroup  and its members.
+Use cases for IAM users 51
+
+                aws iam get-group \ 
+                     --group-name AutomationGroup
+3. Create the security credentials needed for the workload.
+•Create access keys for testing–aws iam create-access-key
+                       aws iam create-access-key \ 
+                           --user-name Automation
+The output of this command displays the secret access key and the access key ID. Record 
+and store this information in a secure location. If these credentials are lost, they can't be 
+recovered, and you must create a new access key.
+Important
+These IAM user access keys are long-term credentials that present a security-
+risk to your account. After you have completed testing, we recommend that you 
+delete these access keys. If you have scenarios in which you are considering access 
+keys, investigate whether you can enable MFA for your workload IAM user and 
+use aws sts get-session-token to obtain temporary credentials for the session 
+instead of using IAM access keys.
+•Upload SSH public keys for AWS CodeCommit–aws iam upload-ssh-public-key
+The following example assumes that you have your SSH public keys stored in the ﬁle
+sshkey.pub .
+                       aws upload-ssh-public-key \ 
+                           --user-name Automation  \ 
+                           --ssh-public-key-body file://sshkey.pub
+•Upload an X.509 signing certiﬁcate–aws iam upload-signing-certiﬁcate
+Use cases for IAM users 52
+
+Upload an X.509 certiﬁcate if you need to make secure SOAP-protocol requests and are 
+in a Region that's not supported by AWS Certiﬁcate Manager. ACM is the preferred tool to 
+provision, manage, and deploy your server certiﬁcates. For more information about using 
+ACM, see the AWS Certiﬁcate Manager User Guide.
+The following example assumes that you have your X.509 signing certiﬁcate stored in the 
+ﬁle certificate.pem .
+                      aws iam upload-signing-certificate \ 
+                      --user-name Automation \ 
+                      --certificate-body file://certificate.pem 
+You can use this same process to give additional workloads programmatic access to your AWS 
+account resources, if the workloads are unable to assume IAM roles. This procedure used the
+PowerUserAccess managed policy to assign permissions. To follow the best practice of least 
+privilege, consider using a more restrictive policy or creating a custom policy that restricts 
+access to only resources required by the program. To learn about using policies that restrict user 
+permissions to speciﬁc AWS resources, see Access management for AWS resources and Example 
+IAM identity-based policies. To add additional users to the user group after it's created, see Edit 
+users in IAM groups.
+Use multi-factor authentication with your identities
+Using multi-factor authentication (MFA) with your identities is another IAM best practice. MFA is 
+an additional security layer that requires users to provide additional authentication factors after 
+providing their username and password to verify their identity. It signiﬁcantly enhances security 
+by making it much harder for attackers to gain unauthorized access, even if a user's password is 
+compromised. MFA is widely adopted as a best practice for securing access to online accounts, 
+cloud services, and other sensitive resources. AWS supports MFA for root user, IAM users, users in 
+IAM Identity Center, Builder ID, and federated users. For additional security, you can create policies 
+that require MFA be conﬁgured before allowing a user to access resources or take speciﬁc actions 
+and attach these policies to your IAM roles. IAM Identity Center comes preconﬁgured with MFA 
+turned on by default so that all users in IAM Identity Center must sign in with MFA in addition to 
+their user name and password.
+Use multi-factor authentication with your identities 53
+
+Note
+All AWS account types (standalone, management, and members accounts) require MFA to 
+be conﬁgured for their root user. Users must register MFA within 35 days of their ﬁrst sign-
+in attempt to access the AWS Management Console if MFA is not already enabled.
+For more information, see Conﬁgure MFA in IAM Identity Center and AWS Multi-factor 
+authentication in IAM .
+Prepare for least-privilege permissions
+Using least-privilege permissions  is an IAM best practice recommendation. The concept of least-
+privilege permissions is to grant users the permissions required to perform a task and no additional 
+permissions. As you get set up, consider how you are going to support least-privilege permissions. 
+The root user, the administrative user, and the emergency access IAM user have powerful 
+permissions that aren't required for everyday tasks. While you are learning about AWS and testing 
+out diﬀerent services we recommend that you create at least one additional user in IAM Identity 
+Center with lesser permissions that you can use in diﬀerent scenarios. You can use IAM policies 
+to deﬁne the actions that can be taken on speciﬁc resources under speciﬁc conditions and then 
+connect to those resources with your lesser privileged account.
+If you are using IAM Identity Center, consider using IAM Identity Center permissions sets to get 
+started. To learn more, see Create a permission set in the IAM Identity Center User Guide .
+If you aren't using IAM Identity Center, use IAM roles to deﬁne the permissions for diﬀerent IAM 
+entities. To learn more, see IAM role creation.
+Both IAM roles and IAM Identity Center permissions sets can use AWS managed policies based on 
+job functions. For details on the permissions granted by these policies, see AWS managed policies 
+for job functions.
+Important
+Keep in mind that AWS managed policies might not grant least-privilege permissions for 
+your speciﬁc use cases because they're available for use by all AWS customers. After getting 
+set up, we recommend that you use IAM Access Analyzer to generate least-privilege policies 
+Prepare for least-privilege permissions 54
+
+based on your access activity that's logged in AWS CloudTrail. For more information about 
+policy generation, see IAM Access Analyzer policy generation.
+When you are getting started, we recommend that you use AWS managed policies to grant 
+permissions. After a predeﬁned sample period of activity (such as 90 days) has passed, you can 
+review the services that people and workloads have accessed. Then you can create a new customer 
+managed policy with reduced permissions to replace the AWS managed policy. The new policy 
+should include only the services that were accessed during the sample period. Update your 
+permissions to remove the AWS managed policy and attach the new customer managed policy you 
+created.
+For instructions on reﬁning permissions, see Reviewing last accessed information for your AWS 
+account. After you identify unused services, see Generating a policy based on access activity.
+Reviewing last accessed information for your AWS account
+You can view service last accessed information for IAM using the IAM console, AWS CLI, or AWS API. 
+For important information about the data, permissions required, troubleshooting, and supported 
+Regions, see Reﬁne permissions in AWS using last accessed information.
+You can view information for the following resource types in IAM. In each case, the information 
+includes allowed services for the given reporting period:
+•IAM user  – View the last time that the user attempted to access each allowed service.
+•IAM group  – View information about the last time that an IAM group member attempted 
+to access each allowed service. This report also includes the total number of members that 
+attempted access.
+•IAM role – View the last time that someone used the role in an attempt to access each allowed 
+service.
+•Policy – View information about the last time that a user or role attempted to access each 
+allowed service. This report also includes the total number of entities that attempted access.
+Reviewing last accessed information for your AWS account 55
+
+Note
+Before you view the access information for a resource in IAM, make sure you understand 
+the reporting period, reported entities, and the evaluated policy types for your information. 
+For more details, see the section called “Things to know about last accessed information”.
+For more information about the last accessed information, see Reﬁne permissions in AWS using last 
+accessed information.
+To review last accessed information for an AWS account
+Console
+1. Follow the sign-in procedure appropriate to your user type as described in the topic How to 
+sign in to AWS in the AWS Sign-In User Guide.
+2. On the IAM Console Home page, in the left navigation pane, enter your query in the
+Search IAM  text box.
+3. In the navigation pane, choose either User groups , Users , Roles, or Policies.
+4. Choose any user, user group, role, or policy name to open its Summary page and choose 
+the Last Accessed tab. View the following information, based on the resource that you 
+chose:
+•User group  – View the list of services that user group members can access. You can also 
+view when a member last accessed the service, what user group policies they used, and 
+which user group member made the request. Choose the name of the policy to learn 
+whether it is a managed policy or an inline user group policy. Choose the name of the 
+user group member to see all of the members of the user group and when they last 
+accessed the service.
+•User  – View the list of services that the user can access. You can also view when they last 
+accessed the service, and what policies are currently associated with the user. Choose the 
+name of the policy to learn whether it is a managed policy, an inline user policy, or an 
+inline policy for the user group.
+•Role – View the list of services that the role can access, when the role last accessed the 
+service, and what policies were used. Choose the name of the policy to learn whether it is 
+a managed policy or an inline role policy.
+Reviewing last accessed information for your AWS account 56
+
+•Policy – View the list of services with allowed actions in the policy. You can also view 
+when the policy was last used to access the service, and which entity (user or role) used 
+the policy. The Last accessed date also includes when access is granted to this policy 
+through another policy. Choose the name of the entity to learn which entities have this 
+policy attached and when they last accessed the service.
+5. In the Service column of the table, choose the name of one of the services that includes 
+action last accessed information to view a list of management actions that IAM entities 
+have attempted to access. You can view the AWS Region and a timestamp that shows when 
+someone last attempted to perform the action.
+6. The Last accessed column is displayed for services and management actions of the services 
+that include action last accessed information. Review the following possible results that 
+are returned in this column. These results vary depending on whether a service or action is 
+allowed, was accessed, and whether it is tracked by AWS for last accessed information.
+<number of> days ago
+The number of days since the service or action was used in the tracking period. The 
+tracking period for services is for the last 400 days. The tracking period for Amazon 
+S3 actions started on April 12, 2020. The tracking period for Amazon EC2, IAM, and 
+Lambda actions started on April 7, 2021. The tracking period for all other services 
+began on May 23, 2023. To learn more about the tracking start dates for each AWS 
+Region, see Where AWS tracks last accessed information.
+Not accessed in the tracking period
+The tracked service or action has not been used by an entity in the tracking period.
+It is possible for you to have permissions for an action that doesn't appear in the list. 
+This can happen if the tracking information for the action is not currently included by 
+AWS. You should not make permissions decisions based solely on the absence of tracking 
+information. Instead, we recommend that you use this information to inform and support 
+your overall strategy of granting least privilege. Check your policies to conﬁrm that the 
+level of access is appropriate.
+Reviewing last accessed information for your AWS account 57
+
+AWS CLI
+You can use the AWS CLI to retrieve information about the last time that an IAM resource in 
+your AWS account was used to attempt to access AWS services and Amazon S3, Amazon EC2, 
+IAM, and Lambda actions. An IAM resource can be a user, user group, role, or policy.
+• Generate a report for IAM resources in an AWS account. The request must include the ARN 
+of the IAM resource (user, user group, role, or policy) for which you want a report. You 
+can specify the level of granularity that you want to generate in the report to view access 
+details for either services or both services and actions. The request returns a job-id  that 
+you can then use in the get-service-last-accessed-details  and get-service-
+last-accessed-details-with-entities  operations to monitor the job-status
+until the job is complete.
+•aws iam generate-service-last-accessed-details
+a. Retrieve details about the report using the job-id parameter from the previous step.
+•aws iam get-service-last-accessed-details
+This operation returns the following information, based on the type of resource and 
+level of granularity that you requested in the generate-service-last-accessed-
+details  operation:
+•User  – Returns a list of services that the speciﬁed user can access. For each service, 
+the operation returns the date and time of the user's last attempt and the ARN of 
+the user.
+•User group  – Returns a list of services that members of the speciﬁed user group 
+can access using the policies attached to the user group. For each service, the 
+operation returns the date and time of the last attempt made by any user 
+group member. It also returns the ARN of that user and the total number 
+of user group members that have attempted to access the service. Use the
+GetServiceLastAccessedDetailsWithEntities operation to retrieve a list of all of the 
+members.
+•Role – Returns a list of services that the speciﬁed role can access. For each service, 
+the operation returns the date and time of the role's last attempt and the ARN of the 
+role.
+Reviewing last accessed information for your AWS account 58
+
+•Policy – Returns a list of services for which the speciﬁed policy allows access. For 
+each service, the operation returns the date and time that an entity (user or role) 
+last attempted to access the service using the policy. It also returns the ARN of that 
+entity and the total number of entities that attempted access.
+b. Learn more about the entities that used user group or policy permissions in an attempt 
+to access a speciﬁc service. This operation returns a list of entities with each entity's 
+ARN, ID, name, path, type (user or role), and when they last attempted to access 
+the service. You can also use this operation for users and roles, but it only returns 
+information about that entity.
+•aws iam get-service-last-accessed-details-with-entities
+c. Learn more about the identity-based policies that an identity (user, user group, or 
+role) used in an attempt to access a speciﬁc service. When you specify an identity and 
+service, this operation returns a list of permissions policies that the identity can use 
+to access the speciﬁed service. This operation gives the current state of policies and 
+does not depend on the generated report. It also does not return other policy types, 
+such as resource-based policies, access control lists, AWS Organizations policies, IAM 
+permissions boundaries, or session policies. For more information, see Policy types or
+Policy evaluation for requests within a single account.
+•aws iam list-policies-granting-service-access
+API
+You can use the AWS API to retrieve information about the last time that an IAM resource 
+was used to attempt to access AWS services and Amazon S3, Amazon EC2, IAM, and Lambda 
+actions. An IAM resource can be a user, user group, role, or policy. You can specify the level of 
+granularity to generate in the report to view details for either services or both services and 
+actions.
+1. Generate a report. The request must include the ARN of the IAM resource 
+(user, user group, role, or policy) for which you want a report. It returns a
+JobId that you can then use in the GetServiceLastAccessedDetails  and
+GetServiceLastAccessedDetailsWithEntities  operations to monitor the
+JobStatus  until the job is complete.
+•GenerateServiceLastAccessedDetails
+Reviewing last accessed information for your AWS account 59
+
+2. Retrieve details about the report using the JobId parameter from the previous step.
+•GetServiceLastAccessedDetails
+This operation returns the following information, based on the type of resource and level 
+of granularity that you requested in the GenerateServiceLastAccessedDetails
+operation:
+•User  – Returns a list of services that the speciﬁed user can access. For each service, the 
+operation returns the date and time of the user's last attempt and the ARN of the user.
+•User group  – Returns a list of services that members of the speciﬁed user group can 
+access using the policies attached to the user group. For each service, the operation 
+returns the date and time of the last attempt made by any user group member. It also 
+returns the ARN of that user and the total number of user group members that have 
+attempted to access the service. Use the GetServiceLastAccessedDetailsWithEntities
+operation to retrieve a list of all of the members.
+•Role – Returns a list of services that the speciﬁed role can access. For each service, the 
+operation returns the date and time of the role's last attempt and the ARN of the role.
+•Policy – Returns a list of services for which the speciﬁed policy allows access. For 
+each service, the operation returns the date and time that an entity (user or role) last 
+attempted to access the service using the policy. It also returns the ARN of that entity 
+and the total number of entities that attempted access.
+3. Learn more about the entities that used user group or policy permissions in an attempt to 
+access a speciﬁc service. This operation returns a list of entities with each entity's ARN, ID, 
+name, path, type (user or role), and when they last attempted to access the service. You can 
+also use this operation for users and roles, but it only returns information about that entity.
+•GetServiceLastAccessedDetailsWithEntities
+4. Learn more about the identity-based policies that an identity (user, user group, or role) 
+used in an attempt to access a speciﬁc service. When you specify an identity and service, 
+this operation returns a list of permissions policies that the identity can use to access the 
+speciﬁed service. This operation gives the current state of policies and does not depend 
+on the generated report. It also does not return other policy types, such as resource-based 
+policies, access control lists, AWS Organizations policies, IAM permissions boundaries, or 
+session policies. For more information, see Policy types or Policy evaluation for requests 
+within a single account.
+Reviewing last accessed information for your AWS account 60
+
+•ListPoliciesGrantingServiceAccess
+Generating a policy based on access activity
+You can use the access activity recorded in AWS CloudTrail for an IAM user or IAM role to have 
+IAM Access Analyzer generate a customer managed policy to allow access to only the services that 
+speciﬁc users and roles need.
+When IAM Access Analyzer generates an IAM policy, information is returned to help you to further 
+customize the policy. Two categories of information can be returned when a policy is generated:
+•Policy with action-level information – For some AWS services, such as Amazon EC2, IAM Access 
+Analyzer can identify the actions found in your CloudTrail events and lists the actions used in the 
+policy it generates. For a list of supported services, see IAM Access Analyzer policy generation 
+services. For some services, IAM Access Analyzer prompts you to add actions for the services to 
+the generated policy.
+•Policy with service-level information – IAM Access Analyzer uses last accessed information to 
+create a policy template with all of the recently used services. When using the AWS Management 
+Console, we prompt you to review the services and add actions to complete the policy.
+To generate a policy based on access activity
+In the following procedure we are going to reduce the permissions given to a role to match the 
+usage of a user. When you choose a user, choose a user whose usage exempliﬁes the role. Many 
+customers set up test user accounts with PowerUser permissions and then have them do a speciﬁc 
+set of tasks for a short time period to determine what access is necessary to perform those tasks,
+Console
+1. Follow the sign-in procedure appropriate to your user type as described in the topic How to 
+sign in to AWS in the AWS Sign-In User Guide.
+2. On the IAM Console Home page, in the left navigation pane, enter your query in the
+Search IAM  text box.
+3. In the navigation pane, choose Users  and then choose the user name to go to the user 
+details page.
+Generating a policy based on access activity 61
+
+4. On Permissions tab, under Generate policy based on CloudTrail events, choose Generate 
+policy.
+5. On the Generate policy page, conﬁgure the following items:
+•For Select time period, choose Last 7 days.
+•For CloudTrail trail to be analyzed, select the Region and trail where this user's activity 
+is recorded.
+•Choose Create and use a new service role.
+6. Choose Generate policy then wait until the role is created. Don't refresh or navigate 
+away from the console page until the Policy generation in progress notiﬁcation message 
+appears.
+7. After the policy is generated, you must review and customize it as needed with the account 
+IDs and ARNs for resources. In addition, the automatically generated policy might not 
+include the action-level information needed to complete the policy. For more information, 
+see IAM Access Analyzer policy generation.
+For example, you might edit the ﬁrst statement that includes the Allow eﬀect and the
+NotAction  element to allow only Amazon EC2 and Amazon S3 actions. To do this, replace 
+it with the statement with the FullAccessToSomeServices  ID. Your new policy could 
+look like the following example policy.
+JSON
+{ 
+  "Version":"2012-10-17",        
+  "Statement": [ 
+      { 
+          "Sid": "FullAccessToSomeServices", 
+          "Effect": "Allow", 
+          "Action": [ 
+              "ec2:*", 
+              "s3:*" 
+          ], 
+          "Resource": "*" 
+      }, 
+      { 
+          "Effect": "Allow", 
+          "Action": [ 
+Generating a policy based on access activity 62
+
+              "iam:CreateServiceLinkedRole", 
+              "iam:DeleteServiceLinkedRole", 
+              "iam:ListRoles", 
+              "organizations:DescribeOrganization" 
+          ], 
+          "Resource": "*" 
+      } 
+  ]
+}
+8. To support the best practice of granting least privilege , review and correct any errors, 
+warnings, or suggestions returned during policy validation.
+9. To further reduce your policies' permissions to speciﬁc actions and resources, view your 
+events in CloudTrail Event history. There you can view detailed information about the 
+speciﬁc actions and resources that your user has accessed. For more information, see
+Viewing CloudTrail Events in the CloudTrail Console in the AWS CloudTrail User Guide.
+10. After reviewing and validating your policy, save it with a descriptive name.
+11. Navigate to the Roles page and choose the role that people will assume when they perform 
+the tasks permitted by your new policy.
+12. Select the Permissions tab, and then choose Add permissions  and select Attach policies.
+13. On the Attach permission policies page, in the Other permissions policies  list, select the 
+policy you created, then choose Attach policies.
+14. You are returned to the Role details page. There are two policies attached to the role, your 
+previous AWS managed policy, such as PowerUserAccess, and your new policy. Select the 
+checkbox for the AWS managed policy and then choose Remove. When asked to conﬁrm 
+removal, choose Remove.
+IAM users, SAML and OIDC federated principals, and workloads who assume this role now have 
+reduced access according to the new policy you created.
+AWS CLI
+You can use the following commands to generate a policy using the AWS CLI.
+To generate a policy
+•aws accessanalyzer start-policy-generation
+Generating a policy based on access activity 63
+
+To view a generated policy
+•aws accessanalyzer get-generated-policy
+To cancel a policy generation request
+•aws accessanalyzer cancel-policy-generation
+To view a list of policy generation requests
+•aws accessanalyzer list-policy-generations
+API
+You can use the following operations to generate a policy using the AWS API.
+To generate a policy
+•StartPolicyGeneration
+To view a generated policy
+•GetGeneratedPolicy
+To cancel a policy generation request
+•CancelPolicyGeneration
+To view a list of policy generation requests
+•ListPolicyGenerations
+Using search to ﬁnd IAM resources
+As you work through your access ﬁndings, you can use the IAM console search page as a faster 
+option for ﬁnding IAM resources. You can search for resources using partial resource names or 
+ARNs.
+Using search to ﬁnd IAM resources 64
+
+Console
+The IAM console search feature can locate any of the following:
+•IAM entity names that match your search keywords (for users, groups, roles, identity 
+providers, and policies)
+•Tasks that match your search keywords
+The IAM console search feature does not return information about IAM Access Analyzer.
+Every line in the search result is an active link. For example, you can choose the user name in 
+the search result, which takes you to that user's detail page. Or you can choose an action link, 
+for example Create user , to go to the Create User  page.
+Note
+Access key search requires you to type the full access key ID in the search box. The 
+search result shows the user associated with that key. From there you can navigate 
+directly to that user's page, where you can manage the access key.
+Use the Search  page in the IAM console to ﬁnd items related to that account.
+To search for items in the IAM console
+1. Follow the sign-in procedure appropriate to your user type as described in the topic How to 
+sign in to AWS in the AWS Sign-In User Guide.
+2. On the IAM Console Home page, in the left navigation pane, enter your query in the
+Search IAM  text box.
+3. In the navigation pane, choose Search .
+4. In the Search  box, type your search keywords.
+5. Choose a link in the search results list to navigate to the corresponding part of the console.
+The following icons identify the types of items that are found by a search:
+Using search to ﬁnd IAM resources 65
+
+Icon Description
+IAM users
+IAM groups
+IAM roles
+IAM policies
+Tasks such as "create user" or "attach policy"
+Results from the keyword delete
+Sample search phrases
+You can use the following phrases in the IAM search. Replace terms in italics with the names of 
+the actual IAM users, groups, roles, access keys, policies, or identity providers that you want to 
+locate.
+•user_name  or group_name   or role_name  or policy_name  or
+identity_provider_name
+•access_key
+•add user user_name  to groups  or add users to group group_name
+•remove user user_name  from groups
+•delete user_name  or delete group_name  or delete role_name , or delete
+policy_name , or delete identity_provider_name
+•manage access keys user_name
+•manage signing certificates user_name
+•users
+•manage MFA for user_name
+Using search to ﬁnd IAM resources 66
+
+•manage password for user_name
+•create role
+•password policy
+•edit trust policy for role role_name
+•show policy document for role role_name
+•attach policy to role_name
+•create managed policy
+•create user
+•create group
+•attach policy to group_name
+•attach entities to policy_name
+•detach entities from policy_name
+Using search to ﬁnd IAM resources 67
+
+Security best practices and use cases in AWS Identity and 
+Access Management
+AWS Identity and Access Management (IAM) oﬀers several security features to consider as you 
+develop and implement your own security policies. The following best practices are general 
+guidelines and don't represent a complete security solution.
+These best practices may not be appropriate or suﬃcient for your speciﬁc environment. Therefore, 
+treat them as helpful considerations rather than requirements.
+To get the most out of IAM, take the time to learn the recommended best practices. One eﬀective 
+way to do this is to see how IAM is used in real-world scenarios to work with other AWS services.
+Topics
+•Security best practices in IAM
+•Root user best practices for your AWS account
+•Business use cases for IAM
+Security best practices in IAM
+To help secure your AWS resources, follow these best practices for AWS Identity and Access 
+Management (IAM).
+After you implement these best practices, see Security in IAM and AWS STS for additional security 
+topics including compliance validation, resilience, and infrastructure security.
+Topics
+•Require human users to use federation with an identity provider to access AWS using temporary 
+credentials
+•Require workloads to use temporary credentials with IAM roles to access AWS
+•Require multi-factor authentication (MFA)
+•Update access keys when needed for use cases that require long-term credentials
+•Follow best practices to protect your root user credentials
+Security best practices 68
+
+•Apply least-privilege permissions
+•Get started with AWS managed policies and move toward least-privilege permissions
+•Use IAM Access Analyzer to generate least-privilege policies based on access activity
+•Regularly review and remove unused users, roles, permissions, policies, and credentials
+•Use conditions in IAM policies to further restrict access
+•Verify public and cross-account access to resources with IAM Access Analyzer
+•Use IAM Access Analyzer to validate your IAM policies for secure and functional permissions
+•Establish permissions guardrails across multiple accounts
+•Use permissions boundaries to delegate permissions management within an account
+Require human users to use federation with an identity provider to 
+access AWS using temporary credentials
+Human users, also known as human identities,  are the people, administrators, developers, 
+operators, and consumers of your applications. They must have an identity to access your AWS 
+environments and applications. Human users that are members of your organization are also 
+known as workforce identities.  Human users can also be external users with whom you collaborate, 
+and who interact with your AWS resources. They can do this through a web browser, client 
+application, mobile app, or interactive command-line tools.
+Require your human users to use temporary credentials when accessing AWS. You can use an 
+identity provider for your human users to provide federated access to AWS accounts by assuming 
+roles, which provide temporary credentials. For centralized access management, we recommend 
+that you use AWS IAM Identity Center (IAM Identity Center) to manage access to your accounts and 
+permissions within those accounts. You can manage your user identities with IAM Identity Center, 
+or manage access permissions for user identities in IAM Identity Center from an external identity 
+provider. For more information, see What is AWS IAM Identity Center in the AWS IAM Identity 
+Center User Guide .
+You can use account access manager — an IAM feature that lets you assign existing IAM roles 
+across your organization's accounts to IAM Identity Center users and groups. Account access 
+manager gives you access to the full IAM role feature set, including custom trust policies, role tags 
+for ABAC, and conﬁgurable role paths. You can use it alongside permission sets or on its own.
+For more information about roles, see Roles terms and concepts.
+Require human users to use federation with an identity provider to access AWS using temporary 
+credentials69
+
+Require workloads to use temporary credentials with IAM roles to 
+access AWS
+A workload  is a collection of resources and code that delivers business value, such as an application 
+or backend process. Your workload can have applications, operational tools, and components that 
+require credentials to make requests to AWS services, such as requests to read data from Amazon 
+S3.
+When you're building on an AWS compute service, such as Amazon EC2 or Lambda, AWS delivers 
+the temporary credentials of an IAM role to that compute resource. Applications written using an 
+AWS SDK will discover and use these temporary credentials to access AWS resources, and there is 
+no need to distribute long lived credentials for an IAM user to your workloads running on AWS.
+Workloads that run outside of AWS, such as your on-premises servers, servers from other cloud 
+providers, or managed continuous integration and continuous delivery (CI/CD) platforms, can still 
+use temporary credentials. However, you'll need to deliver these temporary credentials to your 
+workload. The following are ways you can deliver temporary credentials to your workloads:
+•You can use IAM Roles Anywhere to request temporary AWS credentials for your workload using 
+an X.509 Certiﬁcate from your public key infrastructure (PKI).
+•You can call the AWS STS AssumeRoleWithSAML  API to request temporary AWS credentials for 
+your workload using a SAML assertion from an external identity provider (IdP) that is conﬁgured 
+within your AWS account.
+•You can call the AWS STS AssumeRoleWithWebIdentity  API to request temporary AWS 
+credentials for your workload using a JSON web token (JWT) from an IdP that is conﬁgured 
+within your AWS account.
+•You can request temporary AWS credentials from your IoT device using Mutual Transport Layer 
+Security (MTLS) authentication using AWS IoT Core.
+Some AWS services also support integrations to deliver temporary credentials to your workloads 
+running outside of AWS:
+•Amazon Elastic Container Service (Amazon ECS) Anywhere lets you run Amazon ECS tasks on 
+your own compute resources, and delivers temporary AWS credentials to your Amazon ECS tasks 
+running on those compute resources.
+Require workloads to use temporary credentials with IAM roles to access AWS 70
+
+•Amazon Elastic Kubernetes Service Hybrid Nodes lets you join your compute resources running 
+outside of AWS as nodes to an Amazon EKS cluster. Amazon EKS can deliver temporary 
+credentials to the Amazon EKS pods running on your compute resources.
+•AWS Systems ManagerHybrid Activations lets you manage your compute resources running 
+outside of AWS using SSM, and delivers temporary AWS credentials to the SSM agent running on 
+your compute resources.
+Require multi-factor authentication (MFA)
+We recommend using IAM roles for human users and workloads that access your AWS resources 
+so that they use temporary credentials. However, for scenarios in which you need an IAM user or 
+root user in your account, require MFA for additional security. With MFA, users have a device that 
+generates a response to an authentication challenge. Each user's credentials and device-generated 
+response are required to complete the sign-in process. For more information, see AWS Multi-factor 
+authentication in IAM . We recommend that you use phishing-resistant MFA such as passkeys and 
+security keys wherever possible. For more information, see Assign a passkey or security key in the 
+AWS Management Console.
+If you use IAM Identity Center for centralized access management for human users, you can use the 
+IAM Identity Center MFA capabilities when your identity source is conﬁgured with the IAM Identity 
+Center identity store, AWS Managed Microsoft AD, or AD Connector. For more information about 
+MFA in IAM Identity Center see Multi-factor authentication in the AWS IAM Identity Center User 
+Guide .
+Update access keys when needed for use cases that require long-term 
+credentials
+Where possible, we recommend relying on temporary credentials instead of creating long-
+term credentials such as access keys. However, for scenarios in which you need IAM users with 
+programmatic access and long-term credentials, we recommend that you update the access keys 
+when needed, such as when an employee leaves your company. We recommend that you use IAM 
+access last used information  to update and remove access keys safely. For more information, see
+Update access keys.
+There are speciﬁc use cases that require long-term credentials with IAM users in AWS. Some of the 
+use cases include the following:
+Require multi-factor authentication (MFA) 71
+
+•Workloads that cannot use IAM roles – You might run a workload from a location that needs to 
+access AWS. In some situations, you can't use IAM roles to provide temporary credentials, such as 
+for WordPress plugins. In these situations, use IAM user long-term access keys for that workload 
+to authenticate to AWS.
+•Third-party AWS clients – If you are using tools that don’t support access with IAM Identity 
+Center, such as third-party AWS clients or vendors that are not hosted on AWS, use IAM user 
+long-term access keys.
+•AWS CodeCommit access – If you are using CodeCommit to store your code, you can use an IAM 
+user with either SSH keys or service-speciﬁc credentials for CodeCommit to authenticate to your 
+repositories. We recommend that you do this in addition to using a user in IAM Identity Center 
+for normal authentication. Users in IAM Identity Center are the people in your workforce who 
+need access to your AWS accounts or to your cloud applications. To give users access to your 
+CodeCommit repositories without conﬁguring IAM users, you can conﬁgure the git-remote-
+codecommit utility. For more information about IAM and CodeCommit, see IAM credentials 
+for CodeCommit: Git credentials, SSH keys, and AWS access keys. For more information 
+about conﬁguring the git-remote-codecommit utility, see Connecting to AWS CodeCommit 
+repositories with rotating credentials in the AWS CodeCommit User Guide.
+•Amazon Keyspaces (for Apache Cassandra) access – In a situation where you are unable to 
+use users in IAM Identity Center, such as for testing purposes for Cassandra compatibility, you 
+can use an IAM user with service-speciﬁc credentials to authenticate with Amazon Keyspaces. 
+Users in IAM Identity Center are the people in your workforce who need access to your AWS 
+accounts or to your cloud applications. You can also connect to Amazon Keyspaces using 
+temporary credentials. For more information, see Using temporary credentials to connect to 
+Amazon Keyspaces using an IAM role and the SigV4 plugin in the Amazon Keyspaces (for Apache 
+Cassandra) Developer Guide .
+Follow best practices to protect your root user credentials
+When you create an AWS account, you establish root user credentials to sign in to the AWS 
+Management Console. Safeguard your root user credentials the same way you would protect 
+other sensitive personal information. To better understand how to secure and scale your root user 
+processes, see Root user best practices for your AWS account.
+Follow best practices to protect your root user credentials 72
+
+Apply least-privilege permissions
+When you set permissions with IAM policies, grant only the permissions required to perform a 
+task. You do this by deﬁning the actions that can be taken on speciﬁc resources under speciﬁc 
+conditions, also known as least-privilege permissions . You might start with broad permissions while 
+you explore the permissions that are required for your workload or use case. As your use case 
+matures, you can work to reduce the permissions that you grant to work toward least privilege. 
+For more information about using IAM to apply permissions, see Policies and permissions in AWS 
+Identity and Access Management.
+Get started with AWS managed policies and move toward least-
+privilege permissions
+To get started granting permissions to your users and workloads, use the AWS managed policies
+that grant permissions for many common use cases. They are available in your AWS account. Keep 
+in mind that AWS managed policies might not grant least-privilege permissions for your speciﬁc 
+use cases because they are available for use by all AWS customers. As a result, we recommend that 
+you reduce permissions further by deﬁning customer managed policies  that are speciﬁc to your 
+use cases. For more information, see AWS managed policies. For more information about AWS 
+managed policies that are designed for speciﬁc job functions, see AWS managed policies for job 
+functions.
+Use IAM Access Analyzer to generate least-privilege policies based on 
+access activity
+To grant only the permissions required to perform a task, you can generate policies based on your 
+access activity that is logged in AWS CloudTrail. IAM Access Analyzer analyzes the services and 
+actions that your IAM roles use, and then generates a ﬁne-grained policy that you can use. After 
+you test each generated policy, you can deploy the policy to your production environment. This 
+ensures that you grant only the required permissions to your workloads. For more information 
+about policy generation, see IAM Access Analyzer policy generation.
+Regularly review and remove unused users, roles, permissions, policies, 
+and credentials
+You might have IAM users, roles, permissions, policies, or credentials that you no longer need in 
+your AWS account. IAM provides last accessed information  to help you identify the users, roles, 
+Apply least-privilege permissions 73
+
+permissions, policies, and credentials that you no longer need so that you can remove them. This 
+helps you reduce the number of users, roles, permissions, policies, and credentials that you have 
+to monitor. You can also use this information to reﬁne your IAM policies to better adhere to least-
+privilege permissions. For more information, see Reﬁne permissions in AWS using last accessed 
+information .
+Use conditions in IAM policies to further restrict access
+You can specify conditions under which a policy statement is in eﬀect. That way, you can grant 
+access to actions and resources, but only if the access request meets speciﬁc conditions. For 
+example, you can write a policy condition to specify that all requests must be sent using TLS. 
+You can also use conditions to grant access to service actions, but only if they are used through 
+a speciﬁc AWS service, such as CloudFormation. For more information, see IAM JSON policy 
+elements: Condition .
+Verify public and cross-account access to resources with IAM Access 
+Analyzer
+Before you grant permissions for public or cross-account access in AWS, we recommend that you 
+verify if such access is required. You can use IAM Access Analyzer to help you preview and analyze 
+public and cross-account access for supported resource types. You do this by reviewing the ﬁndings
+that IAM Access Analyzer generates. These ﬁndings help you verify that your resource access 
+controls grant the access that you expect. Additionally, as you update public and cross-account 
+permissions, you can verify the eﬀect of your changes before deploying new access controls to 
+your resources. IAM Access Analyzer also monitors supported resource types continuously and 
+generates a ﬁnding for resources that allow public or cross-account access. For more information, 
+see Previewing access with IAM Access Analyzer APIs.
+Use IAM Access Analyzer to validate your IAM policies for secure and 
+functional permissions
+Validate the policies you create to make sure that they adhere to the IAM policy language
+(JSON) and IAM best practices. You can validate your policies by using IAM Access Analyzer 
+policy validation. IAM Access Analyzer provides more than 100 policy checks and actionable 
+recommendations to help you author secure and functional policies. As you author new policies 
+or edit existing policies in the console, IAM Access Analyzer provides recommendations to help 
+you reﬁne and validate your policies before you save them. Additionally, we recommend that you 
+review and validate all of your existing policies. For more information, see IAM Access Analyzer 
+Use conditions in IAM policies to further restrict access 74
+
+policy validation. For more information about policy checks provided by IAM Access Analyzer, see
+IAM Access Analyzer policy check reference.
+Establish permissions guardrails across multiple accounts
+As you scale your workloads, separate them by using multiple accounts that are managed with 
+AWS Organizations. We recommend that you use AWS Organizations service control policies (SCPs) 
+to establish permissions guardrails to control access for all principals (IAM roles and users) across 
+your accounts. We recommend that you use AWS Organizations resource control policies (RCPs) 
+to establish permissions guardrails to control access for AWS resources across your organization. 
+SCPs and RCPs are types of organization policies that you can use to manage permissions in your 
+organization at the AWS organization, organizational unit (OU), or account level.
+However, SCPs and RCPs alone are insuﬃcient to grant permissions to principals and resources in 
+your organization. No permissions are granted by SCPs and RCPs. To grant permissions, you must 
+attach identity-based or resource-based policies to IAM users, IAM roles, or the resources in your 
+accounts. For more information, see SRA building blocks — AWS Organizations, accounts, and 
+guardrails.
+Use permissions boundaries to delegate permissions management 
+within an account
+In some scenarios, you might want to delegate permissions management within an account to 
+others. For example, you could allow developers to create and manage roles for their workloads. 
+When you delegate permissions to others, use permissions boundaries  to set the maximum 
+permissions that you delegate. A permissions boundary is an advanced feature for using a 
+managed policy to set the maximum permissions that an identity-based policy can grant to an IAM 
+role. A permissions boundary does not grant permissions on its own. For more information, see
+Permissions boundaries for IAM entities.
+Root user best practices for your AWS account
+When you ﬁrst create an AWS account, you begin with a default set of credentials with complete 
+access to all AWS resources in your account. This identity is called the AWS account root user. 
+We strongly recommend you don’t access the AWS account root user unless you have a task that 
+requires root user credentials. You need to secure your root user credentials and your account 
+recovery mechanisms to help make sure you don’t expose your highly privileged credentials for 
+unauthorized use.
+Establish permissions guardrails across multiple accounts 75
+
+For multiple AWS accounts managed through AWS Organizations, we recommend removing 
+root user credentials from member accounts to help prevent unauthorized use. You can remove 
+the root user password, access keys, signing certiﬁcates, and deactivate and delete multi-factor 
+authentication (MFA). Member accounts can't sign in to their root user or perform password 
+recovery for their root user. For more information, see Centrally manage root access for member 
+accounts.
+Instead of accessing the root user, create an administrative user for everyday tasks.
+•If you have a new AWS account, see Setting up your AWS account.
+•For multiple AWS accounts managed through AWS Organizations, see Set up AWS account access 
+for an IAM Identity Center administrative user.
+With your administrative user, you can then create additional identities for users that need access 
+to resources in your AWS account. We strongly recommend you require users to authenticate with 
+temporary credentials when accessing AWS.
+•For a single, standalone AWS account, use IAM roles to create identities in your account with 
+speciﬁc permissions. Roles are intended to be assumable by anyone who needs it. Also, a role 
+does not have standard long-term credentials, such as a password or access keys, associated with 
+it. Instead, when you assume a role, it provides you with temporary security credentials for your 
+role session. Unlike IAM roles, IAM users  have long-term credentials such as passwords and access 
+keys. Where possible, best practices recommend relying on temporary credentials instead of 
+creating IAM users who have long-term credentials such as passwords and access keys.
+•For multiple AWS accounts managed through AWS Organizations, use IAM Identity Center 
+workforce users. With IAM Identity Center, you can centrally manage users across your AWS 
+accounts and permissions within those accounts. Manage your user identities with IAM Identity 
+Center or from an external identity provider. For more information, see What is AWS IAM Identity 
+Center  in the AWS IAM Identity Center User Guide.
+Topics
+•Secure your root user credentials to prevent unauthorized use
+•Use a strong root user password to help protect access
+•Secure your root user sign-in with multi-factor authentication (MFA)
+•Don't create access keys for the root user
+•Use multi-person approval for root user sign-in wherever possible
+Root user best practices 76
+
+•Use a group email address for root user credentials
+•Restrict access to account recovery mechanisms
+•Secure your AWS Organizations account root user credentials
+•Monitor access and usage
+Secure your root user credentials to prevent unauthorized use
+Secure your root user credentials and use them for only the tasks that require them. To help 
+prevent unauthorized use, don’t share your root user password, MFA, access keys, CloudFront key 
+pairs, or signing certiﬁcates with anyone, except those that have a strict business need to access the 
+root user.
+Don't store the root user password with tools that depend on AWS services in an account that is 
+accessed using that same password. If you lose or forget your root user password, you will not be 
+able to access these tools. We recommend that you prioritize resiliency and consider requiring two 
+or more people to authorize access to the storage location. Access to the password or its storage 
+location should be logged and monitored.
+Use a strong root user password to help protect access
+We recommend that you use a password that is strong and unique. Tools such as password 
+managers with strong password generation algorithms can help you achieve these goals. AWS 
+requires that your password meet the following conditions:
+•It must have a minimum of 8 characters and a maximum of 128 characters.
+•It must include a minimum of three of the following mix of character types: uppercase, 
+lowercase, numbers, and ! @ # $ % ^ & * () <> [] {} | _+-= symbols.
+•It must not be identical to your AWS account name or email address.
+For more information, see Change the password for the AWS account root user.
+Secure your root user sign-in with multi-factor authentication (MFA)
+Because a root user can perform privileged actions, it's crucial to add MFA for the root user as a 
+second authentication factor in addition to the email address and password as sign-in credentials. 
+You can register up to eight MFA devices of any combination of the currently supported MFA types 
+with your AWS account root user.
+Secure your root user credentials to prevent unauthorized use 77
+
+We strongly recommend enabling multiple MFA devices for your root user credentials to provide 
+additional ﬂexibility and resiliency in your security strategy. All AWS account types (standalone, 
+management, and member accounts) require MFA to be conﬁgured for their root user. Users must 
+register MFA within 35 days of their ﬁrst sign-in attempt to access the AWS Management Console if 
+MFA is not already enabled.
+•FIDO Certiﬁed hardware security keys are provided by third-party providers. For more 
+information, see Enable a FIDO security key for the AWS account root user.
+•A hardware device that generates a six-digit numeric code based on the time-based one-time 
+password (TOTP) algorithm. For more information, see Enable a hardware TOTP token for the 
+AWS account root user.
+•A virtual authenticator application that runs on a phone or other device and emulates a physical 
+device. For more information, see Enable a virtual MFA device for your AWS account root user.
+Don't create access keys for the root user
+Access keys let you run commands in the AWS Command Line Interface (AWS CLI) or use API 
+operations from one of the AWS SDKs. We strongly recommend that you do not create access keys 
+for your root user because the root user has full access to all AWS services and resources in the 
+account, including billing information.
+Since only a few tasks require the root user and you typically perform those tasks infrequently, 
+we recommend signing in to the AWS Management Console to perform root user tasks. For 
+programmatic access, instead of creating access keys for the root user, use the aws login
+command with your root credentials to authenticate to the AWS CLI and SDKs. This approach 
+provides temporary, automatically rotated credentials that enhance your security posture while 
+eliminating the need to manage long-term access keys. Before creating access keys, review the
+Alternatives to long-term access keys.
+Use multi-person approval for root user sign-in wherever possible
+Consider using multi-person approval to make sure that no one person can access both MFA and 
+password for the root user. Some companies add an additional layer of security by setting up one 
+group of administrators with access to the password, and another group of administrators with 
+access to MFA. One member from each group must come together to sign in as the root user.
+Don't create access keys for the root user 78
+
+Use a group email address for root user credentials
+Use an email address that is managed by your business and forwards received messages directly 
+to a group of users. If AWS must contact the owner of the account, this approach reduces the risk 
+of delays in responding, even if individuals are on vacation, out sick, or have left the business. The 
+email address used for the root user should not be used for other purposes.
+Restrict access to account recovery mechanisms
+Make sure you develop a process to manage root user credential recovery mechanisms in case you 
+need access to it during an emergency such as takeover of your administrative account.
+•Make sure you have access to your root user email inbox so that you can reset a lost or forgotten 
+root user password.
+•If MFA for your AWS account root user is lost, damaged, or not working, you can sign in using 
+another MFA registered to the same root user credentials. If you lost access to all your MFAs, you 
+need both the phone number and the email used to register your account, to be up to date and 
+accessible to recover your MFA. For details, see Recovering a root user MFA device.
+•If you choose not to store your root user password and MFA, then the phone number registered 
+in your account can be used as an alternate way to recover root user credentials. Make sure you 
+have access to the contact phone number, keep the phone number updated, and limit who has 
+access to manage the phone number.
+No one person should have access to both the email inbox and phone number since both are 
+veriﬁcation channels to recover your root user password. It is important to have two groups of 
+individuals managing these channels. One group having access to your primary email address and 
+another group having access to the primary phone number to recover access to your account as 
+root user.
+Secure your AWS Organizations account root user credentials
+As you move to a multi-account strategy with AWS Organizations, each of your AWS accounts 
+has its own root user credentials that you need to secure. The account you use to create your 
+organization is the management account and the rest of the accounts in your organization are
+member accounts.
+Use a group email address for root user credentials 79
+
+Secure root user credentials for the management account
+AWS requires that you register MFA for the root user of your organization's management account. 
+MFA registration must be completed during the ﬁrst sign-in attempt or within the 35-day grace 
+period. If MFA is not enabled within this time, registration will be required before you can access 
+the AWS Management Console. For more information, see Multi-factor authentication for AWS 
+account root user.
+Secure root user credentials for member accounts
+If you use AWS Organizations to manage multiple accounts, there are two strategies that you can 
+take to secure root user access in your AWS Organizations.
+•Centralize root access and remove root user credentials from member accounts. Remove the 
+root user credentials, access keys, signing certiﬁcates, and deactivate and delete multi-factor 
+authentication (MFA). When this strategy is used, member accounts can't sign in to their root 
+user or perform password recovery for their root user. For more information, see Centrally 
+manage root access for member accounts.
+•Secure root user credentials of your AWS Organizations accounts with MFA to enhance account 
+security. For more information, see Multi-factor authentication for AWS account root user.
+For details, see Accessing member accounts in your organization in the AWS Organizations User 
+Guide .
+Set preventative security controls in AWS Organizations using a service control 
+policy (SCP)
+If the member accounts in your organization have root user credentials enabled, you can apply an 
+SCP to restrict access to member account root user. Denying all root user actions in your member 
+accounts, except for certain root-only actions, helps prevent unauthorized access. For details, see
+Use an SCP to restrict what the root user in your member accounts can do.
+Monitor access and usage
+We recommend you use your current tracking mechanisms to monitor, alert, and report the sign 
+in and use of root user credentials, including alerts that announce root user sign-in and usage. The 
+following services can help to make sure that root user credential usage is tracked and perform 
+security checks that can help prevent unauthorized use.
+Monitor access and usage 80
+
+Note
+CloudTrail logs diﬀerent sign-in events for the root user and privileged root user sessions. 
+These privileged sessions allow tasks that require root user credentials to be performed in 
+member accounts in your organization. You can use the sign-in event to identify the actions 
+taken by the management account or a delegated administrator using sts:AssumeRoot . 
+For more information, see Track privileged tasks in CloudTrail.
+•If you want to be notiﬁed about root user sign-in activity in your account, you can leverage 
+Amazon CloudWatch to create an Events rule that detects when root user credentials are used 
+and triggers a notiﬁcation to your security administrator. For details, see Monitor and notify on 
+AWS account root user activity.
+•If you want to set up notiﬁcations to alert you of approved root user actions, you can leverage 
+Amazon EventBridge along with Amazon SNS to write an EventBridge rule to track root user 
+usage for the speciﬁc action and notify you using an Amazon SNS topic. For an example, see
+Send a notiﬁcation when an Amazon S3 object is created.
+•If you already using GuardDuty as your threat detection service, you can extend its capability to 
+notify you when root user credentials are being used in your account.
+Alerts should include, but not be limited to, the email address for the root user. Have procedures 
+in place for how to respond to alerts so that personnel who receive a root user access alert 
+understand how to validate that root user access is expected, and how to escalate if they believe 
+that a security incident is in progress. For an example of how to conﬁgure alerts, see Monitor and 
+notify on AWS account root user activity.
+Evaluate root user MFA compliance
+The following services can help evaluate MFA compliance for root user credentials.
+MFA-related rules return noncompliant if you follow the best practice of removing root 
+user credentials.
+We recommend removing root user credentials from member accounts in your organization 
+to help prevent unauthorized use. After you remove root user credentials, including MFA, 
+these member accounts are evaluated as not applicable.
+Monitor access and usage 81
+
+•AWS Conﬁg provides rules to monitor compliance with root user best practices. You can use AWS 
+Conﬁg managed rules to help you enforce MFA for root user credentials. AWS Conﬁg can also
+identify access keys for the root user.
+•Security Hub CSPM provides you with a comprehensive view of your security state in AWS and 
+helps you assess your AWS environment against security industry standards and best practices, 
+such as having MFA on the root user and not having root user access keys. For details on the 
+rules available, see AWS Identity and Access Management controls in the Security Hub CSPM User 
+Guide .
+•Trusted Advisor provides a security check so you know if MFA isn't enabled on the root user 
+account. For more information, see MFA on Root Account in the AWS Support User Guide.
+If you need to report a security issue on your account, see Report Suspicious Emails or Vulnerability 
+Reporting. Alternatively, you can Contact AWS for assistance and additional guidance.
+Business use cases for IAM
+A simple business use case for IAM can help you understand basic ways you might implement the 
+service to control the AWS access that your users have. The use case is described in general terms, 
+without the mechanics of how you'd use the IAM API to achieve the results you want.
+This use case looks at two typical ways a ﬁctional company called Example Corp might use IAM. 
+The ﬁrst scenario considers Amazon Elastic Compute Cloud (Amazon EC2). The second considers 
+Amazon Simple Storage Service (Amazon S3).
+For more information about using IAM with other services from AWS, see AWS services that work 
+with IAM .
+Topics
+•Initial setup of example corp
+•Use case for IAM with Amazon EC2
+•Use case for IAM with Amazon S3
+Initial setup of example corp
+Nikki Wolf and Mateo Jackson are the founders of Example Corp. Upon starting the company, 
+they create an AWS account and set up AWS IAM Identity Center (IAM Identity Center) to create 
+Business use cases 82

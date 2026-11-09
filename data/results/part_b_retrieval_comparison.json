@@ -1,0 +1,422 @@
+{
+  "Dense": {
+    "average_query_latency_ms": 80.6703499998548,
+    "hit_rate_at_1_pct": 0.0,
+    "hit_rate_at_3_pct": 20.0,
+    "per_query": [
+      {
+        "query_id": "c3_01_ec2_ssh",
+        "latency_ms": 64.13590000011027,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "ec2-ug:9",
+          "ec2-ug:0",
+          "ec2-ug:16",
+          "ec2-ug:8",
+          "ec2-ug:14"
+        ]
+      },
+      {
+        "query_id": "c3_02_ec2_console",
+        "latency_ms": 69.10280000010971,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "vpc-ug:6",
+          "vpc-ug:66",
+          "vpc-ug:10",
+          "vpc-ug:14",
+          "vpc-ug:69"
+        ]
+      },
+      {
+        "query_id": "c3_03_vpc_route",
+        "latency_ms": 71.45780000428203,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "vpc-ug:66",
+          "vpc-ug:10",
+          "vpc-ug:6",
+          "cfn-ug:62",
+          "vpc-ug:5"
+        ]
+      },
+      {
+        "query_id": "c3_04_s3_getobject",
+        "latency_ms": 72.88770000741351,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "s3-userguide:3",
+          "s3-userguide:35",
+          "iam-ug:71",
+          "iam-ug:61",
+          "iam-ug:72"
+        ]
+      },
+      {
+        "query_id": "c3_05_s3_public_access",
+        "latency_ms": 233.33429999183863,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "s3-userguide:43",
+          "s3-userguide:58",
+          "s3-userguide:25",
+          "s3-userguide:35",
+          "s3-userguide:11"
+        ]
+      },
+      {
+        "query_id": "c3_06_lambda_timeout",
+        "latency_ms": 58.04319999879226,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:17",
+          "lambda-dg:21",
+          "lambda-dg:25",
+          "lambda-dg:24",
+          "lambda-dg:52"
+        ]
+      },
+      {
+        "query_id": "c3_07_lambda_vpc",
+        "latency_ms": 55.452800006605685,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:10",
+          "lambda-dg:52",
+          "cfn-ug:62",
+          "lambda-dg:0",
+          "lambda-dg:11"
+        ]
+      },
+      {
+        "query_id": "c3_08_secretsmanager_iam",
+        "latency_ms": 57.855899998685345,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:13",
+          "lambda-dg:62",
+          "iam-ug:7",
+          "iam-ug:61",
+          "iam-ug:57"
+        ]
+      },
+      {
+        "query_id": "c3_09_eventbridge_putevents",
+        "latency_ms": 59.208399994531646,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:30",
+          "lambda-dg:55",
+          "lambda-dg:29",
+          "lambda-dg:34",
+          "lambda-dg:33"
+        ]
+      },
+      {
+        "query_id": "c3_10_iam_role",
+        "latency_ms": 65.22469999617897,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "iam-ug:66",
+          "iam-ug:7",
+          "iam-ug:19",
+          "iam-ug:20",
+          "iam-ug:0"
+        ]
+      }
+    ]
+  },
+  "BM25": {
+    "average_query_latency_ms": 6.65856999985408,
+    "hit_rate_at_1_pct": 50.0,
+    "hit_rate_at_3_pct": 80.0,
+    "per_query": [
+      {
+        "query_id": "c3_01_ec2_ssh",
+        "latency_ms": 5.730300006689504,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "ec2-ug:8",
+          "cfn-ug:51",
+          "ec2-ug:9",
+          "vpc-ug:48",
+          "vpc-ug:46"
+        ]
+      },
+      {
+        "query_id": "c3_02_ec2_console",
+        "latency_ms": 7.1057000022847205,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "vpc-ug:6",
+          "vpc-ug:69",
+          "vpc-ug:10",
+          "vpc-ug:4",
+          "vpc-ug:66"
+        ]
+      },
+      {
+        "query_id": "c3_03_vpc_route",
+        "latency_ms": 5.924199998844415,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "vpc-ug:10",
+          "vpc-ug:66",
+          "vpc-ug:69",
+          "vpc-ug:6",
+          "vpc-ug:5"
+        ]
+      },
+      {
+        "query_id": "c3_04_s3_getobject",
+        "latency_ms": 5.156500003067777,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "iam-ug:16",
+          "lambda-dg:13",
+          "iam-ug:0",
+          "iam-ug:25",
+          "iam-ug:73"
+        ]
+      },
+      {
+        "query_id": "c3_05_s3_public_access",
+        "latency_ms": 5.9960000071441755,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "s3-userguide:58",
+          "s3-userguide:25",
+          "iam-ug:16",
+          "s3-userguide:2",
+          "iam-ug:17"
+        ]
+      },
+      {
+        "query_id": "c3_06_lambda_timeout",
+        "latency_ms": 6.35379999584984,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "lambda-dg:23",
+          "lambda-dg:21",
+          "s3-userguide:4",
+          "lambda-dg:20",
+          "lambda-dg:63"
+        ]
+      },
+      {
+        "query_id": "c3_07_lambda_vpc",
+        "latency_ms": 7.47389999742154,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "vpc-ug:6",
+          "vpc-ug:69",
+          "vpc-ug:66",
+          "vpc-ug:67",
+          "vpc-ug:47"
+        ]
+      },
+      {
+        "query_id": "c3_08_secretsmanager_iam",
+        "latency_ms": 7.723000002442859,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "iam-ug:16",
+          "lambda-dg:13",
+          "lambda-dg:61",
+          "s3-userguide:27",
+          "iam-ug:29"
+        ]
+      },
+      {
+        "query_id": "c3_09_eventbridge_putevents",
+        "latency_ms": 6.795399996917695,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:39",
+          "lambda-dg:14",
+          "lambda-dg:12",
+          "lambda-dg:15",
+          "iam-ug:55"
+        ]
+      },
+      {
+        "query_id": "c3_10_iam_role",
+        "latency_ms": 8.326899987878278,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "iam-ug:38",
+          "iam-ug:7",
+          "iam-ug:6",
+          "iam-ug:28",
+          "iam-ug:18"
+        ]
+      }
+    ]
+  },
+  "Hybrid (RRF)": {
+    "average_query_latency_ms": 62.479980001808144,
+    "hit_rate_at_1_pct": 10.0,
+    "hit_rate_at_3_pct": 40.0,
+    "per_query": [
+      {
+        "query_id": "c3_01_ec2_ssh",
+        "latency_ms": 59.34049999632407,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "ec2-ug:9",
+          "ec2-ug:8",
+          "ec2-ug:7",
+          "cfn-ug:52",
+          "cfn-ug:51"
+        ]
+      },
+      {
+        "query_id": "c3_02_ec2_console",
+        "latency_ms": 63.89620000845753,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "vpc-ug:6",
+          "vpc-ug:10",
+          "vpc-ug:66",
+          "vpc-ug:69",
+          "vpc-ug:4"
+        ]
+      },
+      {
+        "query_id": "c3_03_vpc_route",
+        "latency_ms": 55.0958000094397,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "vpc-ug:10",
+          "vpc-ug:66",
+          "vpc-ug:6",
+          "vpc-ug:5",
+          "vpc-ug:69"
+        ]
+      },
+      {
+        "query_id": "c3_04_s3_getobject",
+        "latency_ms": 67.64710000425112,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "iam-ug:26",
+          "iam-ug:0",
+          "iam-ug:57",
+          "iam-ug:16",
+          "iam-ug:25"
+        ]
+      },
+      {
+        "query_id": "c3_05_s3_public_access",
+        "latency_ms": 59.55340000218712,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "s3-userguide:58",
+          "s3-userguide:25",
+          "s3-userguide:11",
+          "s3-userguide:43",
+          "s3-userguide:2"
+        ]
+      },
+      {
+        "query_id": "c3_06_lambda_timeout",
+        "latency_ms": 63.783599995076656,
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "top5_chunk_ids": [
+          "lambda-dg:21",
+          "lambda-dg:17",
+          "lambda-dg:23",
+          "lambda-dg:20",
+          "lambda-dg:25"
+        ]
+      },
+      {
+        "query_id": "c3_07_lambda_vpc",
+        "latency_ms": 52.157500002067536,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "vpc-ug:69",
+          "lambda-dg:0",
+          "lambda-dg:21",
+          "vpc-ug:10",
+          "lambda-dg:36"
+        ]
+      },
+      {
+        "query_id": "c3_08_secretsmanager_iam",
+        "latency_ms": 65.51449999096803,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:13",
+          "iam-ug:57",
+          "lambda-dg:14",
+          "lambda-dg:62",
+          "iam-ug:0"
+        ]
+      },
+      {
+        "query_id": "c3_09_eventbridge_putevents",
+        "latency_ms": 69.5008000038797,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "lambda-dg:29",
+          "lambda-dg:12",
+          "iam-ug:55",
+          "iam-ug:61",
+          "iam-ug:79"
+        ]
+      },
+      {
+        "query_id": "c3_10_iam_role",
+        "latency_ms": 68.31040000542998,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "top5_chunk_ids": [
+          "iam-ug:7",
+          "iam-ug:66",
+          "iam-ug:38",
+          "lambda-dg:62",
+          "iam-ug:6"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "chunk_size_tokens": 400,
+    "queries": 10,
+    "top_k_reported": 5,
+    "rrf_fusion_depth_per_retriever": 20,
+    "rrf_constant": 60,
+    "warmup_runs_excluded_per_method": 1,
+    "bm25_tokenizer": "lowercase regex preserving AWS identifier punctuation"
+  }
+}
